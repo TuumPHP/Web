@@ -10,7 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "tuum/locator":"dev-master",
+        "tuum/locator": "dev-master",
         "league/flysystem": "0.5.*"
     },
     "repositories": [
