@@ -1,3 +1,20 @@
 {
-  "name":"tuum/web"
+  "name":"tuum/web",
+    "description": "a web application.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Asao",
+            "email": "kamei@workspot.jp"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "league/flysystem": "0.5.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tuum\\Web\\": "src/"
+        }
+    }
 }
