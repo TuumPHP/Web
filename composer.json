@@ -13,6 +13,12 @@
         "tuum/locator":"dev-master",
         "league/flysystem": "0.5.*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/TuumPHP/Locator"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Tuum\\Web\\": "src/"
