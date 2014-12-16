@@ -10,6 +10,11 @@ use Tuum\Locator\Container;
 
 class App
 {
+    const TOKEN_NAME  = 'token';
+    const FLASH_NAME  = 'flash';
+    const ROUTE_PARAM = 'params';
+    const ROUTE_NAMES = 'namedRoutes';
+
     /**
      * @var Container
      */

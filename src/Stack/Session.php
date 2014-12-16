@@ -3,6 +3,7 @@ namespace Tuum\Web\Stack;
 
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Tuum\Stack\Http\Redirect;
+use Tuum\Web\App;
 use Tuum\Stack\Http\Request;
 use Tuum\Stack\Http\Response;
 use Tuum\Stack\Http\View;
@@ -24,10 +25,10 @@ class Session implements StackHandleInterface, StackReleaseInterface
         $session = $request->getSession();
         $flash   = $session->getFlashBag();
         if ( $flash ) {
-            $request->attributes->set( 'flash', $flash->get( 'flash' ) );
+            $request->attributes->set( App::FLASH_NAME, $flash->get( App::FLASH_NAME ) );
         }
-        if( $token = $session->get( 'token' ) ) {
-            $request->attributes->set( 'token', $token );
+        if( $token = $session->get( App::TOKEN_NAME ) ) {
+            $request->attributes->set( App::TOKEN_NAME, $token );
         }
         return null;
     }
@@ -49,15 +50,15 @@ class Session implements StackHandleInterface, StackReleaseInterface
             $session = $request->getSession();
             $flash   = $session->getFlashBag();
             $data    = $response->getData();
-            $flash->set( 'flash', $data );
+            $flash->set( App::FLASH_NAME, $data );
         }
         if ( $response instanceof View )
         {
             $data  = $response->getData();
-            $token = $data[ '_token' ];
+            $token = $data[ App::TOKEN_NAME ];
             /** @var SymfonySession $session */
             $session = $request->getSession();
-            $session->set( 'token', $token );
+            $session->set( App::TOKEN_NAME, $token );
         }
         if ( isset( $session ) ) {
             $session->save();

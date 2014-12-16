@@ -58,7 +58,7 @@ class Routes implements StackHandleInterface, StackableInterface
         if( !$route ) {
             return null;
         }
-        $request->attributes->set( 'namedRoutes', $this->router );
+        $request->attributes->set( Request::ROUTE_NAMES, $this->router );
         if ( $response = $this->applyFilters( $request ) ) {
             return $response;
         }
@@ -79,7 +79,7 @@ class Routes implements StackHandleInterface, StackableInterface
         } else {
             $next = new $class;
         }
-        $request->attributes->set( 'params', $route->params );
+        $request->attributes->set( Request::ROUTE_PARAM, $route->params );
         if( $next instanceof StackHandleInterface ) {
             return $next->handle( $request );
         }

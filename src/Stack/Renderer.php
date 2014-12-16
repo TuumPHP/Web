@@ -65,9 +65,13 @@ class Renderer implements StackHandleInterface, StackReleaseInterface
     {
         $file = $response->getFile();
         $data = $response->getData();
-        if ( $flash = $request->attributes->get( 'flash' ) ) {
+        if ( $flash = $request->attributes->get( Request::FLASH_NAME ) ) {
             $data = array_merge( $data, $flash );
         }
+        $token = sha1( uniqid().mt_rand(0,10000) );
+        $request->attributes->set( Request::TOKEN_NAME, $token );
+        $data[ '_token' ] = $token;
+
         $data[ '_request' ] = $request;
 
         $content = $engine->render( $file, $data );
