@@ -9,6 +9,7 @@ use Tuum\Stack\Http\Response;
 use Tuum\Stack\StackableInterface;
 use Tuum\Stack\StackableTrait;
 use Tuum\Stack\StackHandleInterface;
+use Tuum\Web\App;
 
 class Routes implements StackHandleInterface, StackableInterface
 {
@@ -58,7 +59,7 @@ class Routes implements StackHandleInterface, StackableInterface
         if( !$route ) {
             return null;
         }
-        $request->attributes->set( Request::ROUTE_NAMES, $this->router );
+        $request->attributes->set( App::ROUTE_NAMES, $this->router );
         if ( $response = $this->applyFilters( $request ) ) {
             return $response;
         }
@@ -79,7 +80,7 @@ class Routes implements StackHandleInterface, StackableInterface
         } else {
             $next = new $class;
         }
-        $request->attributes->set( Request::ROUTE_PARAM, $route->params );
+        $request->attributes->set( App::ROUTE_PARAM, $route->params );
         if( $next instanceof StackHandleInterface ) {
             return $next->handle( $request );
         }

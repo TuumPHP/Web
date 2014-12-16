@@ -6,6 +6,7 @@ use Tuum\Stack\Http\Response;
 use Tuum\Stack\Http\View;
 use Tuum\Stack\StackHandleInterface;
 use Tuum\Stack\StackReleaseInterface;
+use Tuum\Web\App;
 use Tuum\Web\View\RendererInterface;
 
 class Renderer implements StackHandleInterface, StackReleaseInterface
@@ -65,11 +66,11 @@ class Renderer implements StackHandleInterface, StackReleaseInterface
     {
         $file = $response->getFile();
         $data = $response->getData();
-        if ( $flash = $request->attributes->get( Request::FLASH_NAME ) ) {
+        if ( $flash = $request->attributes->get( App::FLASH_NAME ) ) {
             $data = array_merge( $data, $flash );
         }
         $token = sha1( uniqid().mt_rand(0,10000) );
-        $request->attributes->set( Request::TOKEN_NAME, $token );
+        $request->attributes->set( App::TOKEN_NAME, $token );
         $data[ '_token' ] = $token;
 
         $data[ '_request' ] = $request;

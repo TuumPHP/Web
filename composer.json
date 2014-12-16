@@ -10,6 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "tuum/stack": "dev-master",
         "tuum/locator": "dev-master",
         "aura/router": "dev-master"
     },
@@ -17,6 +18,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/TuumPHP/Locator"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/TuumPHP/Stack"
         }
     ],
     "autoload": {
