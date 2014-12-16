@@ -6,7 +6,7 @@ use Tuum\Stack\Http\Response;
 use Tuum\Stack\Stack;
 use Tuum\Stack\StackableInterface;
 use Tuum\Stack\StackHandleInterface;
-use Tuum\Web\Locator\Container;
+use Tuum\Locator\Container;
 
 class App
 {
