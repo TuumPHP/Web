@@ -3,7 +3,7 @@ namespace Tuum\Web;
 
 use Tuum\Stack\Http\Request;
 use Tuum\Stack\Http\Response;
-use Tuum\Stack\Stack;
+use Tuum\Web\Stack\Stack;
 use Tuum\Stack\StackableInterface;
 use Tuum\Stack\StackHandleInterface;
 use Tuum\Locator\Container;

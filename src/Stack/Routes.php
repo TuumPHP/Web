@@ -6,12 +6,11 @@ use Aura\Router\RouterFactory;
 use Aura\Router\Router as AuraRouter;
 use Tuum\Stack\Http\Request;
 use Tuum\Stack\Http\Response;
-use Tuum\Stack\StackableInterface;
 use Tuum\Stack\StackableTrait;
 use Tuum\Stack\StackHandleInterface;
 use Tuum\Web\App;
 
-class Routes implements StackHandleInterface, StackableInterface
+class Routes implements StackHandleInterface
 {
     use StackableTrait;
 
