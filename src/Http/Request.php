@@ -23,13 +23,13 @@ class Request extends BaseRequest
      * @param SessionStorageInterface $storage
      * @return Request
      */
-    public static function startGlobal( SessionStorageInterface $storage = null )
+    public static function startGlobal(SessionStorageInterface $storage = null)
     {
-        $request = new Request( $_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER );
+        $request = new Request($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
 
         // set up session
-        $session = new Session( $storage );
-        $request->setSession( $session );
+        $session = new Session($storage);
+        $request->setSession($session);
 
         return $request;
     }
@@ -39,9 +39,9 @@ class Request extends BaseRequest
      * @param Closure|StackHandleInterface $filter
      * @return $this
      */
-    public function setFilter( $name, $filter )
+    public function setFilter($name, $filter)
     {
-        $this->app->container->set( $name, $filter );
+        $this->app->container->set($name, $filter);
         return $this;
     }
 
@@ -49,16 +49,16 @@ class Request extends BaseRequest
      * @param string $name
      * @return null|Response
      */
-    public function filter( $name )
+    public function filter($name)
     {
-        if( !$filter = $this->app->get( $name ) ) {
+        if (!$filter = $this->app->get($name)) {
             return null;
         }
-        if ( $filter instanceof StackHandleInterface ) {
-            return $filter->handle( $this );
+        if ($filter instanceof StackHandleInterface) {
+            return $filter->handle($this);
         }
-        if ( $filter instanceof Closure ) {
-            return $filter( $this );
+        if ($filter instanceof Closure) {
+            return $filter($this);
         }
         return null;
     }

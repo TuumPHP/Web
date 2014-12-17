@@ -19,16 +19,16 @@ class Session implements StackHandleInterface, StackReleaseInterface
      * @param Request $request
      * @return Response|null
      */
-    public function handle( $request )
+    public function handle($request)
     {
         /** @var SymfonySession $session */
         $session = $request->getSession();
         $flash   = $session->getFlashBag();
-        if ( $flash ) {
-            $request->attributes->set( App::FLASH_NAME, $flash->get( App::FLASH_NAME ) );
+        if ($flash) {
+            $request->attributes->set(App::FLASH_NAME, $flash->get(App::FLASH_NAME));
         }
-        if( $token = $session->get( App::TOKEN_NAME ) ) {
-            $request->attributes->set( App::TOKEN_NAME, $token );
+        if ($token = $session->get(App::TOKEN_NAME)) {
+            $request->attributes->set(App::TOKEN_NAME, $token);
         }
         return null;
     }
@@ -42,25 +42,23 @@ class Session implements StackHandleInterface, StackReleaseInterface
      * @param Response $response
      * @return Response|null
      */
-    public function release( $request, $response )
+    public function release($request, $response)
     {
-        if ( $response instanceof Redirect )
-        {
+        if ($response instanceof Redirect) {
             /** @var SymfonySession $session */
             $session = $request->getSession();
             $flash   = $session->getFlashBag();
             $data    = $response->getData();
-            $flash->set( App::FLASH_NAME, $data );
+            $flash->set(App::FLASH_NAME, $data);
         }
-        if ( $response instanceof View )
-        {
+        if ($response instanceof View) {
             $data  = $response->getData();
-            $token = $data[ App::TOKEN_NAME ];
+            $token = $data[App::TOKEN_NAME];
             /** @var SymfonySession $session */
             $session = $request->getSession();
-            $session->set( App::TOKEN_NAME, $token );
+            $session->set(App::TOKEN_NAME, $token);
         }
-        if ( isset( $session ) ) {
+        if (isset($session)) {
             $session->save();
         }
         return $response;

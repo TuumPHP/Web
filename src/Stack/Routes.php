@@ -22,7 +22,7 @@ class Routes implements StackHandleInterface
     /**
      * @param AuraRouter $router
      */
-    public function __construct( $router )
+    public function __construct($router)
     {
         $this->router = $router;
     }
@@ -31,9 +31,9 @@ class Routes implements StackHandleInterface
      * @param AuraRouter $router
      * @return Routes
      */
-    public static function forge( $router )
+    public static function forge($router)
     {
-        $self = new self( $router );
+        $self = new self($router);
         return $self;
     }
 
@@ -50,19 +50,19 @@ class Routes implements StackHandleInterface
      * @param Request $request
      * @return Response|null
      */
-    public function handle( $request )
+    public function handle($request)
     {
         $path   = $request->getPathInfo();
         $server = $request->server->all();
-        $route  = $this->router->match( $path, $server );
-        if( !$route ) {
+        $route  = $this->router->match($path, $server);
+        if (!$route) {
             return null;
         }
-        $request->attributes->set( App::ROUTE_NAMES, $this->router );
-        if ( $response = $this->applyFilters( $request ) ) {
+        $request->attributes->set(App::ROUTE_NAMES, $this->router);
+        if ($response = $this->applyFilters($request)) {
             return $response;
         }
-        return $this->dispatch( $request, $route );
+        return $this->dispatch($request, $route);
     }
 
     /**
@@ -70,20 +70,20 @@ class Routes implements StackHandleInterface
      * @param Route   $route
      * @return null|Response
      */
-    private function dispatch( $request, $route )
+    private function dispatch($request, $route)
     {
         $class = $route->name;
 
-        if( method_exists( $class, 'forge' ) ) {
+        if (method_exists($class, 'forge')) {
             $next = $class::forge();
         } else {
             $next = new $class;
         }
-        $request->attributes->set( App::ROUTE_PARAM, $route->params );
-        if( $next instanceof StackHandleInterface ) {
-            return $next->handle( $request );
+        $request->attributes->set(App::ROUTE_PARAM, $route->params);
+        if ($next instanceof StackHandleInterface) {
+            return $next->handle($request);
         }
-        if( $next instanceof \Closure ) {
+        if ($next instanceof \Closure) {
             return $next($request);
         }
         throw new \InvalidArgumentException();

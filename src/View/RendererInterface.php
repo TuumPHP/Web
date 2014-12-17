@@ -13,7 +13,7 @@ interface RendererInterface
      * @param string $name
      * @param mixed  $service
      */
-    public function register( $name, $service );
+    public function register($name, $service);
 
     /**
      * a simple renderer for a raw PHP file.
@@ -22,5 +22,5 @@ interface RendererInterface
      * @param array  $data
      * @throws \Exception
      */
-    public function render( $file, $data = [ ] );
+    public function render($file, $data = []);
 }

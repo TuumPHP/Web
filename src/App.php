@@ -10,8 +10,8 @@ use Tuum\Locator\Container;
 
 class App
 {
-    const TOKEN_NAME  = 'token';
-    const FLASH_NAME  = 'flash';
+    const TOKEN_NAME = 'token';
+    const FLASH_NAME = 'flash';
     const ROUTE_PARAM = 'params';
     const ROUTE_NAMES = 'namedRoutes';
 
@@ -28,7 +28,7 @@ class App
     /**
      * @param Container $container
      */
-    public function __construct( $container )
+    public function __construct($container)
     {
         $this->container = $container;
     }
@@ -38,9 +38,9 @@ class App
      * @param array  $data
      * @return mixed
      */
-    public function get( $key, $data=[] )
+    public function get($key, $data = [])
     {
-        return $this->container->get( $key, $data );
+        return $this->container->get($key, $data);
     }
 
     // +----------------------------------------------------------------------+
@@ -50,12 +50,12 @@ class App
      * @param StackHandleInterface $stack
      * @return StackableInterface
      */
-    public function push( $stack )
+    public function push($stack)
     {
-        if ( $this->stack ) {
-            return $this->stack->push( $stack );
+        if ($this->stack) {
+            return $this->stack->push($stack);
         }
-        $this->stack = Stack::makeStack( $stack );
+        $this->stack = Stack::makeStack($stack);
         return $this->stack;
     }
 
@@ -63,9 +63,9 @@ class App
      * @param Request $request
      * @return Response
      */
-    public function handle( $request )
+    public function handle($request)
     {
-        return $this->stack->handle( $request );
+        return $this->stack->handle($request);
     }
 
 }

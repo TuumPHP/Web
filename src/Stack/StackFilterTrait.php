@@ -11,13 +11,13 @@ trait StackFilterTrait
     /**
      * @var array
      */
-    protected $beforeFilters = [ ];
+    protected $beforeFilters = [];
 
     /**
      * @param string $filter
      * @return $this
      */
-    public function before( $filter )
+    public function before($filter)
     {
         $this->beforeFilters[] = $filter;
         return $this;
@@ -27,10 +27,10 @@ trait StackFilterTrait
      * @param Request $request
      * @return Response|null
      */
-    protected function applyFilters( $request )
+    protected function applyFilters($request)
     {
-        foreach ( $this->beforeFilters as $filter ) {
-            if ( $response = $request->filter( $filter ) ) {
+        foreach ($this->beforeFilters as $filter) {
+            if ($response = $request->filter($filter)) {
                 return $response;
             }
         }

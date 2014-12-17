@@ -18,7 +18,7 @@ class Renderer implements RendererInterface
     /**
      * @param Container $container
      */
-    public function __construct( $container )
+    public function __construct($container)
     {
         $this->container = $container;
     }
@@ -27,18 +27,18 @@ class Renderer implements RendererInterface
      * @param string $name
      * @param mixed  $service
      */
-    public function register( $name, $service )
+    public function register($name, $service)
     {
-        $this->services[ $name ] = $service;
+        $this->services[$name] = $service;
     }
 
     /**
      * @param string $name
      * @return null|mixed
      */
-    public function __call( $name )
+    public function __call($name)
     {
-        return array_key_exists( $name, $this->services ) ? $this->services[$name] : null;
+        return array_key_exists($name, $this->services) ? $this->services[$name] : null;
     }
 
     /**
@@ -48,15 +48,15 @@ class Renderer implements RendererInterface
      * @param array  $data
      * @throws \Exception
      */
-    public function render( $file, $data=[] )
+    public function render($file, $data = [])
     {
         try {
 
             ob_start();
-            $this->container->evaluate( $file, $data );
+            $this->container->evaluate($file, $data);
             return ob_get_clean();
 
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
 
             ob_end_clean();
             throw $e;

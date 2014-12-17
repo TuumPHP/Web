@@ -13,22 +13,22 @@ class Respond extends BaseRespond
      * @param string $name
      * @return Redirect
      */
-    public function named( $name )
+    public function named($name)
     {
-        $router = $this->request->attributes->get( App::ROUTE_NAMES );
-        if ( !$router ) {
-            throw new \BadMethodCallException( 'no named routes' );
+        $router = $this->request->attributes->get(App::ROUTE_NAMES);
+        if (!$router) {
+            throw new \BadMethodCallException('no named routes');
         }
         $url  = null;
         $args = func_get_args();
-        array_shift( $args );
-        if ( $router instanceof Router ) {
-            $url = $router->generate( $name, $args );
+        array_shift($args);
+        if ($router instanceof Router) {
+            $url = $router->generate($name, $args);
         }
-        if ( !$url ) {
-            throw new \InvalidArgumentException( 'no such named routes: ' . $name );
+        if (!$url) {
+            throw new \InvalidArgumentException('no such named routes: ' . $name);
         }
-        return new Redirect( $url );
+        return new Redirect($url);
     }
 
 }
