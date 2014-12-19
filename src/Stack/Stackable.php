@@ -10,7 +10,7 @@ use Tuum\Web\Http\Request;
  * creates a pile of handlers for http request.
  * continues processing the request until one of the pile returns a response.
  */
-class Stack implements StackableInterface
+class Stackable implements StackableInterface
 {
     use StackableTrait;
 

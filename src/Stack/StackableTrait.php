@@ -16,7 +16,7 @@ trait StackableTrait
     /**
      * pile of Stackable Http Kernels.
      *
-     * @var Stack
+     * @var Stackable
      */
     protected $next;
 

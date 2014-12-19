@@ -3,7 +3,7 @@ namespace Tuum\Web;
 
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
-use Tuum\Web\Stack\Stack;
+use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
 use Tuum\Web\Stack\StackHandleInterface;
 use Tuum\Locator\Container;
@@ -56,7 +56,7 @@ class App
         if ($this->stack) {
             return $this->stack->push($stack);
         }
-        $this->stack = Stack::makeStack($stack);
+        $this->stack = Stackable::makeStack($stack);
         return $this->stack;
     }
 
