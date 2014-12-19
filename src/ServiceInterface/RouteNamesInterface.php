@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\NamedRoutesInterface;
 
-interface NamedRoutesInterface
+interface RouteNamesInterface
 {
     /**
      * @param string $name

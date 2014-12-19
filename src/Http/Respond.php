@@ -3,7 +3,7 @@ namespace Tuum\Web\Http;
 
 use Tuum\Web\Http\Redirect;
 use Tuum\Web\App;
-use Tuum\Web\NamedRoutesInterface\NamedRoutesInterface;
+use Tuum\Web\NamedRoutesInterface\RouteNamesInterface;
 
 class Respond 
 {
@@ -148,7 +148,7 @@ class Respond
         $url  = null;
         $args = func_get_args();
         array_shift($args);
-        if ($router instanceof NamedRoutesInterface) {
+        if ($router instanceof RouteNamesInterface) {
             $url = $router->get($name, $args);
         }
         if (!$url) {
