@@ -5,7 +5,7 @@
  * Date: 14/12/16
  * Time: 11:24
  */
-namespace Tuum\Web\View;
+namespace Tuum\Web\ServiceInterface;
 
 interface RendererInterface
 {

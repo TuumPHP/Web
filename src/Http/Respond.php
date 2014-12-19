@@ -1,9 +1,9 @@
 <?php
 namespace Tuum\Web\Http;
 
-use Aura\Router\Router;
 use Tuum\Web\Http\Redirect;
 use Tuum\Web\App;
+use Tuum\Web\NamedRoutesInterface\NamedRoutesInterface;
 
 class Respond 
 {
@@ -148,8 +148,8 @@ class Respond
         $url  = null;
         $args = func_get_args();
         array_shift($args);
-        if ($router instanceof Router) {
-            $url = $router->generate($name, $args);
+        if ($router instanceof NamedRoutesInterface) {
+            $url = $router->get($name, $args);
         }
         if (!$url) {
             throw new \InvalidArgumentException('no such named routes: ' . $name);
