@@ -14,6 +14,7 @@ class App
     const FLASH_NAME = 'flash';
     const ROUTE_PARAM = 'params';
     const ROUTE_NAMES = 'namedRoutes';
+    const CONTROLLER  = 'controller';
 
     /**
      * @var Container

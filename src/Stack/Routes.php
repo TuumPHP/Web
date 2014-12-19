@@ -12,7 +12,7 @@ use Tuum\Web\App;
 
 class Routes implements StackHandleInterface
 {
-    use StackableTrait;
+    use StackFilterTrait;
 
     /**
      * @var AuraRouter
@@ -58,7 +58,10 @@ class Routes implements StackHandleInterface
         if (!$route) {
             return null;
         }
+        $path = $route->matches[0];
+        $request->attributes->set(App::CONTROLLER, $route);
         $request->attributes->set(App::ROUTE_NAMES, $this->router);
+        $request->attributes->set(App::ROUTE_PARAM, $route->params);
         if ($response = $this->applyFilters($request)) {
             return $response;
         }
