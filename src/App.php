@@ -1,11 +1,11 @@
 <?php
 namespace Tuum\Web;
 
-use Tuum\Stack\Http\Request;
-use Tuum\Stack\Http\Response;
+use Tuum\Web\Http\Request;
+use Tuum\Web\Http\Response;
 use Tuum\Web\Stack\Stack;
-use Tuum\Stack\StackableInterface;
-use Tuum\Stack\StackHandleInterface;
+use Tuum\Web\Stack\StackableInterface;
+use Tuum\Web\Stack\StackHandleInterface;
 use Tuum\Locator\Container;
 
 class App

@@ -2,11 +2,10 @@
 namespace Tuum\Web\Http;
 
 use Closure;
+use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
-use Tuum\Stack\Http\Request as BaseRequest;
-use Tuum\Stack\Http\Response;
-use Tuum\Stack\StackHandleInterface;
+use Tuum\Web\Stack\StackHandleInterface;
 use Tuum\Web\App;
 
 class Request extends BaseRequest
@@ -15,6 +14,11 @@ class Request extends BaseRequest
      * @var App
      */
     public $app;
+
+    /**
+     * @var Respond
+     */
+    protected $respond;
 
     /**
      * a sample for starting a new Request based on super globals.
@@ -34,6 +38,50 @@ class Request extends BaseRequest
         return $request;
     }
 
+    /**
+     * @param string $path
+     * @return Request
+     */
+    public function createNewRequest($path)
+    {
+        $newPath    = $this->getBaseUrl() . $path;
+        $server     = $this->server->all();
+        $attributes = $this->attributes->all();
+        // update with new values
+        $server['PHP_SELF']       = $server['SCRIPT_NAME'] = $server['SCRIPT_FILENAME'] = $newPath;
+        $attributes['url.mapped'] = $newPath;
+        return $this->duplicate(null, null, $attributes, null, null, $server);
+    }
+
+    /**
+     * @param string $path
+     */
+    public function updatePath($path)
+    {
+        $server  = $this->server;
+        $newPath = $this->getBaseUrl() . $path;
+        $server->set('SCRIPT_FILENAME', $newPath);
+        $server->set('SCRIPT_NAME', $newPath);
+        $server->set('PHP_SELF', $newPath);
+        $this->attributes->set('url.mapped', $newPath);
+    }
+    
+    /**
+     * @param Respond $respond
+     */
+    protected function setRespond($respond)
+    {
+        $this->respond = $respond;
+    }
+
+    /**
+     * @return Respond
+     */
+    public function respond()
+    {
+        return $this->respond;
+    }
+    
     /**
      * @param string                       $name
      * @param Closure|StackHandleInterface $filter
