@@ -11,8 +11,7 @@
     "minimum-stability": "dev",
     "require": {
         "tuum/stack": "dev-master",
-        "tuum/locator": "dev-master",
-        "aura/router": "dev-master"
+        "tuum/locator": "dev-master"
     },
     "repositories": [
         {
