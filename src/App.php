@@ -35,6 +35,15 @@ class App
     }
 
     /**
+     * @param Container $container
+     * @return static
+     */
+    public static function forge($container)
+    {
+        return new static($container);
+    }
+
+    /**
      * @param string $key
      * @param array  $data
      * @return mixed

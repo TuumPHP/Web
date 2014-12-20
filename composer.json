@@ -10,6 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "symfony/http-foundation": "~2.5",
         "tuum/stack": "dev-master",
         "tuum/locator": "dev-master"
     },
