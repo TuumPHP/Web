@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Http;
 
-use Tuum\Web\Http\Redirect;
 use Tuum\Web\App;
 use Tuum\Web\NamedRoutesInterface\RouteNamesInterface;
 
@@ -80,7 +79,6 @@ class Respond
         $url      = substr($url, 0, 1) === '/' ? $url : '/' . $url;
         $url      = $this->getRequest()->getUriForPath($url);
         $response = new Redirect($url);
-        $response->setRequest($this->getRequest());
         return $response;
     }
 
@@ -92,7 +90,6 @@ class Respond
     {
         $url      = $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBaseUrl() . $url;
         $response = new Redirect($url);
-        $response->setRequest($this->getRequest());
         return $response;
     }
 
@@ -103,7 +100,6 @@ class Respond
     public function view($file)
     {
         $response = new View();
-        $response->setRequest($this->getRequest());
         $response->setFile($file);
         return $response;
     }
@@ -119,7 +115,6 @@ class Respond
             $file = $this->error_file;
         }
         $response = new View('', $status);
-        $response->setRequest($this->getRequest());
         $response->setFile($file);
         return $response;
     }
@@ -131,7 +126,6 @@ class Respond
     public function notFound($file = null)
     {
         $response = $this->error(Response::HTTP_NOT_FOUND, $file);
-        $response->setRequest($this->getRequest());
         return $response;
     }
 

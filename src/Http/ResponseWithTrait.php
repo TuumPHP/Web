@@ -1,15 +1,8 @@
 <?php
 namespace Tuum\Web\Http;
 
-use Symfony\Component\HttpFoundation\Request;
-
 trait ResponseWithTrait
 {
-    /**
-     * @var Request
-     */
-    protected $request;
-
     /**
      * @var array
      */
@@ -21,22 +14,6 @@ trait ResponseWithTrait
     public function getData()
     {
         return $this->data;
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return Request
-     */
-    protected function getRequest()
-    {
-        return $this->request;
     }
 
     /**
