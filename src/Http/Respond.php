@@ -37,7 +37,7 @@ class Respond
      */
     protected function getRequest()
     {
-        return $this->request ?: null;
+        return $this->request;
     }
 
     /**
@@ -74,12 +74,20 @@ class Respond
      * @param string $url
      * @return Redirect
      */
+    public function location($url)
+    {
+        return new Redirect($url);
+    }
+
+    /**
+     * @param string $url
+     * @return Redirect
+     */
     public function redirect($url)
     {
         $url      = substr($url, 0, 1) === '/' ? $url : '/' . $url;
         $url      = $this->getRequest()->getUriForPath($url);
-        $response = new Redirect($url);
-        return $response;
+        return $this->location($url);
     }
 
     /**
@@ -89,8 +97,7 @@ class Respond
     public function reload($url = null)
     {
         $url      = $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBaseUrl() . $url;
-        $response = new Redirect($url);
-        return $response;
+        return $this->location($url);
     }
 
     /**
