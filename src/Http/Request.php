@@ -34,6 +34,26 @@ class Request extends BaseRequest
         // set up session
         $session = new Session($storage);
         $request->setSession($session);
+        $request->setRespond(new Respond($request));
+
+        return $request;
+    }
+
+    /**
+     * @param string $path
+     * @param null|SessionStorageInterface $storage
+     * @return Request
+     */
+    public static function startPath($path, SessionStorageInterface $storage=null)
+    {
+        $server = [];
+        $server['PHP_SELF'] = $server['SCRIPT_NAME'] = $server['SCRIPT_FILENAME'] = $path;
+        $request = new Request([], [], [], [], [], $server);
+
+        // set up session
+        $session = new Session($storage);
+        $request->setSession($session);
+        $request->setRespond(new Respond($request));
 
         return $request;
     }

@@ -1,43 +1,31 @@
 <?php
-namespace tests\App\Stackable;
+namespace tests\Web\stacks;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use WScore\Pile\Stack\ReleaseInterface;
+use Tuum\Web\Http\Request;
+use Tuum\Web\Http\Response;
+use Tuum\Web\Stack\StackHandleInterface;
+use Tuum\Web\Stack\StackReleaseInterface;
 
-class Increment implements HttpKernelInterface, ReleaseInterface
+class Increment implements StackHandleInterface, StackReleaseInterface
 {
     /**
-     * Handles a Request to convert it to a Response.
-     *
-     * When $catch is true, the implementation must catch all exceptions
-     * and do its best to convert them to a Response instance.
-     *
-     * @param Request $request A Request instance
-     * @param int     $type The type of the request
-     *                          (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
-     * @param bool    $catch Whether to catch exceptions or not
-     *
-     * @return Response A Response instance
-     *
-     * @throws \Exception When an Exception occurs during processing
-     *
-     * @api
+     * @param Request $request
+     * @return null|Response|void
      */
-    public function handle( Request $request, $type = self::MASTER_REQUEST, $catch = true )
+    public function handle($request)
     {
     }
 
     /**
+     * @param Request  $request
      * @param Response $response
      * @return Response
      */
-    public function release( $response )
+    public function release($request, $response)
     {
-        if( $response ) {
-            $value = (int) $response->getContent() + 1;
-            $response->setContent( $value );
+        if ($response) {
+            $value = (int)$response->getContent() + 1;
+            $response->setContent($value);
         }
         return $response;
     }

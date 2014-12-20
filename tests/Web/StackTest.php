@@ -3,8 +3,9 @@ namespace tests\App\Stackable;
 
 use Tuum\Locator\Container;
 use Tuum\Web\App;
+use Tuum\Web\Http\Request;
 
-require_once( __DIR__.'/../autoloader.php' );
+require_once(__DIR__ . '/../autoloader.php');
 
 class StackTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,27 +18,48 @@ class StackTest extends \PHPUnit_Framework_TestCase
      * @var Container
      */
     var $container;
-    
+
     function setup()
     {
         $this->container = Container::forge();
-        $this->container->config(__DIR__.'/config');
+        $this->container->config(__DIR__ . '/config');
         $this->app = App::forge($this->container);
     }
-    
+
     function test0()
     {
-        $this->assertEquals( 'Tuum\Web\App', get_class($this->app) );
+        $this->assertEquals('Tuum\Web\App', get_class($this->app));
     }
 
     /**
      * @test
      */
-    function middleware_to_increment_contents()
+    function get_content_from_return_one()
     {
-        $app = $this->app;
-        $stack = $this->container->evaluate('return-one');
-        $app->push( $stack );
+        $app   = $this->app;
+        $app
+            ->push($this->container->evaluate('return-one'))
+        ;
+        $request  = Request::startPath('test');
+        $response = $this->app->handle($request);
+        $this->assertEquals('Tuum\Web\Http\Request', get_class($request));
+        $this->assertEquals('Tuum\Web\Http\Response', get_class($response));
+        $this->assertEquals('1', $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    function get_content_from_return_one_and_increment()
+    {
+        $app   = $this->app;
+        $app
+            ->push($this->container->evaluate('increment'))
+            ->push($this->container->evaluate('return-one'))
+        ;
+        $request  = Request::startPath('test');
+        $response = $this->app->handle($request);
+        $this->assertEquals('2', $response->getContent());
     }
 
 }
