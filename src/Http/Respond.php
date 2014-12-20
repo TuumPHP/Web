@@ -131,24 +131,13 @@ class Respond
 
     /**
      * @param string $name
+     * @param array  $args
      * @return Redirect
      */
-    public function named($name)
+    public function named($name, $args)
     {
-        $router = $this->request->attributes->get(App::ROUTE_NAMES);
-        if (!$router) {
-            throw new \BadMethodCallException('no named routes');
-        }
-        $url  = null;
-        $args = func_get_args();
-        array_shift($args);
-        if ($router instanceof RouteNamesInterface) {
-            $url = $router->get($name, $args);
-        }
-        if (!$url) {
-            throw new \InvalidArgumentException('no such named routes: ' . $name);
-        }
-        return new Redirect($url);
+        $response = new RedirectNamed($name, $args);
+        return $response;
     }
 
 }
