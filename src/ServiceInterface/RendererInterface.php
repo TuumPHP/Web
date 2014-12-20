@@ -7,6 +7,13 @@
  */
 namespace Tuum\Web\ServiceInterface;
 
+/**
+ * Interface RendererInterface
+ * 
+ * an interface for rendering a view file or a template. 
+ *
+ * @package Tuum\Web\ServiceInterface
+ */
 interface RendererInterface
 {
     /**
