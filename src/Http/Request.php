@@ -18,7 +18,7 @@ class Request extends BaseRequest
     /**
      * @var Respond
      */
-    protected $respond;
+    public $respond;
 
     /**
      * a sample for starting a new Request based on super globals.
@@ -62,7 +62,7 @@ class Request extends BaseRequest
      * @param string $path
      * @return Request
      */
-    public function createNewRequest($path)
+    public function duplicateWithNewPath($path)
     {
         $newPath    = $this->getBaseUrl() . $path;
         $server     = $this->server->all();
@@ -102,17 +102,6 @@ class Request extends BaseRequest
         return $this->respond;
     }
     
-    /**
-     * @param string                       $name
-     * @param Closure|StackHandleInterface $filter
-     * @return $this
-     */
-    public function setFilter($name, $filter)
-    {
-        $this->app->container->set($name, $filter);
-        return $this;
-    }
-
     /**
      * @param string $name
      * @return null|Response
