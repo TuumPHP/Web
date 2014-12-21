@@ -34,7 +34,7 @@ class Request extends BaseRequest
         // set up session
         $session = new Session($storage);
         $request->setSession($session);
-        $request->setRespond(new Respond($request));
+        $request->setRespond(new Respond());
 
         return $request;
     }
@@ -53,7 +53,7 @@ class Request extends BaseRequest
         // set up session
         $session = new Session($storage);
         $request->setSession($session);
-        $request->setRespond(new Respond($request));
+        $request->setRespond(new Respond());
 
         return $request;
     }
@@ -99,6 +99,7 @@ class Request extends BaseRequest
      */
     public function respond()
     {
+        $this->respond->setRequest($this);
         return $this->respond;
     }
     

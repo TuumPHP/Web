@@ -17,9 +17,16 @@ class Respond
     protected $error_file = 'error';
 
     /**
+     * 
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * @param Request $request
      */
-    public function __construct($request)
+    public function setRequest($request)
     {
         $this->request = $request;
     }
