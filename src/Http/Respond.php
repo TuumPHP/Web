@@ -14,7 +14,7 @@ class Respond
     protected $error_file = 'error';
 
     /**
-     * 
+     *
      */
     public function __construct()
     {
@@ -78,7 +78,7 @@ class Respond
      * @param string $url
      * @return Redirect
      */
-    public function location($url)
+    public function redirect($url)
     {
         return new Redirect($url);
     }
@@ -87,11 +87,10 @@ class Respond
      * @param string $url
      * @return Redirect
      */
-    public function redirect($url)
+    public function to($url = null)
     {
-        $url      = substr($url, 0, 1) === '/' ? $url : '/' . $url;
-        $url      = $this->getRequest()->getUriForPath($url);
-        return $this->location($url);
+        $url = $this->request->url()->to($url);
+        return $this->redirect((string)$url);
     }
 
     /**
@@ -100,8 +99,8 @@ class Respond
      */
     public function reload($url = null)
     {
-        $url      = $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBaseUrl() . $url;
-        return $this->location($url);
+        $url = $this->request->getPathInfo($url);
+        return $this->redirect((string)$url);
     }
 
     /**
