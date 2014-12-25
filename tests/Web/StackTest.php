@@ -1,6 +1,7 @@
 <?php
 namespace tests\App\Stackable;
 
+use tests\Web\stacks\MatchRoute;
 use Tuum\Locator\Container;
 use Tuum\Web\App;
 use Tuum\Web\Http\Redirect;
@@ -102,6 +103,69 @@ class StackTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('tested', $data['test']);
         $this->assertEquals(['error'=>'tested'], $data['messages']);
         $this->assertEquals('tested', $data['test']);
+    }
+
+    /**
+     * @test
+     */
+    function matching_route_without_root_returns_response_with_pathInfo()
+    {
+        $app   = $this->app;
+        /** @var MatchRoute $match */
+        $match = $this->container->evaluate('match-route');
+        $app->push($match);
+        /** @var View $response */
+
+        /*
+         * test for a no matching. get the path.
+         */
+        $request  = Request::startPath('path/to/test');
+        $response = $this->app->handle($request);
+        $this->assertEquals('Tuum\Web\Http\Response', get_class($response));
+        $this->assertEquals('path/to/test', $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    function matching_route_returns_response_with_rest_of_the_path()
+    {
+        /** @var MatchRoute $match */
+        /** @var View $response */
+        $app   = $this->app;
+        $match = $this->container->evaluate('match-route');
+        $match->setRoot('path/to');
+        $app->push($match);
+
+        /*
+         * test matching a path/to. get the rest of the path.
+         */
+        $request  = Request::startPath('path/to/test');
+        $response = $this->app->handle($request);
+        $this->assertEquals('Tuum\Web\Http\Response', get_class($response));
+        $this->assertEquals('/test', $response->getContent());
+
+    }
+
+    /**
+     * @test
+     */
+    function matching_route_fails_with_bad_root_returns_null()
+    {
+        /** @var MatchRoute $match */
+        /** @var View $response */
+        $app   = $this->app;
+        $match = $this->container->evaluate('match-route');
+        $match->setRoot('bad/path');
+        $app->push($match);
+
+        /*
+         * test matching a path/to. get the rest of the path.
+         */
+        $request  = Request::startPath('path/to/test');
+        $response = $this->app->handle($request);
+        $this->assertEquals(null, $response);
+
     }
 
 }
