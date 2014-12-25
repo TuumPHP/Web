@@ -4,7 +4,7 @@ namespace Tuum\Web\Http;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
-class RequestFactory
+class RequestFactory extends Request
 {
 
     /**
@@ -103,11 +103,7 @@ class RequestFactory
         $server['REQUEST_URI']  = $components['path'] . ('' !== $queryString ? '?' . $queryString : '');
         $server['QUERY_STRING'] = $queryString;
 
-        $request = new Request($query, [], [], [], [], $server);
-
-        $request->setRespond(new Respond());
-
-        return $request;
+        return new Request($query, [], [], [], [], $server);
     }
 
     /**
@@ -115,7 +111,8 @@ class RequestFactory
      */
     public static function setup($request)
     {
-        $request->setRespond(new Respond());
-        $request->setUrl(new UrlGenerator());
+        $request->respond  = new Respond();
+        $request->redirect = new Redirect();
+        $request->url      = new UrlGenerator();
     }
 }

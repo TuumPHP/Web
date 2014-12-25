@@ -13,22 +13,27 @@ class Request extends BaseRequest
     /**
      * @var App
      */
-    public $app;
+    protected $app;
 
     /**
      * @var Respond
      */
-    public $respond;
+    protected $respond;
+
+    /**
+     * @var Redirect
+     */
+    protected $redirect;
 
     /**
      * @var UrlGenerator
      */
-    public $url;
+    protected $url;
 
     /**
      * @var RouteNamesInterface
      */
-    public $named;
+    protected $named;
 
     /**
      * a sample for starting a new Request based on super globals.
@@ -90,20 +95,20 @@ class Request extends BaseRequest
     }
     
     /**
-     * @param Respond $respond
-     */
-    public function setRespond($respond)
-    {
-        $this->respond = $respond;
-    }
-
-    /**
      * @return Respond
      */
     public function respond()
     {
-        $this->respond->setRequest($this);
         return $this->respond;
+    }
+
+    /**
+     * @return Redirect
+     */
+    public function redirect()
+    {
+        $this->redirect->setRequest($this);
+        return $this->redirect;
     }
 
     /**
@@ -130,14 +135,6 @@ class Request extends BaseRequest
             return $filter($this);
         }
         return null;
-    }
-
-    /**
-     * @param UrlGenerator $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
     }
 
     /**

@@ -4,11 +4,6 @@ namespace Tuum\Web\Http;
 class Respond
 {
     /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
      * @var string
      */
     protected $error_file = 'error';
@@ -21,27 +16,11 @@ class Respond
     }
 
     /**
-     * @param Request $request
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
-
-    /**
      * @param string $error_file
      */
     public function setErrorFile($error_file)
     {
         $this->error_file = $error_file;
-    }
-
-    /**
-     * @return Request
-     */
-    protected function getRequest()
-    {
-        return $this->request;
     }
 
     /**
@@ -72,35 +51,6 @@ class Respond
     public function subRequest($request)
     {
         // todo: implement this method.
-    }
-
-    /**
-     * @param string $url
-     * @return RedirectResponse
-     */
-    public function redirect($url)
-    {
-        return new RedirectResponse($url);
-    }
-
-    /**
-     * @param string $url
-     * @return RedirectResponse
-     */
-    public function to($url = null)
-    {
-        $url = $this->request->url()->to($url);
-        return $this->redirect((string)$url);
-    }
-
-    /**
-     * @param string $url
-     * @return RedirectResponse
-     */
-    public function reload($url = null)
-    {
-        $url = $this->request->getPathInfo($url);
-        return $this->redirect((string)$url);
     }
 
     /**
@@ -137,17 +87,6 @@ class Respond
     {
         $response = $this->error(Response::HTTP_NOT_FOUND, $file);
         return $response;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $args
-     * @return RedirectResponse
-     */
-    public function named($name, $args)
-    {
-        $url = $this->request->named($name, $args);
-        return new RedirectResponse($url);
     }
 
 }
