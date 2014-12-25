@@ -16,7 +16,7 @@ class Stackable implements StackableInterface
     /**
      * the middleware. the Http Kernel that does the job.
      *
-     * @var StackHandleInterface|Object
+     * @var StackHandleInterface|AbstractStack
      */
     protected $middleware;
 
@@ -49,7 +49,7 @@ class Stackable implements StackableInterface
             }
             return null;
         }
-        if ($response = $this->applyFilters($request)) {
+        if ($response = $this->applyBeforeFilters($request)) {
             return $response;
         }
         return $this->_handle($request);
@@ -109,10 +109,11 @@ class Stackable implements StackableInterface
      * @param Request $request
      * @return bool
      */
-    protected function isMatch(
-        /** @noinspection PhpUnusedParameterInspection */
-        $request
-    ) {
+    protected function isMatch($request)
+    {
+        if (method_exists($this->middleware, 'isMatch')) {
+            return $this->middleware->isMatch($request);
+        }
         return true;
     }
 
@@ -122,16 +123,10 @@ class Stackable implements StackableInterface
      * @param Request $request
      * @return null
      */
-    protected function applyFilters(
-        /** @noinspection PhpUnusedParameterInspection */
-        $request
-    ) {
-        if (isset($this->middleware->beforeFilters)) {
-            foreach($this->middleware->beforeFilters as $filter ) {
-                if( $response = $request->filter($filter) ) {
-                    return $response;
-                }
-            }
+    protected function applyBeforeFilters($request)
+    {
+        if (method_exists($this->middleware, 'filterBefore')) {
+            return $this->middleware->filterBefore($request);
         }
         return null;
     }
