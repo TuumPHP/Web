@@ -76,16 +76,16 @@ class Respond
 
     /**
      * @param string $url
-     * @return Redirect
+     * @return RedirectResponse
      */
     public function redirect($url)
     {
-        return new Redirect($url);
+        return new RedirectResponse($url);
     }
 
     /**
      * @param string $url
-     * @return Redirect
+     * @return RedirectResponse
      */
     public function to($url = null)
     {
@@ -95,7 +95,7 @@ class Respond
 
     /**
      * @param string $url
-     * @return Redirect
+     * @return RedirectResponse
      */
     public function reload($url = null)
     {
@@ -142,12 +142,12 @@ class Respond
     /**
      * @param string $name
      * @param array  $args
-     * @return Redirect
+     * @return RedirectResponse
      */
     public function named($name, $args)
     {
         $url = $this->request->named($name, $args);
-        return new Redirect($url);
+        return new RedirectResponse($url);
     }
 
 }

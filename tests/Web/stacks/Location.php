@@ -7,7 +7,7 @@ class Location implements StackHandleInterface
 {
     public function handle( $request )
     {
-        return $request->respond()->location('tested-location.php')
+        return $request->respond()->redirect('tested-location.php')
             ->with( 'test', 'tested')
             ->withMessage('message-test')
             ->withInput(['more'=>'done'])

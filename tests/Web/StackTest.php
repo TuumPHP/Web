@@ -4,7 +4,7 @@ namespace tests\App\Stackable;
 use tests\Web\stacks\MatchRoute;
 use Tuum\Locator\Container;
 use Tuum\Web\App;
-use Tuum\Web\Http\Redirect;
+use Tuum\Web\Http\RedirectResponse;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\View;
 
@@ -75,9 +75,9 @@ class StackTest extends \PHPUnit_Framework_TestCase
             ->push($this->container->evaluate('location'))
         ;
         $request  = Request::startPath('test');
-        /** @var Redirect $response */
+        /** @var RedirectResponse $response */
         $response = $this->app->handle($request);
-        $this->assertEquals('Tuum\Web\Http\Redirect', get_class($response));
+        $this->assertEquals('Tuum\Web\Http\RedirectResponse', get_class($response));
         $this->assertEquals('tested-location.php', $response->getTargetUrl());
         $data = $response->getData();
         $this->assertEquals('tested', $data['test']);
