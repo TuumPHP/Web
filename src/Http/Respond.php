@@ -1,10 +1,7 @@
 <?php
 namespace Tuum\Web\Http;
 
-use Tuum\Web\App;
-use Tuum\Web\NamedRoutesInterface\RouteNamesInterface;
-
-class Respond 
+class Respond
 {
     /**
      * @var Request
@@ -150,17 +147,7 @@ class Respond
      */
     public function named($name, $args)
     {
-        $router = $this->request->attributes->get(App::ROUTE_NAMES);
-        if (!$router) {
-            throw new \BadMethodCallException('no named routes');
-        }
-        $url  = null;
-        if ($router instanceof RouteNamesInterface) {
-            $url = $router->get($name, $args);
-        }
-        if (!$url) {
-            throw new \InvalidArgumentException('no such named routes: ' . $name);
-        }
+        $url = $this->request->named($name, $args);
         return new Redirect($url);
     }
 
