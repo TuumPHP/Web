@@ -4,6 +4,11 @@ namespace Tuum\Web\Http;
 class Respond
 {
     /**
+     * @var Request
+     */
+    protected $request;
+    
+    /**
      * @var string
      */
     protected $error_file = 'error';
@@ -13,6 +18,14 @@ class Respond
      */
     public function __construct()
     {
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
     }
 
     /**
@@ -27,7 +40,7 @@ class Respond
      * @param $content
      * @return Response
      */
-    public function text($content)
+    public function html($content)
     {
         $response = new Response($content);
         return $response;
@@ -61,6 +74,7 @@ class Respond
     {
         $response = new View();
         $response->setFile($file);
+        $response->fill($this->request->attributes->get('data'));
         return $response;
     }
 
@@ -76,6 +90,7 @@ class Respond
         }
         $response = new View('', $status);
         $response->setFile($file);
+        $response->fill($this->request->attributes->get('data'));
         return $response;
     }
 

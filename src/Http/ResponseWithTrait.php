@@ -17,6 +17,16 @@ trait ResponseWithTrait
     }
 
     /**
+     * @param array $data
+     * @return $this
+     */    
+    public function fill(array $data)
+    {
+        $this->data = array_merge( $this->data, $data);
+        return $this;
+    }
+
+    /**
      * @param string $key
      * @param mixed  $value
      * @return $this

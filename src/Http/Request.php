@@ -99,6 +99,7 @@ class Request extends BaseRequest
      */
     public function respond()
     {
+        $this->respond->setRequest($this);
         return $this->respond;
     }
 
