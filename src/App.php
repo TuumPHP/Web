@@ -3,12 +3,13 @@ namespace Tuum\Web;
 
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
+use Tuum\Web\ServiceInterface\ContainerInterface;
 use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
 use Tuum\Web\Stack\StackHandleInterface;
 use Tuum\Locator\Container;
 
-class App
+class App implements ContainerInterface
 {
     const TOKEN_NAME = 'token';
     const FLASH_NAME = 'flash';
@@ -48,9 +49,30 @@ class App
      * @param array  $data
      * @return mixed
      */
+    public function __call($key, $data=[])
+    {
+        return $this->get($key, $data);
+    }
+
+    /**
+     * @param string $key
+     * @param array  $data
+     * @return mixed
+     */
     public function get($key, $data = [])
     {
         return $this->container->get($key, $data);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     * @return $this
+     */
+    public function set($key, $value)
+    {
+        $this->container->set($key,$value);
+        return $this;
     }
 
     // +----------------------------------------------------------------------+
@@ -75,6 +97,7 @@ class App
      */
     public function handle($request)
     {
+        $request->setApp($this);
         return $this->stack->handle($request);
     }
 

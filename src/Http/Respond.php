@@ -37,6 +37,18 @@ class Respond
     }
 
     /**
+     * @param string $content
+     * @param string $charset
+     * @return Response
+     */
+    public function text($content, $charset='UTF-8')
+    {
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'text/html; charset='.$charset);
+        return $response;
+    }
+
+    /**
      * @param $content
      * @return Response
      */
