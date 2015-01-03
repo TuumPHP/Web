@@ -1,6 +1,8 @@
 <?php
 namespace Tuum\Web\Http;
 
+use Tuum\Web\App;
+
 class Respond
 {
     /**
@@ -86,7 +88,7 @@ class Respond
     {
         $response = new View();
         $response->setFile($file);
-        $response->fill($this->request->attributes->get('data'));
+        $response->fill($this->request->attributes->get(App::VIEW_DATA));
         return $response;
     }
 
@@ -102,7 +104,7 @@ class Respond
         }
         $response = new View('', $status);
         $response->setFile($file);
-        $response->fill($this->request->attributes->get('data'));
+        $response->fill($this->request->attributes->get(App::VIEW_DATA));
         return $response;
     }
 
