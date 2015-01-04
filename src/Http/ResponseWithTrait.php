@@ -1,6 +1,8 @@
 <?php
 namespace Tuum\Web\Http;
 
+use Traversable;
+
 trait ResponseWithTrait
 {
     /**
@@ -20,9 +22,16 @@ trait ResponseWithTrait
      * @param array $data
      * @return $this
      */    
-    public function fill(array $data)
+    public function fill($data)
     {
-        $this->data = array_merge( $this->data, $data);
+        if (is_array($data)) {
+            $this->data = array_merge( $this->data, $data);
+        }
+        elseif ($data instanceof Traversable) {
+            foreach ($data as $name => $value) {
+                $this->data[$name] = $value;
+            }
+        }
         return $this;
     }
 

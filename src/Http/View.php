@@ -36,18 +36,4 @@ class View extends Response
         return $this->file;
     }
 
-    /**
-     * @param array|Traversable $data
-     * @return $this
-     */
-    public function fill($data)
-    {
-        if (is_array($data) || $data instanceof Traversable) {
-            foreach ($data as $name => $value) {
-                $this->data[$name] = $value;
-            }
-        }
-        return $this;
-    }
-
 }
