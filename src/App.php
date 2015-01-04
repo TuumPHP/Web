@@ -8,7 +8,6 @@ use Tuum\Web\ServiceInterface\RendererInterface;
 use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
 use Tuum\Web\Stack\StackHandleInterface;
-use Tuum\Locator\Container;
 
 class App implements ContainerInterface
 {
@@ -21,7 +20,7 @@ class App implements ContainerInterface
     const RENDER_ENGINE = 'view.engine';
     
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     public $container;
 
@@ -31,7 +30,7 @@ class App implements ContainerInterface
     public $stack;
 
     /**
-     * @param Container $container
+     * @param ContainerInterface $container
      */
     public function __construct($container)
     {
@@ -39,7 +38,7 @@ class App implements ContainerInterface
     }
 
     /**
-     * @param Container $container
+     * @param ContainerInterface $container
      * @return static
      */
     public static function forge($container)
