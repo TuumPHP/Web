@@ -1,6 +1,8 @@
 <?php
 namespace Tuum\Web;
 
+use Tuum\Locator\Container;
+use Tuum\Locator\Locator;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 use Tuum\Web\ServiceInterface\ContainerInterface;
@@ -9,6 +11,15 @@ use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
 use Tuum\Web\Stack\StackHandleInterface;
 
+/**
+ * Class App
+ *
+ * @package Tuum\Web
+ *          web application.
+ *
+ *
+ *          
+ */
 class App implements ContainerInterface
 {
     const VIEW_DATA = 'data';
@@ -17,7 +28,7 @@ class App implements ContainerInterface
     const ROUTE_PARAM = 'params';
     const ROUTE_NAMES = 'namedRoutes';
     const CONTROLLER  = 'controller';
-    const RENDER_ENGINE = 'view.engine';
+    const RENDER_ENGINE = 'renderer';
     
     /**
      * @var ContainerInterface
@@ -41,8 +52,9 @@ class App implements ContainerInterface
      * @param ContainerInterface $container
      * @return static
      */
-    public static function forge($container)
+    public static function forge($container=null)
     {
+        $container = $container ?: new Container(new Locator());
         return new static($container);
     }
 
@@ -89,7 +101,7 @@ class App implements ContainerInterface
     /**
      * @return RendererInterface
      */
-    public function getRenderer()
+    public function renderer()
     {
         $engine = $this->get(App::RENDER_ENGINE);
         if( is_string($engine)) {
