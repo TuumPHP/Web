@@ -5,8 +5,6 @@ use Traversable;
 
 class View extends Response
 {
-    use ResponseWithTrait;
-
     /**
      * @var string
      */

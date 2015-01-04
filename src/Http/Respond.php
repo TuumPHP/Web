@@ -11,11 +11,6 @@ class Respond
     protected $request;
     
     /**
-     * @var string
-     */
-    protected $error_file = 'error';
-
-    /**
      *
      */
     public function __construct()
@@ -28,14 +23,6 @@ class Respond
     public function setRequest($request)
     {
         $this->request = $request;
-    }
-
-    /**
-     * @param string $error_file
-     */
-    public function setErrorFile($error_file)
-    {
-        $this->error_file = $error_file;
     }
 
     /**
@@ -94,27 +81,21 @@ class Respond
 
     /**
      * @param int    $status
-     * @param string $file
-     * @return View
+     * @return Response
      */
-    public function error($status = Response::HTTP_INTERNAL_SERVER_ERROR, $file = null)
+    public function error($status = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        if (!$file) {
-            $file = $this->error_file;
-        }
-        $response = new View('', $status);
-        $response->setFile($file);
+        $response = new Response('', $status);
         $response->fill($this->request->attributes->get(App::VIEW_DATA));
         return $response;
     }
 
     /**
-     * @param null $file
-     * @return View
+     * @return Response
      */
-    public function notFound($file = null)
+    public function notFound()
     {
-        $response = $this->error(Response::HTTP_NOT_FOUND, $file);
+        $response = $this->error(Response::HTTP_NOT_FOUND);
         return $response;
     }
 
