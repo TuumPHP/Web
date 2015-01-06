@@ -11,10 +11,14 @@ trait ResponseWithTrait
     public $data = [];
 
     /**
+     * @param null|string $key
      * @return array
      */
-    public function getData()
+    public function getData($key=null)
     {
+        if($key) {
+            return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+        }
         return $this->data;
     }
 
