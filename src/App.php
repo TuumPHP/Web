@@ -75,6 +75,7 @@ class App implements ContainerInterface
      */
     public function get($key, $data = [])
     {
+        $data['app'] = $this;
         return $this->container->get($key, $data);
     }
 
