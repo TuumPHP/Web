@@ -15,5 +15,5 @@ interface RouteNamesInterface
      * @param array  $args
      * @return string
      */
-    public function get($name, $args);
+    public function get($name, $args=[]);
 }

@@ -2,6 +2,7 @@
 namespace Tuum\Web\ServiceInterface;
 
 use Tuum\Web\Http\Request;
+use Tuum\Web\NamedRoutesInterface\RouteNamesInterface;
 
 /**
  * Interface RouterInterface
@@ -13,8 +14,24 @@ use Tuum\Web\Http\Request;
 interface RouterInterface
 {
     /**
+     * matches against $request. 
+     * returns matched result, or false if not matched. 
+     * 
      * @param Request $request
      * @return mixed
      */
     public function match($request);
+
+    /**
+     * get router to set routes. 
+     * returns various router object. 
+     * 
+     * @return mixed
+     */
+    public function router();
+
+    /**
+     * @return RouteNamesInterface
+     */
+    public function namedRoutes();
 }
