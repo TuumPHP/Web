@@ -168,4 +168,24 @@ class Request extends BaseRequest
         }
         return $this->named->get($name, $arg);
     }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function bag($name)
+    {
+        return $this->attributes->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $data
+     * @return $this
+     */    
+    public function keep($name, $data)
+    {
+        $this->attributes->set($name, $data);
+        return $this;
+    }
 }
