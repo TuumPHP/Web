@@ -2,7 +2,7 @@
 namespace Tuum\Web\ServiceInterface;
 
 use Tuum\Web\Http\Request;
-use Tuum\Web\NamedRoutesInterface\RouteNamesInterface;
+use Tuum\Web\ServiceInterface\RouteNamesInterface;
 
 /**
  * Interface RouterInterface

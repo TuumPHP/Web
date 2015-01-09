@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\Web\NamedRoutesInterface;
+namespace Tuum\Web\ServiceInterface;
 
 /**
  * Interface RouteNamesInterface

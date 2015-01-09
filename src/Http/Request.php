@@ -4,7 +4,7 @@ namespace Tuum\Web\Http;
 use Closure;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
-use Tuum\Web\NamedRoutesInterface\RouteNamesInterface;
+use Tuum\Web\ServiceInterface\RouteNamesInterface;
 use Tuum\Web\Stack\StackHandleInterface;
 use Tuum\Web\App;
 
