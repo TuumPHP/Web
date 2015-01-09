@@ -22,6 +22,7 @@ use Tuum\Web\Stack\WebHandleInterface;
  */
 class App implements ContainerInterface
 {
+    const DEBUG = 'debug';
     const VIEW_DATA = 'data';
     const TOKEN_NAME = 'token';
     const FLASH_NAME = 'flash';
@@ -29,7 +30,7 @@ class App implements ContainerInterface
     const ROUTE_NAMES = 'namedRoutes';
     const CONTROLLER  = 'controller';
     const RENDER_ENGINE = 'renderer';
-    
+
     /**
      * @var ContainerInterface
      */
