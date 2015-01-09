@@ -1,9 +1,9 @@
 <?php
 namespace tests\Web\stacks;
 
-use Tuum\Web\Stack\StackHandleInterface;
+use Tuum\Web\Stack\WebHandleInterface;
 
-class Location implements StackHandleInterface
+class Location implements WebHandleInterface
 {
     public function handle( $request )
     {

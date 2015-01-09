@@ -4,7 +4,7 @@ namespace Tuum\Web\Stack;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
-interface StackReleaseInterface
+interface WebReleaseInterface
 {
     /**
      * @param Request  $request

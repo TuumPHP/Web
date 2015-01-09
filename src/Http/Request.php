@@ -5,7 +5,7 @@ use Closure;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Tuum\Web\ServiceInterface\RouteNamesInterface;
-use Tuum\Web\Stack\StackHandleInterface;
+use Tuum\Web\Stack\WebHandleInterface;
 use Tuum\Web\App;
 
 class Request extends BaseRequest
@@ -129,7 +129,7 @@ class Request extends BaseRequest
         if (!$filter = $this->app->get($name)) {
             return null;
         }
-        if ($filter instanceof StackHandleInterface) {
+        if ($filter instanceof WebHandleInterface) {
             return $filter->handle($this);
         }
         if ($filter instanceof Closure) {

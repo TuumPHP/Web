@@ -16,7 +16,7 @@ class Stackable implements StackableInterface
     /**
      * the middleware. the Http Kernel that does the job.
      *
-     * @var StackHandleInterface|AbstractStack
+     * @var WebHandleInterface|AbstractStack
      */
     protected $middleware;
 
@@ -30,9 +30,9 @@ class Stackable implements StackableInterface
     /**
      * wraps the Http Kernel that does the job with Stackable Http Kernel.
      *
-     * @param StackHandleInterface $middleware
+     * @param WebHandleInterface $middleware
      */
-    public function __construct(StackHandleInterface $middleware)
+    public function __construct(WebHandleInterface $middleware)
     {
         $this->middleware = $middleware;
     }
@@ -69,17 +69,17 @@ class Stackable implements StackableInterface
             $response = $this->next->handle($request);
         }
         // process the response if PileInterface is implemented.
-        if ($this->middleware instanceof StackReleaseInterface) {
+        if ($this->middleware instanceof WebReleaseInterface) {
             $response = $this->middleware->release($request, $response);
         }
         return $response;
     }
 
     /**
-     * @param StackHandleInterface $handler
+     * @param WebHandleInterface $handler
      * @return StackableInterface|static
      */
-    public static function makeStack(StackHandleInterface $handler)
+    public static function makeStack(WebHandleInterface $handler)
     {
         if (!$handler instanceof StackableInterface) {
             $handler = new static($handler);
@@ -91,10 +91,10 @@ class Stackable implements StackableInterface
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param StackHandleInterface $handler
+     * @param WebHandleInterface $handler
      * @return $this
      */
-    public function push(StackHandleInterface $handler)
+    public function push(WebHandleInterface $handler)
     {
         if ($this->next) {
             return $this->next->push($handler);

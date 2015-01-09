@@ -1,14 +1,14 @@
 <?php
 namespace Tuum\Web\Stack;
 
-interface StackableInterface extends StackHandleInterface
+interface StackableInterface extends WebHandleInterface
 {
     /**
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param StackHandleInterface $handler
+     * @param WebHandleInterface $handler
      * @return $this
      */
-    public function push(StackHandleInterface $handler);
+    public function push(WebHandleInterface $handler);
 }

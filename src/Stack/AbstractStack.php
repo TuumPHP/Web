@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
-abstract class AbstractStack implements StackHandleInterface
+abstract class AbstractStack implements WebHandleInterface
 {
     use StackMatchTrait;
 

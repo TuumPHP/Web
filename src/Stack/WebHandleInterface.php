@@ -4,7 +4,7 @@ namespace Tuum\Web\Stack;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
-interface StackHandleInterface
+interface WebHandleInterface
 {
     /**
      * @param Request $request

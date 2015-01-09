@@ -16,12 +16,12 @@ trait StackFilterTrait
     /**
      * list of filters to apply if matched.
      *
-     * @var string[]|Closure[]|StackHandleInterface[]
+     * @var string[]|Closure[]|WebHandleInterface[]
      */
     protected $_beforeFilters = [];
 
     /**
-     * @param string|Closure|StackHandleInterface $filter
+     * @param string|Closure|WebHandleInterface $filter
      */
     public function setBeforeFilter($filter)
     {
