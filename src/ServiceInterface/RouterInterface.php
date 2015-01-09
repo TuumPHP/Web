@@ -31,7 +31,8 @@ interface RouterInterface
     public function router();
 
     /**
+     * @param Request $request
      * @return RouteNamesInterface
      */
-    public function namedRoutes();
+    public function namedRoutes($request);
 }
