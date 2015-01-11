@@ -44,11 +44,11 @@ class Stackable implements StackableInterface
      * @param Request $request
      * @return null|Response
      */
-    public function handle($request)
+    public function execute($request)
     {
         if (!$this->isMatch($request)) {
             if ($this->next) {
-                return $this->next->handle($request);
+                return $this->next->execute($request);
             }
             return null;
         }
@@ -69,7 +69,7 @@ class Stackable implements StackableInterface
 
         // if no response, invoke the next pile of handler.
         if (!$response && $this->next) {
-            $response = $this->next->handle($request);
+            $response = $this->next->execute($request);
         }
         // process the response if PileInterface is implemented.
         if ($this->app instanceof AppReleaseInterface) {

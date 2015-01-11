@@ -20,7 +20,7 @@ use Tuum\Web\App\AppHandleInterface;
  *
  *          
  */
-class App implements ContainerInterface
+class App implements ContainerInterface, AppHandleInterface
 {
     const DEBUG = 'debug';
     const VIEW_DATA = 'data';
@@ -134,7 +134,7 @@ class App implements ContainerInterface
     public function handle($request)
     {
         $request->setApp($this);
-        return $this->stack->handle($request);
+        return $this->stack->execute($request);
     }
 
 }
