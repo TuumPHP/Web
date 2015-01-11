@@ -1,6 +1,9 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Tuum\Web\App\AbstractApp;
+use Tuum\Web\App\AppHandleInterface;
+use Tuum\Web\App\AppReleaseInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
@@ -16,9 +19,9 @@ class Stackable implements StackableInterface
     /**
      * the middleware. the Http Kernel that does the job.
      *
-     * @var WebHandleInterface|AbstractStack
+     * @var AppHandleInterface|AbstractApp
      */
-    protected $middleware;
+    protected $app;
 
     /**
      * pile of Stackable Http Kernels.
@@ -30,11 +33,11 @@ class Stackable implements StackableInterface
     /**
      * wraps the Http Kernel that does the job with Stackable Http Kernel.
      *
-     * @param WebHandleInterface $middleware
+     * @param AppHandleInterface $app
      */
-    public function __construct(WebHandleInterface $middleware)
+    public function __construct(AppHandleInterface $app)
     {
-        $this->middleware = $middleware;
+        $this->app = $app;
     }
 
     /**
@@ -62,24 +65,24 @@ class Stackable implements StackableInterface
     public function _handle($request)
     {
         // get the response from the own handler.
-        $response = $this->middleware->handle($request);
+        $response = $this->app->handle($request);
 
         // if no response, invoke the next pile of handler.
         if (!$response && $this->next) {
             $response = $this->next->handle($request);
         }
         // process the response if PileInterface is implemented.
-        if ($this->middleware instanceof WebReleaseInterface) {
-            $response = $this->middleware->release($request, $response);
+        if ($this->app instanceof AppReleaseInterface) {
+            $response = $this->app->release($request, $response);
         }
         return $response;
     }
 
     /**
-     * @param WebHandleInterface $handler
+     * @param AppHandleInterface $handler
      * @return StackableInterface|static
      */
-    public static function makeStack(WebHandleInterface $handler)
+    public static function makeStack(AppHandleInterface $handler)
     {
         if (!$handler instanceof StackableInterface) {
             $handler = new static($handler);
@@ -91,10 +94,10 @@ class Stackable implements StackableInterface
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param WebHandleInterface $handler
+     * @param AppHandleInterface $handler
      * @return $this
      */
-    public function push(WebHandleInterface $handler)
+    public function push(AppHandleInterface $handler)
     {
         if ($this->next) {
             return $this->next->push($handler);
@@ -111,8 +114,8 @@ class Stackable implements StackableInterface
      */
     protected function isMatch($request)
     {
-        if (method_exists($this->middleware, 'isMatch')) {
-            return $this->middleware->isMatch($request);
+        if (method_exists($this->app, 'isMatch')) {
+            return $this->app->isMatch($request);
         }
         return true;
     }
@@ -125,8 +128,8 @@ class Stackable implements StackableInterface
      */
     protected function applyBeforeFilters($request)
     {
-        if (method_exists($this->middleware, 'filterBefore')) {
-            return $this->middleware->filterBefore($request);
+        if (method_exists($this->app, 'filterBefore')) {
+            return $this->app->filterBefore($request);
         }
         return null;
     }

@@ -3,10 +3,10 @@ namespace tests\Web\stacks;
 
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
-use Tuum\Web\Stack\WebHandleInterface;
-use Tuum\Web\Stack\WebReleaseInterface;
+use Tuum\Web\App\AppHandleInterface;
+use Tuum\Web\App\AppReleaseInterface;
 
-class Increment implements WebHandleInterface, WebReleaseInterface
+class Increment implements AppHandleInterface, AppReleaseInterface
 {
     /**
      * @param Request $request

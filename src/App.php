@@ -9,7 +9,7 @@ use Tuum\Web\ServiceInterface\ContainerInterface;
 use Tuum\Web\ServiceInterface\RendererInterface;
 use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
-use Tuum\Web\Stack\WebHandleInterface;
+use Tuum\Web\App\AppHandleInterface;
 
 /**
  * Class App
@@ -115,7 +115,7 @@ class App implements ContainerInterface
     //  managing instance and stacks
     // +----------------------------------------------------------------------+
     /**
-     * @param WebHandleInterface $stack
+     * @param AppHandleInterface $stack
      * @return StackableInterface
      */
     public function push($stack)

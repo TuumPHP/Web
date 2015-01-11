@@ -1,10 +1,10 @@
 <?php
-namespace Tuum\Web\Stack;
+namespace Tuum\Web\App;
 
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
-interface WebHandleInterface
+interface AppHandleInterface
 {
     /**
      * @param Request $request

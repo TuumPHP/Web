@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\Web\Stack;
+namespace Tuum\Web\App;
 
 use Tuum\Web\Http\Request;
 
@@ -9,7 +9,7 @@ use Tuum\Web\Http\Request;
  *
  * a trait for a simple match list of roots against path-info.
  */
-trait StackMatchTrait
+trait AppMatchTrait
 {
     /**
      * matching conditions; list of paths.

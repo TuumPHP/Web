@@ -1,9 +1,9 @@
 <?php
 namespace tests\Web\stacks;
 
-use Tuum\Web\Stack\WebHandleInterface;
+use Tuum\Web\App\AppHandleInterface;
 
-class ReturnOne implements WebHandleInterface
+class ReturnOne implements AppHandleInterface
 {
     public function handle( $request )
     {

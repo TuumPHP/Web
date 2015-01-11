@@ -3,9 +3,9 @@ namespace tests\Web\stacks;
 
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
-use Tuum\Web\Stack\AbstractStack;
+use Tuum\Web\App\AbstractApp;
 
-class MatchRoute extends AbstractStack
+class MatchRoute extends AbstractApp
 {
     /**
      * @param Request $request

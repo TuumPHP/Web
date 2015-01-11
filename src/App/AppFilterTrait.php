@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\Web\Stack;
+namespace Tuum\Web\App;
 
 use Closure;
 use Tuum\Web\Http\Request;
@@ -11,17 +11,17 @@ use Tuum\Web\Http\Response;
  *
  * apply filters if matched, but before the main handle.
  */
-trait StackFilterTrait
+trait AppFilterTrait
 {
     /**
      * list of filters to apply if matched.
      *
-     * @var string[]|Closure[]|WebHandleInterface[]
+     * @var string[]|Closure[]|AppHandleInterface[]
      */
     protected $_beforeFilters = [];
 
     /**
-     * @param string|Closure|WebHandleInterface $filter
+     * @param string|Closure|AppHandleInterface $filter
      */
     public function setBeforeFilter($filter)
     {
