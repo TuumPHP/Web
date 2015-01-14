@@ -9,6 +9,7 @@ use Tuum\Web\Http\Response;
 
 /**
  * Class Pile
+ *
  * @package WScore\Pile
  *
  * creates a pile of handlers for http request.
@@ -41,39 +42,54 @@ class Stackable implements StackableInterface
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
+     * @param Response $response
      * @return null|Response
      */
-    public function execute($request)
+    public function execute($request, $response)
     {
+        // if not matched, ignore this middleware and execute the next handler
         if (!$this->isMatch($request)) {
-            if ($this->next) {
-                return $this->next->execute($request);
-            }
-            return null;
+            return $this->execNext($request, $response);
         }
-        if ($response = $this->applyBeforeFilters($request)) {
-            return $response;
+        // apply filters, if $response is not set. 
+        if (!$response) {
+            $response = $this->applyBeforeFilters($request);
         }
-        return $this->_handle($request);
+        return $this->_handle($request, $response);
+     }
+
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @return Response
+     */
+    public function _handle($request, $response)
+    {
+        // for AppHandleInterface: execute the handler if $response is not set yet. 
+        if (!$response && ( $this->app instanceof AppHandleInterface || $this->app instanceof \Closure ) ) {
+            $response = $this->app->handle($request);
+        }
+        // execute next handler, always.
+        $response = $this->execNext($request, $response);
+        
+        // for AppReleaseInterface: execute the handler, always. 
+        if ($this->app instanceof AppReleaseInterface) {
+            $response = $this->app->release($request, $response);
+        }
+        return $response;
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
+     * @param Response $response
      * @return Response
      */
-    public function _handle($request)
+    protected function execNext($request, $response)
     {
-        // get the response from the own handler.
-        $response = $this->app->handle($request);
-
-        // if no response, invoke the next pile of handler.
-        if (!$response && $this->next) {
-            $response = $this->next->execute($request);
-        }
-        // process the response if PileInterface is implemented.
-        if ($this->app instanceof AppReleaseInterface) {
-            $response = $this->app->release($request, $response);
+        // execute the next handler.
+        if ($this->next) {
+            return $this->next->execute($request, $response);
         }
         return $response;
     }

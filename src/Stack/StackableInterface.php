@@ -8,10 +8,11 @@ use Tuum\Web\Http\Response;
 interface StackableInterface 
 {
     /**
-     * @param Request $request
-     * @return Response|null
+     * @param Request  $request
+     * @param Response $response
+     * @return null|Response
      */
-    public function execute($request);
+    public function execute($request, $response);
 
     /**
      * stack up the SplStack.

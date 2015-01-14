@@ -128,13 +128,13 @@ class App implements ContainerInterface, AppHandleInterface
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @return Response
      */
     public function handle($request)
     {
         $request->setApp($this);
-        return $this->stack->execute($request);
+        return $this->stack->execute($request, null);
     }
 
 }
