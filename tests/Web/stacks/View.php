@@ -5,7 +5,7 @@ use Tuum\Web\App\AppHandleInterface;
 
 class View implements AppHandleInterface
 {
-    public function handle( $request )
+    public function __invoke( $request )
     {
         return $request->respond()->view('tested-view')
             ->withErrorMsg( 'tested')

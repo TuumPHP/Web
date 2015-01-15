@@ -1,8 +1,8 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Tuum\Web\App\AbstractApp;
 use Tuum\Web\App\AppHandleInterface;
+use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\App\AppReleaseInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
@@ -20,7 +20,7 @@ class Stackable implements StackableInterface
     /**
      * the middleware. the Http Kernel that does the job.
      *
-     * @var AppHandleInterface|AbstractApp
+     * @var AppMarkerInterface
      */
     protected $app;
 
@@ -34,9 +34,9 @@ class Stackable implements StackableInterface
     /**
      * wraps the Http Kernel that does the job with Stackable Http Kernel.
      *
-     * @param AppHandleInterface $app
+     * @param AppMarkerInterface $app
      */
-    public function __construct(AppHandleInterface $app)
+    public function __construct(AppMarkerInterface $app)
     {
         $this->app = $app;
     }
@@ -66,16 +66,17 @@ class Stackable implements StackableInterface
      */
     public function _handle($request, $response)
     {
-        // for AppHandleInterface: execute the handler if $response is not set yet. 
-        if (!$response && ( $this->app instanceof AppHandleInterface || $this->app instanceof \Closure ) ) {
-            $response = $this->app->handle($request);
+        // for AppHandleInterface: execute the handler if $response is not set yet.
+        $app = $this->app;
+        if (!$response && ( $app instanceof AppHandleInterface ) ) {
+            $response = $app->__invoke($request);
         }
         // execute next handler, always.
         $response = $this->execNext($request, $response);
         
         // for AppReleaseInterface: execute the handler, always. 
-        if ($this->app instanceof AppReleaseInterface) {
-            $response = $this->app->release($request, $response);
+        if ($app instanceof AppReleaseInterface) {
+            $response = $app->__invoke($request, $response);
         }
         return $response;
     }
@@ -95,10 +96,10 @@ class Stackable implements StackableInterface
     }
 
     /**
-     * @param AppHandleInterface $handler
+     * @param AppMarkerInterface $handler
      * @return StackableInterface|static
      */
-    public static function makeStack(AppHandleInterface $handler)
+    public static function makeStack(AppMarkerInterface $handler)
     {
         if (!$handler instanceof StackableInterface) {
             $handler = new static($handler);
@@ -110,10 +111,10 @@ class Stackable implements StackableInterface
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param AppHandleInterface $handler
+     * @param AppMarkerInterface $handler
      * @return $this
      */
-    public function push(AppHandleInterface $handler)
+    public function push(AppMarkerInterface $handler)
     {
         if ($this->next) {
             return $this->next->push($handler);

@@ -130,7 +130,7 @@ class Request extends BaseRequest
             return null;
         }
         if ($filter instanceof AppHandleInterface) {
-            return $filter->handle($this);
+            return $filter->__invoke($this);
         }
         if ($filter instanceof Closure) {
             return $filter($this);

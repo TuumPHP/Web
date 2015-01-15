@@ -2,6 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Tuum\Web\App\AppHandleInterface;
+use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
@@ -18,8 +19,8 @@ interface StackableInterface
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param AppHandleInterface $handler
+     * @param AppMarkerInterface $handler
      * @return $this
      */
-    public function push(AppHandleInterface $handler);
+    public function push(AppMarkerInterface $handler);
 }

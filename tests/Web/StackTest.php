@@ -44,7 +44,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
             ->push($this->container->evaluate('return-one'))
         ;
         $request  = Request::startPath('test');
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals('Tuum\Web\Http\Request', get_class($request));
         $this->assertEquals('Tuum\Web\Http\Response', get_class($response));
         $this->assertEquals('1', $response->getContent());
@@ -61,7 +61,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
             ->push($this->container->evaluate('return-one'))
         ;
         $request  = Request::startPath('test');
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals('2', $response->getContent());
     }
 
@@ -76,7 +76,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
         ;
         $request  = Request::startPath('test');
         /** @var RedirectResponse $response */
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals('Tuum\Web\Http\RedirectResponse', get_class($response));
         $this->assertEquals('tested-location.php', $response->getTargetUrl());
         $data = $response->getData();
@@ -96,7 +96,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
         ;
         $request  = Request::startPath('test');
         /** @var View $response */
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals('Tuum\Web\Http\View', get_class($response));
         $this->assertEquals('tested-view', $response->getFile());
         $data = $response->getData();
@@ -120,7 +120,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
          * test for a no matching. get the path.
          */
         $request  = Request::startPath('path/to/test');
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals('Tuum\Web\Http\Response', get_class($response));
         $this->assertEquals('path/to/test', $response->getContent());
     }
@@ -141,7 +141,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
          * test matching a path/to. get the rest of the path.
          */
         $request  = Request::startPath('path/to/test');
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals('Tuum\Web\Http\Response', get_class($response));
         $this->assertEquals('/test', $response->getContent());
 
@@ -163,7 +163,7 @@ class StackTest extends \PHPUnit_Framework_TestCase
          * test matching a path/to. get the rest of the path.
          */
         $request  = Request::startPath('path/to/test');
-        $response = $this->app->handle($request);
+        $response = $this->app->__invoke($request);
         $this->assertEquals(null, $response);
 
     }

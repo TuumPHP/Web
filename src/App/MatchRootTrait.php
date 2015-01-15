@@ -9,7 +9,7 @@ use Tuum\Web\Http\Request;
  *
  * a trait for a simple match list of roots against path-info.
  */
-trait AppMatchTrait
+trait MatchRootTrait
 {
     /**
      * matching conditions; list of paths.

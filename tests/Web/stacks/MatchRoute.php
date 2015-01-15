@@ -11,7 +11,7 @@ class MatchRoute extends AbstractApp
      * @param Request $request
      * @return Response|null
      */
-    public function handle($request)
+    public function __invoke($request)
     {
         return $request->respond()->text($request->getPathInfo());
 

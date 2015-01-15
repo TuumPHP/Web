@@ -4,12 +4,12 @@ namespace Tuum\Web\App;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
-interface AppReleaseInterface
+interface AppReleaseInterface extends AppMarkerInterface
 {
     /**
      * @param Request  $request
      * @param Response $response
      * @return Response|null
      */
-    public function release($request, $response);
+    public function __invoke($request, $response);
 }

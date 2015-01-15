@@ -5,7 +5,7 @@ use Tuum\Web\App\AppHandleInterface;
 
 class Location implements AppHandleInterface
 {
-    public function handle( $request )
+    public function __invoke( $request )
     {
         return $request->redirect()->location('tested-location.php')
             ->with( 'test', 'tested')

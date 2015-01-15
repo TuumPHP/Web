@@ -30,7 +30,7 @@ class Chain extends Stackable
     public function execute($request)
     {
         foreach($this->apps as $app) {
-            $response = $app->handle($request);
+            $response = $app->__invoke($request);
             if($response) {
                 return $response;
             }

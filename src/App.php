@@ -3,6 +3,7 @@ namespace Tuum\Web;
 
 use Tuum\Locator\Container;
 use Tuum\Locator\Locator;
+use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 use Tuum\Web\ServiceInterface\ContainerInterface;
@@ -115,7 +116,7 @@ class App implements ContainerInterface, AppHandleInterface
     //  managing instance and stacks
     // +----------------------------------------------------------------------+
     /**
-     * @param AppHandleInterface $stack
+     * @param AppMarkerInterface $stack
      * @return StackableInterface
      */
     public function push($stack)
@@ -131,7 +132,7 @@ class App implements ContainerInterface, AppHandleInterface
      * @param Request  $request
      * @return Response
      */
-    public function handle($request)
+    public function __invoke($request)
     {
         $request->setApp($this);
         return $this->stack->execute($request, null);

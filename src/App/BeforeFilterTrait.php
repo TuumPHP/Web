@@ -11,7 +11,7 @@ use Tuum\Web\Http\Response;
  *
  * apply filters if matched, but before the main handle.
  */
-trait AppFilterTrait
+trait BeforeFilterTrait
 {
     /**
      * list of filters to apply if matched.
