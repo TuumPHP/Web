@@ -93,6 +93,17 @@ class App implements ContainerInterface, AppHandleInterface
     }
 
     /**
+     * @param string $key
+     * @param array  $data
+     * @return $this
+     */
+    public function share($key, $data = [])
+    {
+        $this->container->share($key, $data);
+        return $this;
+    }
+
+    /**
      * @param RendererInterface|string $engine
      * @return App
      */

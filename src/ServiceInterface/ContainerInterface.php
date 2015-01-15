@@ -12,6 +12,7 @@ interface ContainerInterface
     /**
      * a simple container based on evaluating a file.
      * closures will be evaluated each time.
+     * this method will not share the found object.
      *
      * @param string $file
      * @param array  $data
@@ -24,4 +25,14 @@ interface ContainerInterface
      * @param mixed  $value
      */
     public function set($name, $value);
+
+
+    /**
+     * keep the found object for sharing.
+     *
+     * @param string $file
+     * @param array  $data
+     * @return $this
+     */
+    public function share($file, $data=[]);
 }
