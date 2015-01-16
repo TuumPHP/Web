@@ -57,7 +57,7 @@ class Stackable implements StackableInterface
             $response = $this->applyBeforeFilters($request);
         }
         return $this->_handle($request, $response);
-     }
+    }
 
     /**
      * @param Request  $request
@@ -71,13 +71,13 @@ class Stackable implements StackableInterface
         if (!$response && ( $app instanceof AppHandleInterface ) ) {
             $response = $app->__invoke($request);
         }
-        // execute next handler, always.
-        $response = $this->execNext($request, $response);
-        
-        // for AppReleaseInterface: execute the handler, always. 
+        // for AppReleaseInterface: execute the handler, always.
         if ($app instanceof AppReleaseInterface) {
             $response = $app->__invoke($request, $response);
         }
+        // execute next handler, always.
+        $response = $this->execNext($request, $response);
+
         return $response;
     }
 

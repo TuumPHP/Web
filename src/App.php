@@ -146,6 +146,7 @@ class App implements ContainerInterface, AppHandleInterface
     public function __invoke($request)
     {
         $request->setApp($this);
+        if(!$this->stack) return $request->respond()->notFound();
         return $this->stack->execute($request, null);
     }
 

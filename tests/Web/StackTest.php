@@ -57,8 +57,8 @@ class StackTest extends \PHPUnit_Framework_TestCase
     {
         $app   = $this->app;
         $app
-            ->push($this->container->evaluate('increment'))
             ->push($this->container->evaluate('return-one'))
+            ->push($this->container->evaluate('increment'))
         ;
         $request  = Request::startPath('test');
         $response = $this->app->__invoke($request);
