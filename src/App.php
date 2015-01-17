@@ -23,6 +23,13 @@ use Tuum\Web\App\AppHandleInterface;
  */
 class App implements ContainerInterface, AppHandleInterface
 {
+    /*
+     * directories
+     */
+    const CONFIG_DIR   = 'dir.config';
+    const TEMPLATE_DIR = 'dir.view';
+    const RESOURCE_DIR = 'dir.resource';
+    
     const DEBUG = 'debug';
     const VIEW_DATA = 'data';
     const TOKEN_NAME = 'token';
