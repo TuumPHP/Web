@@ -33,7 +33,7 @@ class Respond
     public function text($content, $charset='UTF-8')
     {
         $response = new Response($content);
-        $response->headers->set('Content-Type', 'text/html; charset='.$charset);
+        $response->headers->set('Content-Type', 'text/plain; charset='.$charset);
         return $response;
     }
 
