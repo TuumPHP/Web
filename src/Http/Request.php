@@ -173,7 +173,7 @@ class Request extends BaseRequest
      * @param string $name
      * @return mixed
      */
-    public function bag($name)
+    public function getAttribute($name)
     {
         return $this->attributes->get($name);
     }
@@ -183,7 +183,7 @@ class Request extends BaseRequest
      * @param mixed  $data
      * @return $this
      */    
-    public function keep($name, $data)
+    public function setAttribute($name, $data)
     {
         $this->attributes->set($name, $data);
         return $this;
