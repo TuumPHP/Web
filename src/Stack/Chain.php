@@ -2,13 +2,15 @@
 namespace Tuum\Web\Stack;
 
 use Tuum\Web\App\AppHandleInterface;
+use Tuum\Web\App\AppMarkerInterface;
+use Tuum\Web\App\AppReleaseInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
 class Chain extends Stackable
 {
     /**
-     * @var AppHandleInterface[]
+     * @var AppMarkerInterface[]
      */
     protected $apps = [];
 
@@ -18,23 +20,38 @@ class Chain extends Stackable
      */
     public function addApp($app)
     {
-        $apps = func_get_args();
+        $apps       = func_get_args();
         $this->apps = array_merge($this->apps, $apps);
         return $this;
     }
 
     /**
-     * @param Request $request
-     * @return Response|null
+     * @param Request  $request
+     * @param Response $response
+     * @return null|Response
      */
-    public function execute($request)
+    public function execute($request, $response)
     {
-        foreach($this->apps as $app) {
-            $response = $app->__invoke($request);
-            if($response) {
-                return $response;
+        foreach ($this->apps as $app) {
+
+            if (method_exists($app, 'isMatch') && !$app->isMatch($request)) {
+                continue;
+            }
+            if (!$response && $app instanceof AppHandleInterface) {
+                if (method_exists($app, 'filterBefore')) {
+                    $response = $app->filterBefore($request);
+                    if ($response) {
+                        continue;
+                    }
+                }
+                if (!$response) {
+                    $response = $app->__invoke($request);
+                }
+            }
+            elseif ($app instanceof AppReleaseInterface) {
+                $response = $app->__invoke($request, $response);
             }
         }
-        return null;
+        return $response;
     }
 }
