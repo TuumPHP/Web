@@ -12,7 +12,8 @@
     "require": {
         "symfony/http-foundation": "~2.5",
         "tuum/stack": "dev-master",
-        "tuum/locator": "dev-master"
+        "tuum/locator": "dev-master",
+        "tuum/view": "dev-master"
     },
     "repositories": [
         {
@@ -22,7 +23,11 @@
         {
             "type": "vcs",
             "url": "https://github.com/TuumPHP/Stack"
-        }
+        },
+      {
+        "type": "vcs",
+        "url": "https://github.com/TuumPHP/View"
+      }
     ],
     "autoload": {
         "psr-4": {
