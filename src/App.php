@@ -28,6 +28,7 @@ class App implements ContainerInterface, AppHandleInterface
     /*
      * directories
      */
+    const ROUTES_FILE  = 'file.routes';
     const CONFIG_DIR   = 'dir.config';
     const TEMPLATE_DIR = 'dir.view';
     const RESOURCE_DIR = 'dir.resource';
@@ -42,6 +43,7 @@ class App implements ContainerInterface, AppHandleInterface
     const ROUTE_NAMES = 'namedRoutes';
     const CONTROLLER  = 'controller';
     const RENDER_ENGINE = 'renderer';
+    const ROUTER = 'router';
 
     /**
      * @var ContainerInterface
