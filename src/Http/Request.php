@@ -4,7 +4,7 @@ namespace Tuum\Web\Http;
 use Closure;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
-use Tuum\Router\RouteNamesInterface;
+use Tuum\Router\ReverseRouteInterface;
 use Tuum\Web\App\AppHandleInterface;
 use Tuum\Web\App;
 
@@ -31,7 +31,7 @@ class Request extends BaseRequest
     protected $url;
 
     /**
-     * @var RouteNamesInterface
+     * @var ReverseRouteInterface
      */
     protected $named;
 
@@ -149,7 +149,7 @@ class Request extends BaseRequest
     }
 
     /**
-     * @param RouteNamesInterface $named
+     * @param ReverseRouteInterface $named
      */
     public function setNamedRoute($named)
     {
@@ -166,7 +166,7 @@ class Request extends BaseRequest
         if (!$this->named) {
             throw new \BadMethodCallException('no named routes');
         }
-        return $this->named->get($name, $arg);
+        return $this->named->generate($name, $arg);
     }
 
     /**
