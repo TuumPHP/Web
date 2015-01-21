@@ -1,6 +1,8 @@
 <?php
 namespace Tuum\Web;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Tuum\Locator\Container;
 use Tuum\Locator\Locator;
 use Tuum\View\ViewEngineInterface;
@@ -29,8 +31,10 @@ class App implements ContainerInterface, AppHandleInterface
     const CONFIG_DIR   = 'dir.config';
     const TEMPLATE_DIR = 'dir.view';
     const RESOURCE_DIR = 'dir.resource';
-    
+    const VAR_DATA_DIR = 'dir.variable';
+
     const DEBUG = 'debug';
+    const LOGGER = 'logger';
     const VIEW_DATA = 'data';
     const TOKEN_NAME = 'token';
     const FLASH_NAME = 'flash';
@@ -106,10 +110,14 @@ class App implements ContainerInterface, AppHandleInterface
      */
     public function share($key, $data = [])
     {
+        $data['app'] = $this;
         $this->container->share($key, $data);
         return $this;
     }
 
+    // +----------------------------------------------------------------------+
+    //  services
+    // +----------------------------------------------------------------------+
     /**
      * @param ViewEngineInterface|string $engine
      * @return App
@@ -130,6 +138,30 @@ class App implements ContainerInterface, AppHandleInterface
         }
         return $engine;
     }
+
+    /**
+     * @param mixed $message
+     */
+    public function log($message)
+    {
+        /** @var LoggerInterface $log */
+        $log = $this->get(App::LOGGER);
+        if( !$log ) return;
+        $log->debug($message);
+    }
+
+    /**
+     * @param mixed  $message
+     * @param string $level
+     */
+    public function logError($message, $level=LogLevel::ERROR)
+    {
+        /** @var LoggerInterface $log */
+        $log = $this->get(App::LOGGER);
+        if( !$log ) return;
+        $log->log($level, $message);
+    }
+
     // +----------------------------------------------------------------------+
     //  managing instance and stacks
     // +----------------------------------------------------------------------+
@@ -153,8 +185,13 @@ class App implements ContainerInterface, AppHandleInterface
     public function __invoke($request)
     {
         $request->setApp($this);
-        if(!$this->stack) return $request->respond()->notFound();
-        return $this->stack->execute($request, null);
+        if(!$this->stack) {
+            return $request->respond()->notFound();
+        }
+        $this->log('stack start for '.$request->getMethod().':'.$request->getPathInfo());
+        $response = $this->stack->execute($request, null);
+        $this->log('stack start end ');
+        return $response;
     }
 
 }
