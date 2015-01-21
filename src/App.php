@@ -3,11 +3,11 @@ namespace Tuum\Web;
 
 use Tuum\Locator\Container;
 use Tuum\Locator\Locator;
+use Tuum\View\ViewEngineInterface;
 use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 use Tuum\Web\ServiceInterface\ContainerInterface;
-use Tuum\Web\ServiceInterface\RendererInterface;
 use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
 use Tuum\Web\App\AppHandleInterface;
@@ -111,7 +111,7 @@ class App implements ContainerInterface, AppHandleInterface
     }
 
     /**
-     * @param RendererInterface|string $engine
+     * @param ViewEngineInterface|string $engine
      * @return App
      */
     public function setRenderer($engine)
@@ -120,7 +120,7 @@ class App implements ContainerInterface, AppHandleInterface
     }
 
     /**
-     * @return RendererInterface
+     * @return ViewEngineInterface
      */
     public function renderer()
     {
