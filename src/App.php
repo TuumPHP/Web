@@ -121,27 +121,6 @@ class App implements ContainerInterface, AppHandleInterface
     //  services
     // +----------------------------------------------------------------------+
     /**
-     * @param ViewEngineInterface|string $engine
-     * @return App
-     */
-    public function setRenderer($engine)
-    {
-        return $this->set(App::RENDER_ENGINE, $engine);
-    }
-
-    /**
-     * @return ViewEngineInterface
-     */
-    public function renderer()
-    {
-        $engine = $this->get(App::RENDER_ENGINE);
-        if( is_string($engine)) {
-            return $this->get($engine);
-        }
-        return $engine;
-    }
-
-    /**
      * @param mixed $message
      */
     public function log($message)
