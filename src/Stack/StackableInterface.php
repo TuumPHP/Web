@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Tuum\Web\App\AppHandleInterface;
 use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
