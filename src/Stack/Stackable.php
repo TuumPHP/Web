@@ -92,10 +92,10 @@ class Stackable implements StackableInterface
     }
 
     /**
-     * @param AppMarkerInterface $handler
+     * @param AppMarkerInterface|StackableInterface $handler
      * @return StackableInterface|static
      */
-    public static function makeStack(AppMarkerInterface $handler)
+    public static function makeStack($handler)
     {
         if (!$handler instanceof StackableInterface) {
             $handler = new static($handler);
