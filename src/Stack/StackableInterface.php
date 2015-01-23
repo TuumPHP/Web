@@ -19,8 +19,8 @@ interface StackableInterface
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param AppMarkerInterface $handler
+     * @param AppMarkerInterface|StackableInterface $handler
      * @return $this
      */
-    public function push(AppMarkerInterface $handler);
+    public function push($handler);
 }

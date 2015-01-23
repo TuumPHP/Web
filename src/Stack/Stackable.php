@@ -17,19 +17,14 @@ use Tuum\Web\Http\Response;
  */
 class Stackable implements StackableInterface
 {
+    use NextStackTrait;
+    
     /**
      * the middleware. the Http Kernel that does the job.
      *
      * @var AppMarkerInterface
      */
     protected $app;
-
-    /**
-     * pile of Stackable Http Kernels.
-     *
-     * @var Stackable
-     */
-    protected $next;
 
     /**
      * wraps the Http Kernel that does the job with Stackable Http Kernel.
@@ -76,21 +71,7 @@ class Stackable implements StackableInterface
 
         return $response;
     }
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @return Response
-     */
-    protected function execNext($request, $response)
-    {
-        // execute the next handler.
-        if ($this->next) {
-            return $this->next->execute($request, $response);
-        }
-        return $response;
-    }
-
+    
     /**
      * @param AppMarkerInterface|StackableInterface $handler
      * @return StackableInterface|static
@@ -101,22 +82,6 @@ class Stackable implements StackableInterface
             $handler = new static($handler);
         }
         return $handler;
-    }
-
-    /**
-     * stack up the SplStack.
-     * converts normal HttpKernel into Stackable.
-     *
-     * @param AppMarkerInterface $handler
-     * @return $this
-     */
-    public function push(AppMarkerInterface $handler)
-    {
-        if ($this->next) {
-            return $this->next->push($handler);
-        }
-        $this->next = static::makeStack($handler);
-        return $this->next;
     }
 
     /**
