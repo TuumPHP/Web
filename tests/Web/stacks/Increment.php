@@ -14,7 +14,7 @@ class Increment implements StackableInterface
      * @param Request  $request
      * @return Response
      */
-    public function execute($request)
+    public function __invoke($request)
     {
         /*
          * execute the subsequent stack.

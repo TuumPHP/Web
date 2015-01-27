@@ -39,7 +39,7 @@ class Stackable implements StackableInterface
      * @param Request  $request
      * @return null|Response
      */
-    public function execute($request)
+    public function __invoke($request)
     {
         /*
          * first, check for match and before filters. 

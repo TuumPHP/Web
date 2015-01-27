@@ -28,7 +28,7 @@ class Chain extends Stackable
      * @param Request  $request
      * @return null|Response
      */
-    public function execute($request)
+    public function __invoke($request)
     {
         $response = null;
         foreach ($this->apps as $app) {

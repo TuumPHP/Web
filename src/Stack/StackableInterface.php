@@ -11,7 +11,7 @@ interface StackableInterface
      * @param Request  $request
      * @return null|Response
      */
-    public function execute($request);
+    public function __invoke($request);
 
     /**
      * stack up the SplStack.

@@ -170,7 +170,7 @@ class App implements ContainerInterface, AppHandleInterface
             return $request->respond()->notFound();
         }
         $this->log('stack start for '.$request->getMethod().':'.$request->getPathInfo());
-        $response = $this->stack->execute($request, null);
+        $response = $this->stack->__invoke($request, null);
         $this->log('stack start end ');
         return $response;
     }

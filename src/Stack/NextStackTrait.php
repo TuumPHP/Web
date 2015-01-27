@@ -39,7 +39,7 @@ trait NextStackTrait
     {
         // execute the next handler.
         if ($this->next) {
-            return $this->next->execute($request);
+            return $this->next->__invoke($request);
         }
         return null;
     }
