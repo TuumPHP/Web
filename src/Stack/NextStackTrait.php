@@ -33,16 +33,15 @@ trait NextStackTrait
 
     /**
      * @param Request  $request
-     * @param Response $response
-     * @return Response
+     * @return null|Response
      */
-    protected function execNext($request, $response)
+    protected function execNext($request)
     {
         // execute the next handler.
         if ($this->next) {
-            return $this->next->execute($request, $response);
+            return $this->next->execute($request);
         }
-        return $response;
+        return null;
     }
 
 }

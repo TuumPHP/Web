@@ -37,34 +37,35 @@ class Stackable implements StackableInterface
 
     /**
      * @param Request  $request
-     * @param Response $response
      * @return null|Response
      */
-    public function execute($request, $response)
+    public function execute($request)
     {
         /*
          * first, check for match and before filters. 
          */
         if (!$this->isMatch($request)) {
             // if not matched, ignore this middleware and execute the next handler
-            return $this->execNext($request, $response);
+            return $this->execNext($request);
         }
-        if (!$response) {
-            // apply filters, if $response is not set. 
-            $response = $this->applyBeforeFilters($request);
+        // apply filters, if $response is not set.
+        $response = $this->applyBeforeFilters($request);
+        if ($response) {
+            return $response;
         }
         /*
          * now, run the AppHandle/AppRelease..
          */
         $app = $this->app;
-        if (!$response && ( $app instanceof AppHandleInterface ) ) {
+        if ( $app instanceof AppHandleInterface ) {
             // AppHandleInterface: execute the handler if $response is not set yet.
             $response = $app->__invoke($request);
         }
         // execute next handler, always.
-        $response = $this->execNext($request, $response);
-
-        return $response;
+        if ($response) {
+            return $response;
+        }
+        return $this->execNext($request);
     }
     
     /**

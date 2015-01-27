@@ -12,15 +12,14 @@ class Increment implements StackableInterface
 
     /**
      * @param Request  $request
-     * @param Response $response
      * @return Response
      */
-    public function execute($request, $response)
+    public function execute($request)
     {
         /*
          * execute the subsequent stack.
          */
-        $response = $this->execNext($request, $response);
+        $response = $this->execNext($request);
 
         if ($response) {
             $value = (int)$response->getContent() + 1;

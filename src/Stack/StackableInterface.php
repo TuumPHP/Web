@@ -9,10 +9,9 @@ interface StackableInterface
 {
     /**
      * @param Request  $request
-     * @param Response $response
      * @return null|Response
      */
-    public function execute($request, $response);
+    public function execute($request);
 
     /**
      * stack up the SplStack.

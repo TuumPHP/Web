@@ -26,17 +26,17 @@ class Chain extends Stackable
 
     /**
      * @param Request  $request
-     * @param Response $response
      * @return null|Response
      */
-    public function execute($request, $response)
+    public function execute($request)
     {
+        $response = null;
         foreach ($this->apps as $app) {
 
             if (method_exists($app, 'isMatch') && !$app->isMatch($request)) {
                 continue;
             }
-            if (!$response && $app instanceof AppHandleInterface) {
+            if ($app instanceof AppHandleInterface) {
                 if (method_exists($app, 'filterBefore')) {
                     $response = $app->filterBefore($request);
                     if ($response) {
