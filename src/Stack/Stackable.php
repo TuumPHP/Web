@@ -3,7 +3,6 @@ namespace Tuum\Web\Stack;
 
 use Tuum\Web\App\AppHandleInterface;
 use Tuum\Web\App\AppMarkerInterface;
-use Tuum\Web\App\AppReleaseInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
@@ -61,10 +60,6 @@ class Stackable implements StackableInterface
         if (!$response && ( $app instanceof AppHandleInterface ) ) {
             // AppHandleInterface: execute the handler if $response is not set yet.
             $response = $app->__invoke($request);
-        }
-        if ($app instanceof AppReleaseInterface) {
-            // AppReleaseInterface: execute the handler, always.
-            $response = $app->__invoke($request, $response);
         }
         // execute next handler, always.
         $response = $this->execNext($request, $response);

@@ -3,7 +3,6 @@ namespace Tuum\Web\Stack;
 
 use Tuum\Web\App\AppHandleInterface;
 use Tuum\Web\App\AppMarkerInterface;
-use Tuum\Web\App\AppReleaseInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
@@ -47,9 +46,6 @@ class Chain extends Stackable
                 if (!$response) {
                     $response = $app->__invoke($request);
                 }
-            }
-            elseif ($app instanceof AppReleaseInterface) {
-                $response = $app->__invoke($request, $response);
             }
         }
         return $response;
