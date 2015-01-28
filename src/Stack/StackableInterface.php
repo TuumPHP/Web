@@ -5,14 +5,8 @@ use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
-interface StackableInterface 
+interface StackableInterface extends AppMarkerInterface
 {
-    /**
-     * @param Request  $request
-     * @return null|Response
-     */
-    public function __invoke($request);
-
     /**
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
