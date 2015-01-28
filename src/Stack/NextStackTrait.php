@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Tuum\Web\App\AppMarkerInterface;
+use Tuum\Web\App\AppHandleInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
 
@@ -19,7 +19,7 @@ trait NextStackTrait
      * stack up the SplStack.
      * converts normal HttpKernel into Stackable.
      *
-     * @param AppMarkerInterface|StackableInterface $handler
+     * @param AppHandleInterface|StackableInterface $handler
      * @return $this
      */
     public function push($handler)

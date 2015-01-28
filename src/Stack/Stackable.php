@@ -69,7 +69,7 @@ class Stackable implements StackableInterface
     }
     
     /**
-     * @param AppMarkerInterface|StackableInterface $handler
+     * @param AppHandleInterface|StackableInterface $handler
      * @return StackableInterface|static
      */
     public static function makeStack($handler)
