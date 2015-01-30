@@ -1,5 +1,5 @@
 <?php
-namespace tests\App\Stackable;
+namespace tests\Web;
 
 use tests\Web\stacks\MatchRoute;
 use Tuum\Locator\Container;
