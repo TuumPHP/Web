@@ -41,7 +41,7 @@ class Middleware implements MiddlewareInterface
     public function __invoke($request)
     {
         if ($this->isMatch($request)) {
-            $app      = $this->next;
+            $app      = $this->app;
             $response = $app($request);
             if ($response) {
                 return $response;
