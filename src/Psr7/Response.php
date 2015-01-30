@@ -48,6 +48,22 @@ class Response extends BaseResponse
     }
 
     /**
+     * @return string
+     */
+    public function getViewFile()
+    {
+        return $this->view_file;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->getHeader('Location');
+    }
+
+    /**
      * @param string $file
      * @param array  $data
      * @return Response

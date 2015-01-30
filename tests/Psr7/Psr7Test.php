@@ -81,4 +81,25 @@ class StackTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['message'=>'message-test'], $data['messages']);
         $this->assertEquals(['more'=>'done'], $data['inputs']);
     }
+
+    /**
+     * @test
+     */
+    function view()
+    {
+        $app   = $this->app;
+        $app
+            ->push($this->container->evaluate('view'))
+        ;
+        $request  = RequestFactory::fromPath('test');
+        $response = $this->app->__invoke($request);
+        $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
+        $this->assertTrue( $response->isType(Response::TYPE_VIEW));
+        $this->assertEquals('tested-view', $response->getViewFile());
+        $data = $response->getData();
+        $this->assertEquals('tested', $data['test']);
+        $this->assertEquals(['message'=>'tested', 'error'=>true], $data['messages']);
+        $this->assertEquals(['more'=>'done'], $data['inputs']);
+        $this->assertEquals('tested', $data['test']);
+    }
 }

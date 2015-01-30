@@ -76,6 +76,15 @@ class Respond
     }
 
     /**
+     * @param array $errors
+     * @return Respond
+     */
+    public function withInputErrors(array $errors)
+    {
+        return $this->with('errors', $errors);
+    }
+
+    /**
      * @param string $message
      * @return Respond
      */
@@ -92,7 +101,7 @@ class Respond
      */
     public function withErrorMessage($message)
     {
-        return $this->with('message', [
+        return $this->with('messages', [
             'message' => $message,
             'error'   => true,
         ]);
