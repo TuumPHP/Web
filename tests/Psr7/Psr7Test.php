@@ -61,4 +61,24 @@ class StackTest extends \PHPUnit_Framework_TestCase
         $response = $this->app->__invoke($request);
         $this->assertEquals('2', (string) $response->getBody());
     }
+
+    /**
+     * @test
+     */
+    function location()
+    {
+        $app   = $this->app;
+        $app
+            ->push($this->container->evaluate('location'))
+        ;
+        $request  = RequestFactory::fromPath('test');
+        $response = $this->app->__invoke($request);
+        $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
+        $this->assertEquals('/tested-location.php', $response->getHeader('location'));
+        $this->assertTrue( $response->isType(Response::TYPE_REDIRECT));
+        $data = $response->getData();
+        $this->assertEquals('tested', $data['test']);
+        $this->assertEquals(['message'=>'message-test'], $data['messages']);
+        $this->assertEquals(['more'=>'done'], $data['inputs']);
+    }
 }

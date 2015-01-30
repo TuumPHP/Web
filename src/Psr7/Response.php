@@ -71,7 +71,7 @@ class Response extends BaseResponse
         if($uri instanceof UriInterface) {
             $uri = (string) $uri;
         }
-        $self = new self('php:/memory', '302', ['Location' => $uri ]);
+        $self = new self('php://memory', '302', ['Location' => $uri ]);
         $self->redirect_to = $uri;
         $self->data = $data;
         $self->type = self::TYPE_REDIRECT;

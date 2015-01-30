@@ -81,7 +81,7 @@ class Respond
      */
     public function withMessage($message)
     {
-        return $this->with('message', [
+        return $this->with('messages', [
             'message' => $message
         ]);
     }
