@@ -47,7 +47,7 @@ class Request extends ServerRequest
         $body = 'php://input',
         array $headers = []
     ) {
-        $this->respond = new Respond($this);
+        $this->respond = new Respond();
         return parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
     }
 
@@ -113,6 +113,7 @@ class Request extends ServerRequest
      */
     public function respond()
     {
+        $this->respond->setRequest($this);
         return $this->respond;
     }
 }

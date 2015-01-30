@@ -31,9 +31,16 @@ class Respond
     protected $request;
 
     /**
+     * 
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * @param Request $request
      */
-    public function __construct($request)
+    public function setRequest($request)
     {
         $this->request = $request;
     }
