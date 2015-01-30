@@ -57,13 +57,14 @@ class Respond
      */
     public function with($key, $value = null)
     {
+        $new = clone($this);
         if (is_array($key)) {
-            $this->data = array_merge($this->data, $key);
+            $new->data = array_merge($this->data, $key);
         }
         if (is_string($key)) {
-            $this->data[$key] = $value;
+            $new->data[$key] = $value;
         }
-        return $this;
+        return $new;
     }
 
     /**

@@ -12,7 +12,8 @@ echo "\n";
 
 $bad = function($request) {
     /** @var Request $request */
-    $request->setAttribute('test', 'tested');
+    $request->respondWith('test', 'tested');
+    $request = $request->withMethod('post');
     return $request->withMethod('post');
 };
 $new = $bad($request);

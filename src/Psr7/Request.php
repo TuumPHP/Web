@@ -98,23 +98,13 @@ class Request extends ServerRequest
     }
     
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param string|array $key
+     * @param mixed|null   $value
      * @return $this
      */
-    public function setAttribute($key, $value)
+    public function respondWith($key, $value=null)
     {
-        $this->respond->with($key, $value);
-        return $this;
-    }
-
-    /**
-     * @param array $data
-     * @return $this
-     */
-    public function setAttributes($data)
-    {
-        $this->respond->with($data);
+        $this->respond = $this->respond->with($key, $value);
         return $this;
     }
 
