@@ -2,7 +2,18 @@
 namespace Tuum\Web\Psr7;
 
 use Phly\Http\ServerRequest;
+use Tuum\Web\ApplicationInterface;
+use Tuum\Web\Web;
 
+/**
+ * Class Request
+ *
+ * a Tuum's Request class.
+ *
+ * contains a mutable $respond object as a decorator for creating a response.
+ *
+ * @package Tuum\Web\Psr7
+ */
 class Request extends ServerRequest
 {
     /**
@@ -10,6 +21,19 @@ class Request extends ServerRequest
      */
     protected $respond;
 
+    /**
+     * @var Web
+     */
+    protected $web;
+
+    /**
+     * @param array  $serverParams
+     * @param array  $fileParams
+     * @param null   $uri
+     * @param null   $method
+     * @param string $body
+     * @param array  $headers
+     */
     public function __construct(
         array $serverParams = [],
         array $fileParams = [],
@@ -20,6 +44,29 @@ class Request extends ServerRequest
     ) {
         $this->respond = new Respond($this);
         return parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
+    }
+
+    /**
+     * @param Web $web
+     */
+    public function setWebApp($web)
+    {
+        $this->web = $web;
+    }
+
+    /**
+     * @param string|ApplicationInterface $filter
+     * @return null|Response
+     */
+    public function filter($filter)
+    {
+        if (is_string($filter)) {
+            $filter = $this->web->get($filter);
+        }
+        if ($filter instanceof \Closure) {
+            return $filter($this);
+        }
+        return null;
     }
 
     /**
