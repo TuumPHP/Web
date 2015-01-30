@@ -46,4 +46,19 @@ class StackTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Response::class, get_class($response));
         $this->assertEquals('1', (string) $response->getBody());
     }
+    
+    /**
+     * @test
+     */
+    function get_content_from_return_one_and_increment()
+    {
+        $app   = $this->app;
+        $app
+            ->push($this->container->evaluate('increment'))
+            ->push($this->container->evaluate('return-one'))
+        ;
+        $request  = RequestFactory::fromPath('test');
+        $response = $this->app->__invoke($request);
+        $this->assertEquals('2', (string) $response->getBody());
+    }
 }

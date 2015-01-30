@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Psr7;
 
-use Phly\Http\Stream;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -119,8 +118,7 @@ class Respond
      */
     public function asText($text)
     {
-        $stream = new Stream('php://memory', 'wb+');
-        $stream->write($text);
+        $stream = StreamFactory::string($text);
         return new Response($stream, self::OK, ['Content-Type' => 'text/plain']);
     }
 
@@ -132,8 +130,7 @@ class Respond
      */
     public function asJson(array $data)
     {
-        $stream = new Stream('php://memory', 'wb+');
-        $stream->write(json_encode($data));
+        $stream = StreamFactory::string(json_encode($data));
         return new Response($stream, self::OK, ['Content-Type' => 'application/json']);
     }
 
