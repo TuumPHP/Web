@@ -7,7 +7,7 @@ use Tuum\Web\Psr7\RequestFactory;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Web;
 
-class StackTest extends \PHPUnit_Framework_TestCase
+class WebTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Web

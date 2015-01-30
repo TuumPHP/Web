@@ -49,6 +49,11 @@ class RequestFactory extends ServerRequestFactory
             ->withBodyParams($body ?: $_POST);
     }
 
+    /**
+     * @param string $path
+     * @param string $method
+     * @return Request
+     */
     public static function fromPath(
         $path,
         $method = 'GET'
