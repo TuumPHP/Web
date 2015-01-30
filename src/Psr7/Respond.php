@@ -48,7 +48,7 @@ class Respond
         if(is_null($key)) {
             return $this->data;
         }
-        return array_key_exists($key, $this->data) ? $data[$key] : null;
+        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
     /**
      * @param string|array $key

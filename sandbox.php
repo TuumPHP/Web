@@ -1,5 +1,6 @@
 <?php
 use Phly\Http\Stream;
+use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
 
 require_once(__DIR__.'/tests/autoloader.php');
@@ -9,10 +10,17 @@ $request = RequestFactory::fromGlobals();
 echo $request->getMethod();
 echo "\n";
 
-echo $request->respond()->with('name', 'tuum')->asText('test response')->getBody();
+$bad = function($request) {
+    /** @var Request $request */
+    $request->setAttribute('test', 'tested');
+    return $request->withMethod('post');
+};
+$new = $bad($request);
+
+echo $request->respond()->get('test');
 echo "\n";
 
-echo $request->respond()->asJson(['response'=>'json'])->getBody();
+echo $new->respond()->get('test');
 echo "\n";
 
 $stream = new Stream('php://memory', 'wb+');
