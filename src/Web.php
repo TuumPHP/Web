@@ -15,7 +15,7 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-class Web extends Middleware
+class Web 
 {
     use MiddlewareTrait;
 

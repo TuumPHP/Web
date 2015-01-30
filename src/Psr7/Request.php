@@ -27,6 +27,11 @@ class Request extends ServerRequest
     protected $web;
 
     /**
+     * @var string
+     */
+    protected $path_to_match = null;
+
+    /**
      * @param array  $serverParams
      * @param array  $fileParams
      * @param null   $uri
@@ -69,6 +74,29 @@ class Request extends ServerRequest
         return null;
     }
 
+    /**
+     * @param string $path
+     * @return Request
+     */
+    public function withPathToMatch($path)
+    {
+        $new = clone $this;
+        $new->path_to_match = $path;
+        return $new;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPathToMatch()
+    {
+        if(is_null($this->path_to_match)) {
+            return $this->getUri()->getPath();
+            
+        }
+        return $this->path_to_match;
+    }
+    
     /**
      * @param string $key
      * @param mixed  $value

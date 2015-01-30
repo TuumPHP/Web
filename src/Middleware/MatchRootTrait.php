@@ -41,7 +41,7 @@ trait MatchRootTrait
         /*
          * match roots against the path info.
          */
-        $path   = $request->getUri()->getPath();
+        $path   = $request->getPathToMatch();
         $method = $request->getMethod();
         foreach ($this->_patterns as $pattern) {
             if (Matcher::verify($pattern, $path, $method)) {

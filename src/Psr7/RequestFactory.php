@@ -2,6 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Phly\Http\ServerRequestFactory;
+use Phly\Http\Uri;
 
 class RequestFactory extends ServerRequestFactory
 {
@@ -48,4 +49,18 @@ class RequestFactory extends ServerRequestFactory
             ->withBodyParams($body ?: $_POST);
     }
 
+    public static function fromPath(
+        $path,
+        $method = 'GET'
+    ) {
+        $request = new Request(
+            [],
+            [],
+            new Uri($path),
+            $method ?: 'GET',
+            'php://input',
+            []
+        );
+        return $request;
+    }
 }
