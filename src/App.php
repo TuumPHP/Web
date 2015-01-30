@@ -9,7 +9,7 @@ use Tuum\View\ViewEngineInterface;
 use Tuum\Web\App\AppMarkerInterface;
 use Tuum\Web\Http\Request;
 use Tuum\Web\Http\Response;
-use Tuum\Web\ServiceInterface\ContainerInterface;
+use Tuum\Locator\ContainerInterface;
 use Tuum\Web\Stack\Stackable;
 use Tuum\Web\Stack\StackableInterface;
 use Tuum\Web\App\AppHandleInterface;
