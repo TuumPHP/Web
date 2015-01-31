@@ -48,7 +48,7 @@ class Request extends ServerRequest
         array $headers = []
     ) {
         $this->respond = new Respond();
-        return parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
+        parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
     }
 
     /**

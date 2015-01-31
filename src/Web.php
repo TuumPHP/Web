@@ -3,7 +3,6 @@ namespace Tuum\Web;
 
 use Tuum\Locator\Container;
 use Tuum\Web\Middleware\BeforeFilterTrait;
-use Tuum\Web\Middleware\Middleware;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -15,7 +14,7 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-class Web 
+class Web implements MiddlewareInterface
 {
     use MiddlewareTrait;
 
