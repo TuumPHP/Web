@@ -36,11 +36,22 @@ class Web
 
     /**
      * @param string $key
+     * @param mixed  $value
+     */
+    public function set($key, $value)
+    {
+        $this->container->set($key, $value);
+    }
+
+    /**
+     * @param string $key
+     * @param array  $data
      * @return mixed
      */
-    public function get($key)
+    public function get($key, $data=[])
     {
-        return $this->container->get($key);
+        $data['app'] = $this;
+        return $this->container->get($key, $data);
     }
 
     /**

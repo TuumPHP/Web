@@ -132,6 +132,18 @@ class Respond
      * @param string $text
      * @return Response
      */
+    public function asHtml($text)
+    {
+        $stream = StreamFactory::string($text);
+        return new Response($stream, self::OK, ['Content-Type' => 'text/html']);
+    }
+
+    /**
+     * returns a string as a plain text.
+     *
+     * @param string $text
+     * @return Response
+     */
     public function asText($text)
     {
         $stream = StreamFactory::string($text);

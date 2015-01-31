@@ -18,5 +18,5 @@ interface MiddlewareInterface extends ApplicationInterface
      * @param ApplicationInterface $handler
      * @return $this
      */
-    public function push(ApplicationInterface $handler);
+    public function push($handler);
 }

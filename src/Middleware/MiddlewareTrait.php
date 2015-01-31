@@ -3,6 +3,8 @@ namespace Tuum\Web\Middleware;
 
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
+use Tuum\Web\Psr7\Request;
+use Tuum\Web\Psr7\Response;
 
 trait MiddlewareTrait
 {
@@ -18,8 +20,11 @@ trait MiddlewareTrait
      * @param ApplicationInterface $handler
      * @return $this
      */
-    public function push(ApplicationInterface $handler)
+    public function push($handler)
     {
+        if(!$handler) {
+            return $this;
+        }
         if ($this->next) {
             return $this->next->push($handler);
         }
@@ -28,5 +33,18 @@ trait MiddlewareTrait
         }
         $this->next = $handler;
         return $this->next;
+    }
+
+    /**
+     * @param Request $request
+     * @return null|Response
+     */
+    protected function execNext($request)
+    {
+        if(!$this->next) {
+            return null;
+        }
+        $next = $this->next;
+        return $next($request);
     }
 }
