@@ -19,4 +19,13 @@ interface MiddlewareInterface extends ApplicationInterface
      * @return $this
      */
     public function push($handler);
+
+    /**
+     * prepends a new middleware/application at the
+     * beginning of the stack. returns the prepended stack.
+     *
+     * @param ApplicationInterface $handler
+     * @return MiddlewareInterface
+     */
+    public function prepend($handler);
 }

@@ -3,6 +3,7 @@ namespace Tuum\Web\Middleware;
 
 use Closure;
 use Tuum\Web\ApplicationInterface;
+use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 
@@ -22,6 +23,15 @@ trait BeforeFilterTrait
     protected $_beforeFilters = [];
 
     /**
+     * prepends a new middleware/application at the
+     * beginning of the stack. returns the prepended stack.
+     *
+     * @param ApplicationInterface $handler
+     * @return MiddlewareInterface
+     */
+    abstract public function prepend($handler);
+
+    /**
      * @param string|Closure|ApplicationInterface $filter
      */
     public function setBeforeFilter($filter)
@@ -36,9 +46,8 @@ trait BeforeFilterTrait
     public function filterBefore($request)
     {
         foreach ($this->_beforeFilters as $filter) {
-            if ($response = $request->filter($filter)) {
-                return $response;
-            }
+            $filter = $request->getFilter($filter);
+            $this->prepend($filter);
         }
         return null;
     }

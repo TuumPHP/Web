@@ -59,7 +59,9 @@ class Web implements MiddlewareInterface
      */
     public function __invoke($request)
     {
-        $request->setWebApp($this);
+        if(is_object($request) && method_exists($request, 'setWebApp')) {
+            $request->setWebApp($this);
+        }
         $app = $this->next;
         if($app) {
             return $app($request);

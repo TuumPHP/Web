@@ -34,6 +34,30 @@ class WebTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    function pushed_executes_the_first_closure()
+    {
+        $app = $this->app;
+        $app->push(function($req) { return $req.'-pushed';});
+        $app->push(function($req) { return $req.'-not-reaching';});
+        $res = $app('testing');
+        $this->assertEquals('testing-pushed', $res);
+    }
+
+    /**
+     * @test
+     */
+    function prepend_executes_the_last_closure()
+    {
+        $app = $this->app;
+        $app->push(function($req) { return $req.'-pushed';});
+        $app->prepend(function($req) { return $req.'-prepended';});
+        $res = $app('testing');
+        $this->assertEquals('testing-prepended', $res);
+    }
+
+    /**
+     * @test
+     */
     function get_content_from_return_one()
     {
         $app   = $this->app;

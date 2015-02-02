@@ -36,6 +36,27 @@ trait MiddlewareTrait
     }
 
     /**
+     * prepends a new middleware/application at the
+     * beginning of the stack. returns the prepended stack.
+     *
+     * @param ApplicationInterface $handler
+     * @return MiddlewareInterface
+     */
+    public function prepend($handler)
+    {
+        if(!$handler) {
+            return $this;
+        }
+        if (!$handler instanceof MiddlewareInterface) {
+            $handler = new Middleware($handler);
+        }
+        $next = $this->next;
+        $handler->push($next);
+        $this->next = $handler;
+        return $this;
+    }
+
+    /**
      * @param Request $request
      * @return null|Response
      */

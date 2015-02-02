@@ -3,6 +3,7 @@ namespace Tuum\Web\Psr7;
 
 use Phly\Http\ServerRequest;
 use Tuum\Web\ApplicationInterface;
+use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Web;
 
 /**
@@ -72,6 +73,18 @@ class Request extends ServerRequest
             return $filter($this);
         }
         return null;
+    }
+
+    /**
+     * @param string|mixed $filter
+     * @return MiddlewareInterface|ApplicationInterface
+     */
+    public function getFilter($filter)
+    {
+        if (is_string($filter)) {
+            $filter = $this->web->get($filter);
+        }
+        return $filter;
     }
 
     /**
