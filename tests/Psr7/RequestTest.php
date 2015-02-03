@@ -67,4 +67,26 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $data = $response->getData();
         $this->assertEquals('filter', $data['tested']);
     }
+
+    /**
+     * @test
+     */
+    function respond()
+    {
+        $request = RequestFactory::fromPath('/path/to', 'get');
+        $request->respondWith( 'test', 'tested');
+        $respond = $request->respond()
+            ->withMessage('hello')
+            ->withInput( ['more' => 'done'])
+            ->withInputErrors(['input' => 'errors'])
+        ;
+        $this->assertEquals('Tuum\Web\Psr7\Respond', get_class($respond));
+        $response= $respond->asRedirectUri('tested');
+        $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
+        $data = $response->getData();
+        $this->assertEquals('tested',                $data['test']);
+        $this->assertEquals(['message' => 'hello'],  $data['messages']);
+        $this->assertEquals(['more'    => 'done'],   $data['inputs']);
+        $this->assertEquals(['input'   => 'errors'], $data['errors']);
+    }
 }
