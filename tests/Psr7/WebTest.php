@@ -34,6 +34,28 @@ class WebTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    function set_and_get()
+    {
+        $app = $this->app;
+        $app->set('test', 'tested');
+        $this->assertEquals('tested', $app->get('test'));
+    }
+
+    /**
+     * @test
+     */
+    function no_middleware_returns_error_response()
+    {
+        $app = $this->app;
+        $request  = RequestFactory::fromPath('test');
+        $res = $app->__invoke($request);
+        $this->assertEquals('Tuum\Web\Psr7\Response', get_class($res));
+        $this->assertTrue($res->isType(Response::TYPE_ERROR));
+    }
+
+    /**
+     * @test
+     */
     function pushed_executes_the_first_closure()
     {
         $app = $this->app;
