@@ -24,12 +24,14 @@ class App
     const DEBUG = 'debug';
     const LOGGER = 'logger';
     const VIEW_DATA = 'data';
-    const TOKEN_NAME = 'token';
     const FLASH_NAME = 'flash';
     const ROUTE_PARAM = 'params';
     const ROUTE_NAMES = 'namedRoutes';
     const CONTROLLER  = 'controller';
     const RENDER_ENGINE = 'renderer';
     const ROUTER = 'router';
+
+    const SESSION_MGR = 'session.manager';
+    const TOKEN_NAME = '_token';
 
 }

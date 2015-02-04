@@ -36,7 +36,7 @@ class SessionStack implements MiddlewareInterface
         /*
          * first, copy session data into $request->respond. 
          */
-        $flash = $this->session->getFlashBag()->get(self::FLASH_NAME);
+        $flash = $this->session->getFlashBag()->all();
         $token = $this->session->get(App::TOKEN_NAME);
         if ($flash || $token) {
             if (!$flash) {
@@ -45,8 +45,9 @@ class SessionStack implements MiddlewareInterface
             if ($token) {
                 $flash[App::TOKEN_NAME] = $token;
             }
-            $request->respond()->with($flash);
+            $request->respondWith($flash);
         }
+        $request = $request->withAttribute( App::SESSION_MGR, $this->session);
 
         /*
          * execute the subsequent stack.
@@ -57,9 +58,8 @@ class SessionStack implements MiddlewareInterface
          * copy data from $response into session. 
          */
         if ($response->isType(Response::TYPE_REDIRECT)) {
-            $flash = $this->session->getFlashBag();
             $data  = $response->getData();
-            $flash->set(App::FLASH_NAME, $data);
+            $this->session->getFlashBag()->setAll($data);
         }
         if ($response->isType(Response::TYPE_VIEW)) {
             $token = $response->getData(App::TOKEN_NAME);

@@ -56,10 +56,14 @@ class Response extends BaseResponse
     }
 
     /**
+     * @param null|string $key
      * @return array
      */
-    public function getData()
+    public function getData($key=null)
     {
+        if(!is_null($key)) {
+            return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+        }
         return $this->data;
     }
 

@@ -12,4 +12,6 @@ use Tuum\Web\App;
  * sample session stack constructor script for locator.
  */
 
-return new SessionStack(new Session());
+$session = new Session();
+$session->start();
+return new SessionStack($session);
