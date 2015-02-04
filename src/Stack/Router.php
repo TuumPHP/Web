@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Tuum\Router\Dispatcher;
 use Tuum\Router\RouterInterface;
 use Tuum\Web\App;
 use Tuum\Web\Middleware\MatchRootTrait;
@@ -10,7 +9,7 @@ use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 
-class Routes implements MiddlewareInterface
+class Router implements MiddlewareInterface
 {
     use MiddlewareTrait;
     
@@ -39,7 +38,7 @@ class Routes implements MiddlewareInterface
     /**
      * @param RouterInterface    $router
      * @param Dispatcher         $dispatcher
-     * @return Routes
+     * @return Router
      */
     public static function forge($router, $dispatcher=null)
     {
