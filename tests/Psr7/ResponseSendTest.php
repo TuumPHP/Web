@@ -26,6 +26,11 @@ class ResponseSendTest extends \PHPUnit_Framework_TestCase
         }
         $this->respond = new Respond();
     }
+    
+    function teardown()
+    {
+        ob_end_clean();
+    }
 
     /**
      * just avoid being no tests.
