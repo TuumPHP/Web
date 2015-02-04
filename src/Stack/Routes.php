@@ -62,6 +62,9 @@ class Routes implements MiddlewareInterface
         if (!$route) {
             return $this->execNext($request);
         }
+        $this->dispatcher->setRoute($route);
+        $this->prepend($this->dispatcher);
+
         if ($beforeFilters = $route->before()) {
             foreach($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
@@ -69,6 +72,6 @@ class Routes implements MiddlewareInterface
             }
         }
         $request = $request->withAttribute(App::ROUTE_NAMES, $this->router->getReverseRoute($request));
-        return $this->dispatcher->__invoke($request, $route);
+        return $this->execNext($request);
     }
 }
