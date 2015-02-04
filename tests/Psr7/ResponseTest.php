@@ -72,4 +72,16 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($res->isType(Response::TYPE_ERROR));
         $this->assertEquals('404', $res->getStatusCode());
     }
+
+    /**
+     * @test
+     */
+    function asJson()
+    {
+        $res = $this->respond->asJson(['test' => 'tested']);
+        $obj = json_decode((string) $res->getBody());
+        $std = new \stdClass;
+        $std->test = 'tested';
+        $this->assertEquals($std, $obj);
+    }
 }
