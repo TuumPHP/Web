@@ -1,10 +1,10 @@
 <?php
 
+use Tuum\Web\Stack\Dispatcher;
+use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Web;
 
 /** @var Web $app */
 
 $router = $app->get('router');
-$route = \Tuum\Web\Stack\Router::forge($router);
-
-return $route;
+return new RouterStack($router, new Dispatcher($app));

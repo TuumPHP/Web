@@ -7,6 +7,7 @@ use Tuum\Web\ApplicationInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\App;
+use Tuum\Web\Web;
 
 class Dispatcher implements ApplicationInterface
 {
@@ -15,6 +16,19 @@ class Dispatcher implements ApplicationInterface
      */
     protected $route;
 
+    /**
+     * @var Web
+     */
+    protected $app;
+
+    /**
+     * @param null|Web $app
+     */
+    public function __construct($app=null)
+    {
+        $this->app = $app;
+    }
+    
     /**
      * @param Request $request
      * @return null|Response
@@ -26,7 +40,7 @@ class Dispatcher implements ApplicationInterface
         // prepare object to dispatch.
         if (is_string($class) ) {
             if (method_exists($class, 'forge')) {
-                $next = $class::forge();
+                $next = $class::forge($this->app);
             } else {
                 $next = new $class;
             }

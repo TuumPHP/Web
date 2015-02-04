@@ -9,7 +9,7 @@ use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 
-class Router implements MiddlewareInterface
+class RouterStack implements MiddlewareInterface
 {
     use MiddlewareTrait;
     
@@ -29,22 +29,10 @@ class Router implements MiddlewareInterface
      * @param RouterInterface    $router
      * @param Dispatcher         $dispatcher
      */
-    protected function __construct($router, $dispatcher)
+    public function __construct($router, $dispatcher)
     {
         $this->router = $router;
         $this->dispatcher = $dispatcher;
-    }
-
-    /**
-     * @param RouterInterface    $router
-     * @param Dispatcher         $dispatcher
-     * @return Router
-     */
-    public static function forge($router, $dispatcher=null)
-    {
-        $dispatcher = $dispatcher ?: new Dispatcher();
-        $self = new self($router, $dispatcher);
-        return $self;
     }
 
     /**
