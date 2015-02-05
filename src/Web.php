@@ -66,6 +66,17 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @param string $root
+     * @return $this
+     */
+    public function setRenderRoot($root)
+    {
+        $engine = $this->get(App::RENDER_ENGINE);
+        $engine->locator->addRoot($root);
+        return $this;
+    }
+
+    /**
      * @param string $routes
      * @return mixed
      */
