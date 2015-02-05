@@ -29,7 +29,7 @@ trait DispatchByMethodTrait
         /*
          * set up request information
          */
-        $params = (array)$request->getAttribute(App::ROUTE_PARAM) + (array)$request->getQueryParams();
+        $params = (array)$request->getQueryParams();
         $method = $request->getMethod();
         $method = 'on' . ucwords( $method );
         if ( !method_exists( $this, $method ) ) {

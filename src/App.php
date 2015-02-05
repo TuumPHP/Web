@@ -25,9 +25,7 @@ class App
     const LOGGER = 'logger';
     const VIEW_DATA = 'data';
     const FLASH_NAME = 'flash';
-    const ROUTE_PARAM = 'params';
     const ROUTE_NAMES = 'namedRoutes';
-    const CONTROLLER  = 'controller';
     const RENDER_ENGINE = 'renderer';
     const ROUTER = 'router';
 
