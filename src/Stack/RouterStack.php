@@ -49,16 +49,20 @@ class RouterStack implements MiddlewareInterface
         if (!$route) {
             return $this->execNext($request);
         }
+        /*
+         * execute the dispatcher and filters using blank new web application.
+         */
+        $app = $request->getWebApp()->cloneApp();
         $this->dispatcher->setRoute($route);
-        $this->prepend($this->dispatcher);
+        $app->prepend($this->dispatcher);
 
         if ($beforeFilters = $route->before()) {
             foreach($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
-                $this->prepend($filter);
+                $app->prepend($filter);
             }
         }
         $request = $request->withAttribute(App::ROUTE_NAMES, $this->router->getReverseRoute($request));
-        return $this->execNext($request);
+        return $app($request);
     }
 }

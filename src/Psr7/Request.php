@@ -61,6 +61,14 @@ class Request extends ServerRequest
     }
 
     /**
+     * @return Web
+     */
+    public function getWebApp()
+    {
+        return $this->web;
+    }
+
+    /**
      * @param string|ApplicationInterface $filter
      * @return null|Response
      */

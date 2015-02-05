@@ -68,4 +68,17 @@ class Web implements MiddlewareInterface
         }
         return $request->respond()->asError();
     }
+
+    /**
+     * start a new web application.
+     * have same container but no middleware.
+     *
+     * @return Web
+     */
+    public function cloneApp()
+    {
+        $new = clone($this);
+        $new->next = null;
+        return $new;
+    }
 }
