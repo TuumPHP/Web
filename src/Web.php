@@ -54,6 +54,18 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * add a config directory for the container. 
+     * 
+     * @param string $root
+     * @return $this
+     */
+    public function setConfigRoot($root)
+    {
+        $this->container->config($root);
+        return $this;
+    }
+
+    /**
      * @param Request $request
      * @return Response|null
      */
