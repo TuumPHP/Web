@@ -26,7 +26,7 @@ abstract class AbstractController implements ApplicationInterface
     public function __invoke($request)
     {
         $this->request  = $request;
-        $this->respond  = $request->respond();
+        $this->respond  = $request->respond()->with('basePath', $request->getBasePath());
 
         return $this->dispatch($request);
     }

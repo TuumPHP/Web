@@ -105,13 +105,9 @@ class Request extends ServerRequest
      * @param string $path
      * @return Request
      */
-    public function withPathToMatch($base, $path=null)
+    public function withPathToMatch($base, $path)
     {
         $new = clone $this;
-        if(!$path) {
-            $path = $base;
-            $base = '';
-        }
         $new->base_path     = $base;
         $new->path_to_match = $path;
         return $new;

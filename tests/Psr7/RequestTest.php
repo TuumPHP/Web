@@ -23,7 +23,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = RequestFactory::fromPath('/path/to', 'get');
         $this->assertEquals('/path/to', $request->getPathToMatch());
         
-        $newReq = $request->withPathToMatch('/another/path');
+        $newReq = $request->withPathToMatch('', '/another/path');
         $this->assertEquals('/path/to', $request->getPathToMatch());
         $this->assertEquals('/another/path', $newReq->getPathToMatch());
     }
