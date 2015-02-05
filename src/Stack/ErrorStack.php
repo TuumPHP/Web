@@ -76,7 +76,7 @@ class ErrorStack implements MiddlewareInterface
             $this->logger->error('ErrorRelease: received an error response: '.$response->getStatusCode());
         }
         $content = $this->renderer->render($response->getStatusCode(), $response->getData());
-        $response->withBody(StreamFactory::string($content));
+        $response = $response->withBody(StreamFactory::string($content));
         return $response;
     }
 
