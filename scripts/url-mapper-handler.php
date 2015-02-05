@@ -10,5 +10,5 @@ use Tuum\Web\Web;
 
 /** @var Web $app */
 
-$loc = new Locator($app->get(App::RESOURCE_DIR));
+$loc = new Locator($app->get(App::DOCUMENT_DIR));
 return new UrlMapper($loc);

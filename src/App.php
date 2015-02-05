@@ -18,7 +18,7 @@ class App
     const ROUTES_FILE  = 'file.routes';
     const CONFIG_DIR   = 'dir.config';
     const TEMPLATE_DIR = 'dir.view';
-    const RESOURCE_DIR = 'dir.resource';
+    const DOCUMENT_DIR = 'dir.resource';
     const VAR_DATA_DIR = 'dir.variable';
 
     const DEBUG = 'debug';
