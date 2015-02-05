@@ -6,14 +6,13 @@ trait ResourceControllerTrait
     use RouteDispatchTrait;
 
     protected $routes = [
-        'get:/'           => 'index',
-        'get:/create'     => 'create',
-        'post:/'          => 'post',
-        'get:/{id}'       => 'get',
-        'put:/{id}'       => 'put',
-        'get:/{id}/edit'  => 'edit',
-        'post:/{id}'      => 'update',
-        'delete:/{id}'    => 'delete',
+        'get:/create'       => 'create',
+        'get:/{id}/edit'    => 'edit',
+        'get:/{id}'         => 'get',
+        'get:/'             => 'index',
+        'post:/{id}/delete' => 'delete',
+        'post:/{id}'        => 'update',
+        'post:/'            => 'insert',
     ];
 
     /**
