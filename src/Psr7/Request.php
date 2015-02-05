@@ -33,6 +33,11 @@ class Request extends ServerRequest
     protected $path_to_match = null;
 
     /**
+     * @var string
+     */
+    protected $base_path = '';
+
+    /**
      * @param array  $serverParams
      * @param array  $fileParams
      * @param null   $uri
@@ -96,12 +101,18 @@ class Request extends ServerRequest
     }
 
     /**
+     * @param string $base
      * @param string $path
      * @return Request
      */
-    public function withPathToMatch($path)
+    public function withPathToMatch($base, $path=null)
     {
         $new = clone $this;
+        if(!$path) {
+            $path = $base;
+            $base = '';
+        }
+        $new->base_path     = $base;
         $new->path_to_match = $path;
         return $new;
     }
@@ -113,9 +124,16 @@ class Request extends ServerRequest
     {
         if(is_null($this->path_to_match)) {
             return $this->getUri()->getPath();
-            
         }
         return $this->path_to_match;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->base_path;
     }
     
     /**

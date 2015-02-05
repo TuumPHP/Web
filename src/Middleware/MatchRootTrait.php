@@ -29,8 +29,12 @@ trait MatchRootTrait
     }
 
     /**
+     * check if matches with given roots.
+     * returns true/false, but
+     * if the matched root has trails, returns new $request with a path to match.
+     * 
      * @param Request $request
-     * @return bool
+     * @return bool|Request
      */
     public function isMatch($request)
     {
@@ -44,8 +48,11 @@ trait MatchRootTrait
         $path   = $request->getPathToMatch();
         $method = $request->getMethod();
         foreach ($this->_patterns as $pattern) {
-            if (Matcher::verify($pattern, $path, $method)) {
-                return true;
+            if ($matched = Matcher::verify($pattern, $path, $method)) {
+                if(isset($matched['trailing'])) {
+                    return $request->withPathToMatch($matched['matched'], $matched['trailing']);
+                }
+                return $request;
             }
         }
         return false;

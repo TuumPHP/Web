@@ -26,7 +26,7 @@ trait RouteDispatchTrait
     protected function dispatch($request)
     {
         $method = $request->getMethod();
-        $path   = $request->getUri()->getPath();
+        $path   = $request->getPathToMatch();
         $routes = $this->getRoutes();
         foreach ($routes as $pattern => $dispatch) {
             $params = Matcher::verify($pattern, $path, $method);
