@@ -20,13 +20,19 @@ abstract class AbstractController implements ApplicationInterface
     protected $respond;
 
     /**
+     * @var string
+     */
+    protected $basePath;
+
+    /**
      * @param Request $request
      * @return null|Response
      */
     public function __invoke($request)
     {
         $this->request  = $request;
-        $this->respond  = $request->respond()->with('basePath', $request->getBasePath());
+        $this->basePath = $request->getBasePath();
+        $this->respond  = $request->respond()->with('basePath', $this->basePath);
 
         return $this->dispatch($request);
     }
