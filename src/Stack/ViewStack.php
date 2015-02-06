@@ -65,20 +65,15 @@ class ViewStack implements MiddlewareInterface
         if( !isset($data['_request'])) {
             $data['_request'] = $request;
         }
-        // generate C.S.R.F. token
-        if(!isset($data['_token'])) {
-            $data['_token'] = $this->calToken();
+        if($session = $request->getAttribute(App::SESSION_MGR) ) {
+            if($token = $session->get(App::TOKEN_NAME)) {
+                $data[App::TOKEN_NAME] = $token;
+            }
         }
-        $response = $response->withData(App::TOKEN_NAME, $data['_token']);
-        // render view file. 
+        // render view file.
         $file = $response->getViewFile();
         $content = $this->engine->render($file, $data);
         $response = $response->withBody(StreamFactory::string($content));
         return $response;
-    }
-    
-    protected function calToken()
-    {
-        return sha1(uniqid() . mt_rand(0, 10000));
     }
 }

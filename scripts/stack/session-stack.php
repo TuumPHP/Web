@@ -8,5 +8,4 @@ use Tuum\Web\Stack\SessionStack;
  */
 
 $session = new Session();
-$session->start();
 return new SessionStack($session);

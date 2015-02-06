@@ -207,4 +207,15 @@ class Respond
     {
         return $this->asError(self::FILE_NOT_FOUND);
     }
+
+    /**
+     * forbidden, or access-denied.
+     * use for password failure, or CsRf token failure.
+     *
+     * @return Response
+     */
+    public function asForbidden()
+    {
+        return $this->asError(self::ACCESS_DENIED);
+    }
 }
