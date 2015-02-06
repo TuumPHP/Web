@@ -32,7 +32,6 @@ class App
     const LOGGER = 'logger';
     const ROUTE_NAMES = 'namedRoutes';
     const RENDER_ENGINE = 'renderer';
-    const ROUTER = 'router';
     const SESSION_MGR = 'session.manager';
 
 }
