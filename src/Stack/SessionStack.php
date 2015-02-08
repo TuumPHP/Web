@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+use Aura\Session\Session;
 use Tuum\Web\App;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -36,8 +36,8 @@ class SessionStack implements MiddlewareInterface
         /*
          * first, copy session data into $request->respond. 
          */
-        $this->session->start();
-        $flash = $this->session->getFlashBag()->all();
+        $segment = $this->session->getSegment('TuumPHP/WebApplication');
+        $flash   = $segment->getFlash('flashed');
         if ($flash) {
             $request->respondWith($flash);
         }
@@ -53,12 +53,12 @@ class SessionStack implements MiddlewareInterface
          */
         if ($response->isType(Response::TYPE_REDIRECT)) {
             $data  = $response->getData();
-            $this->session->getFlashBag()->setAll($data);
+            $segment->setFlash('flashed', $data);
         }
         if ($response->isType(Response::TYPE_VIEW)) {
             // currently, nothing to do.
         }
-        $this->session->save();
+        $this->session->commit();
         return $response;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+use Aura\Session\Session;
 use Tuum\Web\App;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -34,13 +34,8 @@ class CsRfStack  implements MiddlewareInterface
         if(!$session) {
             return $this->execNext($request);
         }
-        /*
-         * set up CsRf token if not set.
-         * use the same token for the duration of the session.
-         */
-        if(!$session->get(App::TOKEN_NAME)) {
-            $session->set(App::TOKEN_NAME, $this->calToken());
-        }
+        $token = $session->getCsrfToken(App::TOKEN_NAME);
+        $request->respondWith(App::TOKEN_NAME, $token->getValue());
         /*
          * check if token must be verified.
          */
@@ -50,23 +45,12 @@ class CsRfStack  implements MiddlewareInterface
         /*
          * check for token in post data.
          */
-        $token = $session->get(App::TOKEN_NAME);
         $posts = $request->getBodyParams();
         if( isset($posts[App::TOKEN_NAME]) &&
             $posts[App::TOKEN_NAME] &&
-            $posts[App::TOKEN_NAME] === $token) {
+            $token->isValid($posts[App::TOKEN_NAME])) {
             return $this->execNext($request); // GOOD!
         }
         return $request->respond()->asForbidden(); // BAD!!!
-    }
-
-    /**
-     * TODO: update the logic with more secure one!
-     *
-     * @return string
-     */
-    protected function calToken()
-    {
-        return sha1(uniqid() . mt_rand(0, 10000));
     }
 }

@@ -3,7 +3,6 @@ namespace Tuum\Web\Stack;
 
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
-use Tuum\Web\App;
 use Tuum\View\ViewEngineInterface;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
@@ -64,11 +63,6 @@ class ViewStack implements MiddlewareInterface
         $data = $response->getData();
         if( !isset($data['_request'])) {
             $data['_request'] = $request;
-        }
-        if($session = $request->getAttribute(App::SESSION_MGR) ) {
-            if($token = $session->get(App::TOKEN_NAME)) {
-                $data[App::TOKEN_NAME] = $token;
-            }
         }
         // render view file.
         $file = $response->getViewFile();
