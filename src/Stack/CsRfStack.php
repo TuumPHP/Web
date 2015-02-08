@@ -32,7 +32,7 @@ class CsRfStack  implements MiddlewareInterface
     {
         // get session. ignore CsRf filter if not set. 
         /** @var Session $session */
-        $session = $request->getAttribute(App::SESSION_MGR);
+        $session = $request->getSession();
         if(!$session) {
             return $this->execNext($request);
         }

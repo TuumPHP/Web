@@ -41,7 +41,7 @@ class SessionStack implements MiddlewareInterface
         if ($flash) {
             $request->respondWith($flash);
         }
-        $request = $request->withAttribute( App::SESSION_MGR, $this->session);
+        $request = $request->withSession($this->session);
 
         /*
          * execute the subsequent stack.

@@ -20,7 +20,7 @@ class CsRfFilter implements ApplicationInterface
          * get token from session. ignore CsRf if session is not set.
          */
         /** @var Session $session */
-        $session = $request->getAttribute(App::SESSION_MGR);
+        $session = $request->getSession();
         if(!$session) {
             return null;
         }

@@ -32,7 +32,6 @@ class App
     const LOGGER = 'logger';
     const ROUTE_NAMES = 'namedRoutes';
     const RENDER_ENGINE = 'renderer';
-    const SESSION_MGR = 'session.manager';
     const CS_RF_FILTER = 'csrf';
 
 }

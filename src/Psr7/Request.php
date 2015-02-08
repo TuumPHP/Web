@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Psr7;
 
+use Aura\Session\Session;
 use Phly\Http\ServerRequest;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
@@ -150,5 +151,22 @@ class Request extends ServerRequest
     {
         $this->respond->setRequest($this);
         return $this->respond;
+    }
+
+    /**
+     * @param Session $session
+     * @return $this
+     */
+    public function withSession($session)
+    {
+        return $this->withAttribute('session.mgr', $session);
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->getAttribute('session.mgr');
     }
 }
