@@ -10,9 +10,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "symfony/http-foundation": "~2.5",
         "tuum/locator": "dev-master",
+        "tuum/router": "dev-master",
         "tuum/view": "dev-master",
+        "aura/session": " 2.0.0-beta2",
         "phly/http": "~0.10.0",
         "monolog/monolog": "~1.0",
         "filp/whoops": "1.1.3"
