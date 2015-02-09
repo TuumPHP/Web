@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Tuum\View\Viewer\View;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\View\ViewEngineInterface;
@@ -60,14 +61,25 @@ class ViewStack implements MiddlewareInterface
      */
     protected function setContents($request, $response)
     {
-        $data = $response->getData();
-        if( !isset($data['_request'])) {
-            $data['_request'] = $request;
-        }
         // render view file.
+        $data = $this->prepareData($request, $response);
         $file = $response->getViewFile();
         $content = $this->engine->render($file, $data);
         $response = $response->withBody(StreamFactory::string($content));
         return $response;
+    }
+
+    /**
+     * @param Request           $request
+     * @param Response          $response
+     * @return mixed
+     */
+    protected function prepareData($request, $response)
+    {
+        $data = $response->getData();
+        $view = new View($data);
+        $view->setUri($request->getUri());
+        $data = ['view' => $view];
+        return $data;
     }
 }

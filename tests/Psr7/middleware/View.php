@@ -14,7 +14,7 @@ class View implements ApplicationInterface
     public function __invoke( $request )
     {
         return $request->respond()
-            ->withErrorMessage( 'tested')
+            ->withError( 'tested')
             ->withInput(['more'=>'done'])
             ->with(['test'=>'tested'])
             ->asView('tested-view')

@@ -2,6 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Psr\Http\Message\UriInterface;
+use Tuum\View\Viewer\Message;
 
 /**
  * Class Respond
@@ -23,7 +24,11 @@ class Respond
     /**
      * @var array
      */
-    protected $data = [];
+    protected $data = [
+        'messages' => [],
+        'inputs' => [],
+        'errors' => [],
+    ];
 
     /**
      * @var Request
@@ -56,6 +61,7 @@ class Respond
         }
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
+
     /**
      * @param string|array $key
      * @param null         $value
@@ -63,14 +69,25 @@ class Respond
      */
     public function with($key, $value = null)
     {
-        $new = clone($this);
         if (is_array($key)) {
-            $new->data = array_merge($this->data, $key);
+            $this->data = array_merge($this->data, $key);
         }
         if (is_string($key)) {
-            $new->data[$key] = $value;
+            $this->data[$key] = $value;
         }
-        return $new;
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    protected function merge($key, $value)
+    {
+        if( !isset($this->data[$key])) {
+            $this->data[$key] = [];
+        }
+        $this->data[$key][] = $value;
     }
 
     /**
@@ -97,21 +114,37 @@ class Respond
      */
     public function withMessage($message)
     {
-        return $this->with('messages', [
-            'message' => $message
+        $this->merge('messages', [
+            'message' => $message,
+            'type' => Message::MESSAGE,
         ]);
+        return $this;
     }
 
     /**
      * @param string $message
      * @return Respond
      */
-    public function withErrorMessage($message)
+    public function withNotice($message)
     {
-        return $this->with('messages', [
+        $this->merge('messages', [
             'message' => $message,
-            'error'   => true,
+            'type' => Message::ALERT,
         ]);
+        return $this;
+    }
+
+    /**
+     * @param string $message
+     * @return Respond
+     */
+    public function withError($message)
+    {
+        $this->merge('messages', [
+            'message' => $message,
+            'type' => Message::ERROR,
+        ]);
+        return $this;
     }
 
     /**
