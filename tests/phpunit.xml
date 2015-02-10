@@ -12,6 +12,7 @@
         >
     <testsuites>
         <testsuite name="WScore/Pile Test Suite">
+            <directory>Controller</directory>
             <directory>Psr7</directory>
             <directory>Viewer</directory>
         </testsuite>
