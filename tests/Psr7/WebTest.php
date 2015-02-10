@@ -124,7 +124,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( $response->isType(Response::TYPE_REDIRECT));
         $data = $response->getData();
         $this->assertEquals('tested', $data['test']);
-        $this->assertEquals(['message'=>'message-test'], $data['messages']);
+        $this->assertEquals([['message'=>'message-test','type'=>'message']], $data['messages']);
         $this->assertEquals(['more'=>'done'], $data['inputs']);
     }
 
@@ -144,7 +144,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('tested-view', $response->getViewFile());
         $data = $response->getData();
         $this->assertEquals('tested', $data['test']);
-        $this->assertEquals(['message'=>'tested', 'error'=>true], $data['messages']);
+        $this->assertEquals([['message'=>'tested', 'type'=>'error']], $data['messages']);
         $this->assertEquals(['more'=>'done'], $data['inputs']);
         $this->assertEquals('tested', $data['test']);
     }

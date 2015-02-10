@@ -85,7 +85,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
         $data = $response->getData();
         $this->assertEquals('tested',                $data['test']);
-        $this->assertEquals(['message' => 'hello'],  $data['messages']);
+        $this->assertEquals([['message' => 'hello','type'=>'message']],  $data['messages']);
         $this->assertEquals(['more'    => 'done'],   $data['inputs']);
         $this->assertEquals(['input'   => 'errors'], $data['errors']);
     }
