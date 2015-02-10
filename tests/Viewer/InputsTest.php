@@ -43,8 +43,8 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         ];
         $input = new Inputs($data);
         $this->assertEquals($data['test'], $input->get('test'));
-        $this->assertEquals('assured', $input->get('test', 'assured'));
-        $this->assertEquals(null, $input->get('test', 'bad'));
+        $this->assertEquals(true, $input->exists('test', 'assured'));
+        $this->assertEquals(false, $input->exists('test', 'bad'));
     }
 
     /**

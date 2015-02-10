@@ -35,10 +35,28 @@ class Inputs
         parse_str($name, $levels);
         $inputs = $this->inputs;
         $found = $this->recurseGet($levels, $inputs);
-        if(!is_null($option) && is_array($found)) {
-            return in_array($option, $found) ? $option: null;
+        if(!is_null($found)) {
+            return $found;
         }
-        return $found;
+        return $option;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return bool
+     */    
+    public function exists($name, $value=null)
+    {
+        $found = $this->get($name);
+        if(is_null($found)) return false;
+        if(!is_null($value)) {
+            if(is_array($found) && in_array($value, $found)) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     /**

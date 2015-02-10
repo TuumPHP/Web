@@ -2,7 +2,6 @@
 namespace Tuum\Web\Viewer;
 
 use Psr\Http\Message\UriInterface;
-use Traversable;
 
 /**
  * Class View
@@ -10,9 +9,11 @@ use Traversable;
  * @property Errors errors
  * @property Inputs inputs
  * @property Message message
+ * @property Data    data
+ * @property UriInterface     uri
  * @package Tuum\View
  */
-class View implements \ArrayAccess, \IteratorAggregate
+class View
 {
     /**
      * @var Inputs
@@ -23,6 +24,11 @@ class View implements \ArrayAccess, \IteratorAggregate
      * @var array
      */
     protected $_data_ = [];
+
+    /**
+     * @var Data
+     */
+    protected $data;
 
     /**
      * @var Message
@@ -42,14 +48,14 @@ class View implements \ArrayAccess, \IteratorAggregate
     /**
      * @var UriInterface
      */
-    public $uri;
+    protected $uri;
 
     /**
      * a callable to escape a string.
      *
      * @var callable
      */
-    public $escape = 'h';
+    public static $escape = ['self', 'htmlSafe'];
 
     // +----------------------------------------------------------------------+
     //  construction
@@ -62,7 +68,6 @@ class View implements \ArrayAccess, \IteratorAggregate
     public function __construct($data=[])
     {
         $this->setData($data);
-        $this->escape = [$this, 'htmlSafe'];
     }
 
     /**
@@ -73,20 +78,6 @@ class View implements \ArrayAccess, \IteratorAggregate
      */
     public function withData($data)
     {
-        $view = clone($this);
-        $view->setData($data);
-        return $view;
-    }
-
-    /**
-     * returns new view object populated with its _data_[$key].
-     *
-     * @param string $key
-     * @return View
-     */
-    public function withKey($key)
-    {
-        $data = $this->get($key);
         $view = clone($this);
         $view->setData($data);
         return $view;
@@ -105,6 +96,7 @@ class View implements \ArrayAccess, \IteratorAggregate
         $this->message = new Message($this->bite($data, 'messages'));
         $this->uri     = new Message($this->bite($data, 'uri'));
         $this->values  = new Inputs($data);
+        $this->data    = new Data($data);
         $this->_data_  = $data;
     }
 
@@ -123,42 +115,6 @@ class View implements \ArrayAccess, \IteratorAggregate
             return $found;
         }
         return [];
-    }
-
-    /**
-     * escapes a string using $this->escape.
-     *
-     * @param string $string
-     * @return mixed
-     */
-    protected function escape($string)
-    {
-        if(is_string($string)) {
-            return call_user_func($this->escape, $string);
-        }
-        return $string;
-    }
-
-    /**
-     * escape for html output.
-     *
-     * @param string $string
-     * @return string
-     */
-    protected function htmlSafe($string)
-    {
-        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-    }
-
-    /**
-     * a handy method to escape a string as input.
-     *
-     * @param string $string
-     * @return string
-     */
-    public function e($string)
-    {
-        return $this->escape($string);
     }
 
     // +----------------------------------------------------------------------+
@@ -189,7 +145,7 @@ class View implements \ArrayAccess, \IteratorAggregate
     {
         $found = $this->value($key);
         if( is_string($found)) {
-            return $this->escape($found);
+            return self::escape($found);
         }
         return $found;
     }
@@ -208,133 +164,43 @@ class View implements \ArrayAccess, \IteratorAggregate
         if(isset($this->$key)) {
             return $this->$key;
         }
-        return $this->get($key);
+        return null;
     }
-
+    
     /**
-     * get raw value.
+     * escapes a string using $this->escape.
      *
-     * @param string       $key
-     * @param null|mixed   $default
+     * @param string $string
      * @return mixed
      */
-    function get($key, $default=null)
+    public static function escape($string)
     {
-        if (!$this->offsetExists($key)) {
-            return $default;
+        if(is_string($string)) {
+            return call_user_func(self::$escape, $string);
         }
-        if(is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess) {
-            return $this->_data_[$key];
-        }
-        if(is_object($this->_data_)) {
-            return $this->_data_->$key;
-        }
-        throw new \RuntimeException('unknown view data given');
+        return $string;
     }
 
     /**
-     * get keys of current data (if it is an array).
+     * a handy method to escape a string as input.
      *
-     * @return array
-     */
-    public function getKeys()
-    {
-        return is_array($this->_data_) ? array_keys($this->_data_) : [];
-    }
-
-    /**
-     * get escaped value.
-     *
-     * @param string       $key
+     * @param string $string
      * @return string
      */
-    function safe($key)
+    public function e($string)
     {
-        $html = $this->get($key);
-        if(is_string($html)) {
-            $html = $this->escape($html);
-        }
-        return $html;
+        return self::escape($string);
     }
 
     /**
-     * get value as hidden tag with $key as name.
+     * escape for html output.
      *
-     * @param string $key
+     * @param string $string
      * @return string
      */
-    public function hiddenTag($key)
+    protected static function htmlSafe($string)
     {
-        if ($this->offsetExists($key)) {
-            $value = $this->safe($key);
-            return "<input type='hidden' name='{$key}' value='{$value}' />";
-        }
-        return '';
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
     }
 
-    // +----------------------------------------------------------------------+
-    //  for ArrayAccess and Iterator
-    // +----------------------------------------------------------------------+
-    /**
-     * check if the $offset exists in the data.
-     *
-     * @param mixed $offset
-     * @return boolean
-     */
-    public function offsetExists($offset)
-    {
-        if(is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess) {
-            return array_key_exists($offset, $this->_data_);
-        }
-        if(is_object($this->_data_)) {
-            if(isset($this->_data_->$offset)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Offset to retrieve. automatically escapes the output.
-     *
-     * @param mixed $offset 
-     * @return mixed 
-     */
-    public function offsetGet($offset)
-    {
-        return $this->escape($this->get($offset, null));
-    }
-
-    /**
-     * Offset to set
-     *
-     * @param mixed $offset
-     * @param mixed $value
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        throw new \RuntimeException('cannot set new values in View');
-    }
-
-    /**
-     * Offset to unset
-     *
-     * @param mixed $offset 
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        throw new \RuntimeException('cannot unset a value from View');
-    }
-
-    /**
-     * Retrieve an external iterator
-     *
-     * @return Traversable 
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->_data_);
-    }
 }
