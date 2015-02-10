@@ -41,7 +41,7 @@ class CsRfStack  implements MiddlewareInterface
          * so that view/response can access it.
          */
         $token = $session->getCsrfToken(App::TOKEN_NAME);
-        $request->respondWith(App::TOKEN_NAME, $token->getValue());
+        $request->respondWith()->with(App::TOKEN_NAME, $token->getValue());
         /*
          * check if token must be verified.
          */

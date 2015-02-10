@@ -134,17 +134,20 @@ class Request extends ServerRequest
     }
     
     /**
-     * @param string|array $key
-     * @param mixed|null   $value
-     * @return $this
+     * returns new Respond object.
+     *
+     * @return Respond
      */
-    public function respondWith($key, $value=null)
+    public function respondWith()
     {
-        $this->respond = $this->respond->with($key, $value);
-        return $this;
+        $this->respond = clone($this->respond);
+        return $this->respond;
     }
 
     /**
+     * use this to get respond object to construct a new Response.
+     * sets $request in the respond.
+     *
      * @return Respond
      */
     public function respond()

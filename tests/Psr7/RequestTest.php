@@ -34,10 +34,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     function respond_with_sets_data_in_response()
     {
         $request = RequestFactory::fromPath('/path/to', 'get');
-        $request->respondWith(
+        $request->respondWith()->with(
             'test', 'tested'
         );
-        $request->respondWith([
+        $request->respondWith()->with([
             'more' => 'done',
         ]);
         $response = $request->respond()->asView('test');
@@ -55,7 +55,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $app = new Web($con);
         $con->set('test-filter', function($request) {
             /** @var Request $request */
-            $request->respondWith(
+            $request->respondWith()->with(
                 'tested', 'filter'
             );
         });
@@ -74,7 +74,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     function respond()
     {
         $request = RequestFactory::fromPath('/path/to', 'get');
-        $request->respondWith( 'test', 'tested');
+        $request->respondWith()->with( 'test', 'tested');
         $respond = $request->respond()
             ->withMessage('hello')
             ->withInput( ['more' => 'done'])

@@ -39,7 +39,7 @@ class SessionStack implements MiddlewareInterface
         $segment = $this->session->getSegment('TuumPHP/WebApplication');
         $flash   = $segment->getFlash('flashed');
         if ($flash) {
-            $request->respondWith($flash);
+            $request->respondWith()->with($flash);
         }
         $request = $request->withSession($this->session);
 
