@@ -19,11 +19,18 @@ class ViewStack implements MiddlewareInterface
     public $engine;
 
     /**
-     * @param ViewEngineInterface $engine
+     * @var View
      */
-    public function __construct($engine)
+    public $view;
+
+    /**
+     * @param ViewEngineInterface $engine
+     * @param View                $view
+     */
+    public function __construct($engine, $view)
     {
         $this->engine = $engine;
+        $this->view   = $view;
     }
 
     /**
@@ -77,9 +84,8 @@ class ViewStack implements MiddlewareInterface
     protected function prepareData($request, $response)
     {
         $data = $response->getData();
-        $view = new View($data);
-        $view->setUri($request->getUri());
-        $data = ['view' => $view];
+        $data['uri'] = $request->getUri();
+        $data = ['view' => $this->view->withData($data)];
         return $data;
     }
 }

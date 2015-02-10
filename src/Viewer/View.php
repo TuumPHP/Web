@@ -49,13 +49,34 @@ class View implements \ArrayAccess, \IteratorAggregate
      *
      * @param array $data
      */
-    public function __construct($data)
+    public function __construct($data=[])
     {
-        $this->inputs = new Inputs($this->bite($data, 'inputs'));
-        $this->errors = new Errors($this->bite($data, 'errors'));
+        $this->setData($data);
+    }
+
+    /**
+     * @param array $data
+     * @return View
+     */
+    public function withData($data)
+    {
+        $view = clone($this);
+        $view->setData($data);
+        return $view;
+    }
+
+    /**
+     * @param $data
+     */
+    protected function setData($data)
+    {
+        if(empty($data)) return;
+        $this->inputs  = new Inputs($this->bite($data, 'inputs'));
+        $this->errors  = new Errors($this->bite($data, 'errors'));
         $this->message = new Message($this->bite($data, 'messages'));
-        $this->values = new Inputs($data);
-        $this->_data_ = $data;
+        $this->uri     = new Message($this->bite($data, 'uri'));
+        $this->values  = new Inputs($data);
+        $this->_data_  = $data;
     }
 
     /**
@@ -145,7 +166,7 @@ class View implements \ArrayAccess, \IteratorAggregate
     {
         if ($this->offsetExists($key)) {
             $value = $this->offsetGet($key);
-            return "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\" />";
+            return "<input type='hidden' name='{$key}' value='{$value}' />";
         }
         return '';
     }

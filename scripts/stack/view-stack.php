@@ -2,6 +2,7 @@
 
 use Tuum\Web\Stack\ViewStack;
 use Tuum\Web\App;
+use Tuum\Web\Viewer\View;
 use Tuum\Web\Web;
 
 /*
@@ -10,4 +11,13 @@ use Tuum\Web\Web;
 
 /** @var Web $app */
 
-return new ViewStack($app->get(App::RENDER_ENGINE));
+$view = new View();
+
+/*
+ * write setup for $view.
+ */
+
+return new ViewStack(
+    $app->get(App::RENDER_ENGINE),
+    $view
+);
