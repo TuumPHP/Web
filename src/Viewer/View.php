@@ -44,6 +44,11 @@ class View implements \ArrayAccess, \IteratorAggregate
      */
     public $uri;
 
+    /**
+     * a callable to escape a string.
+     *
+     * @var callable
+     */
     public $escape = 'h';
 
     // +----------------------------------------------------------------------+
@@ -61,6 +66,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * creates a new View object with $data set.
+     *
      * @param array|object $data
      * @return View
      */
@@ -72,7 +79,7 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * returns new view object with data[$key] populated.
+     * returns new view object populated with its _data_[$key].
      *
      * @param string $key
      * @return View
@@ -86,6 +93,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * populates View with data.
+     *
      * @param array|object $data
      */
     protected function setData($data)
@@ -100,6 +109,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * a way to populate data.
+     *
      * @param array  $data
      * @param string $key
      * @return array
@@ -115,6 +126,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * escapes a string using $this->escape.
+     *
      * @param string $string
      * @return mixed
      */
@@ -127,6 +140,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * escape for html output.
+     *
      * @param string $string
      * @return string
      */
@@ -136,6 +151,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * a handy method to escape a string as input.
+     *
      * @param string $string
      * @return string
      */
@@ -181,6 +198,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     //  values from current data.
     // +----------------------------------------------------------------------+
     /**
+     * accessing its internal properties.
+     *
      * @param string $key
      * @return mixed
      */
@@ -239,6 +258,8 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * get value as hidden tag with $key as name.
+     *
      * @param string $key
      * @return string
      */
@@ -251,7 +272,12 @@ class View implements \ArrayAccess, \IteratorAggregate
         return '';
     }
 
+    // +----------------------------------------------------------------------+
+    //  for ArrayAccess and Iterator
+    // +----------------------------------------------------------------------+
     /**
+     * check if the $offset exists in the data.
+     *
      * @param mixed $offset
      * @return boolean
      */
