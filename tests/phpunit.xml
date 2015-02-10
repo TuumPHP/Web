@@ -13,6 +13,7 @@
     <testsuites>
         <testsuite name="WScore/Pile Test Suite">
             <directory>Psr7</directory>
+            <directory>Viewer</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Tuum\View\Viewer\View;
+use Tuum\Web\Viewer\View;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\View\ViewEngineInterface;
