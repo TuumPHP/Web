@@ -1,8 +1,6 @@
 <?php
 namespace Tuum\Web\Viewer;
 
-use Tuum\Web\Viewer\Inputs;
-
 class Errors
 {
     /**
@@ -29,14 +27,6 @@ class Errors
         $this->errors = $errors;
     }
     
-    /**
-     * @param array $errors
-     */
-    public function setErrors($errors)
-    {
-        $this->errors->setInputs($errors);
-    }
-
     /**
      * @param string $name
      * @return array|mixed|string

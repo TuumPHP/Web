@@ -21,11 +21,6 @@ class View
     public $values;
 
     /**
-     * @var array
-     */
-    protected $_data_ = [];
-
-    /**
      * @var Data
      */
     protected $data;
@@ -97,7 +92,6 @@ class View
         $this->uri     = new Message($this->bite($data, 'uri'));
         $this->values  = new Inputs($data);
         $this->data    = new Data($data);
-        $this->_data_  = $data;
     }
 
     /**
@@ -115,39 +109,6 @@ class View
             return $found;
         }
         return [];
-    }
-
-    // +----------------------------------------------------------------------+
-    //  values from old input or current data.
-    // +----------------------------------------------------------------------+
-    /**
-     * search for inputs (old input from previous post), and then
-     * values passed from a controller.
-     *
-     * @param string $key
-     * @return array|mixed|null|string
-     */
-    public function value($key)
-    {
-        if($found = $this->inputs->get($key)) {
-            return $found;
-        }
-        return $this->values->get($key);
-    }
-
-    /**
-     * same as value method, but strings are escaped for html.
-     *
-     * @param string $key
-     * @return array|mixed|null|string
-     */
-    public function valueSafe($key)
-    {
-        $found = $this->value($key);
-        if( is_string($found)) {
-            return self::escape($found);
-        }
-        return $found;
     }
 
     // +----------------------------------------------------------------------+
