@@ -2,6 +2,7 @@
 namespace tests\Controller;
 
 use tests\Controller\ctrl\ByMethodController;
+use tests\Controller\ctrl\ResourceController;
 use tests\Controller\ctrl\TestController;
 use Tuum\Web\Psr7\RequestFactory;
 use Tuum\Web\Viewer\View;
@@ -43,5 +44,26 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new ByMethodController();
         $response   = $controller->__invoke($request);
         $this->assertEquals('on-put', (string) $response->getBody());
+
+        $request    = RequestFactory::fromPath('test', 'post');
+        $controller = new ByMethodController();
+        $response   = $controller->__invoke($request);
+        $this->assertNull($response);
+    }
+
+    /**
+     * @test
+     */
+    function Resource_controller_returns_based_on_route()
+    {
+        $request    = RequestFactory::fromPath('/123', 'get');
+        $controller = new ResourceController();
+        $response   = $controller->__invoke($request);
+        $this->assertEquals('on-get:123', (string) $response->getBody());
+
+        $request    = RequestFactory::fromPath('/bad/route', 'get');
+        $controller = new ResourceController();
+        $response   = $controller->__invoke($request);
+        $this->assertNull($response);
     }
 }

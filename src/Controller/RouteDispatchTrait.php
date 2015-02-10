@@ -31,7 +31,7 @@ trait RouteDispatchTrait
         foreach ($routes as $pattern => $dispatch) {
             $params = Matcher::verify($pattern, $path, $method);
             if ($params) {
-                $params += $request->getQueryParams();
+                $params += $request->getQueryParams() ?: [];
                 $method  = 'on'.ucwords($dispatch);
                 return $this->dispatchMethod($method, $params);
             }
