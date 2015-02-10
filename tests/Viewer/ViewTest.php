@@ -26,7 +26,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         // getting values
         $this->assertEquals('tested', $view['text']);
         $this->assertEquals('tested', $view->text);
-        $this->assertEquals('<bold>', $view['html']);
+        $this->assertEquals('&lt;bold&gt;', $view['html']);
         $this->assertEquals('<bold>', $view->html);
 
         // check existence
@@ -167,4 +167,52 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<div>', $view->value('more[html]'));
         $this->assertEquals('&lt;div&gt;', $view->valueSafe('more[html]'));
     }
+
+    /**
+     * @test
+     */
+    function view_can_handle_object()
+    {
+        $obj = new \stdClass();
+        $obj->test = 'tested';
+        $view = new View($obj);
+        $this->assertEquals('tested', $view->get('test'));
+    }
+
+    /**
+     * @test
+     */
+    function view_can_handle_arrayAccess_object()
+    {
+        $obj = new \ArrayObject(['test'=>'tested']);
+        $view = new View($obj);
+        $this->assertEquals('tested', $view->get('test'));
+    }
+    /**
+     * @test
+     */
+    function withKey_creates_new_view()
+    {
+        $obj1 = new \stdClass();
+        $obj1->test = 'tested';
+        $obj2 = new \stdClass();
+        $obj2->test = 'done';
+        $view = new View([
+            'list' => [
+                $obj1,
+                $obj2
+            ]
+        ]);
+        $list = $view->withKey('list');
+        $this->assertEquals('Tuum\Web\Viewer\View', get_class($list));
+
+        $answer = ['tested', 'done'];
+        foreach($list->getKeys() as $key) {
+            $object = $list->withKey($key);
+            $this->assertEquals('Tuum\Web\Viewer\View', get_class($object));
+            $this->assertEquals($answer[$key], $object->test);
+        }
+    }
+
+
 }

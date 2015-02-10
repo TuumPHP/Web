@@ -52,7 +52,7 @@ class View implements \ArrayAccess, \IteratorAggregate
     /**
      * @ param Message $message
      *
-     * @param array $data
+     * @param array|object $data
      */
     public function __construct($data=[])
     {
@@ -61,7 +61,7 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param array $data
+     * @param array|object $data
      * @return View
      */
     public function withData($data)
@@ -72,7 +72,21 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param $data
+     * returns new view object with data[$key] populated.
+     *
+     * @param string $key
+     * @return View
+     */
+    public function withKey($key)
+    {
+        $data = $this->get($key);
+        $view = clone($this);
+        $view->setData($data);
+        return $view;
+    }
+
+    /**
+     * @param array|object $data
      */
     protected function setData($data)
     {
@@ -179,7 +193,7 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * get data as list (i.e. array).
+     * get raw value.
      *
      * @param string       $key
      * @param null|mixed   $default
@@ -187,11 +201,30 @@ class View implements \ArrayAccess, \IteratorAggregate
      */
     function get($key, $default=null)
     {
-        return $this->offsetExists($key) ? $this->_data_[$key] : $default;
+        if (!$this->offsetExists($key)) {
+            return $default;
+        }
+        if(is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess) {
+            return $this->_data_[$key];
+        }
+        if(is_object($this->_data_)) {
+            return $this->_data_->$key;
+        }
+        throw new \RuntimeException('unknown view data given');
     }
 
     /**
-     * get data as list (i.e. array).
+     * get keys of current data (if it is an array).
+     *
+     * @return array
+     */
+    public function getKeys()
+    {
+        return is_array($this->_data_) ? array_keys($this->_data_) : [];
+    }
+
+    /**
+     * get escaped value.
      *
      * @param string       $key
      * @return string
@@ -224,18 +257,26 @@ class View implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->_data_);
+        if(is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess) {
+            return array_key_exists($offset, $this->_data_);
+        }
+        if(is_object($this->_data_)) {
+            if(isset($this->_data_->$offset)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve. automatically escapes the output.
      *
      * @param mixed $offset 
      * @return mixed 
      */
     public function offsetGet($offset)
     {
-        return $this->get($offset, null);
+        return $this->escape($this->get($offset, null));
     }
 
     /**
