@@ -19,18 +19,6 @@
         "filp/whoops": "1.1.3"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/TuumPHP/Locator"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/TuumPHP/Stack"
-        },
-      {
-        "type": "vcs",
-        "url": "https://github.com/TuumPHP/View"
-      }
     ],
     "autoload": {
         "psr-4": {
