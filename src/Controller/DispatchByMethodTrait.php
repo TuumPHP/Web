@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Controller;
 
-use Tuum\Web\App;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 
