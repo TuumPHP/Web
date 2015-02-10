@@ -117,7 +117,7 @@ class View implements \ArrayAccess, \IteratorAggregate
      */
     private function bite(&$data, $key)
     {
-        if(array_key_exists($key, $data) && is_array($data[$key])) {
+        if(is_array($data) && array_key_exists($key, $data) && is_array($data[$key])) {
             $found = $data[$key];
             unset($data[$key]);
             return $found;
