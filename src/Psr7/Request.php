@@ -145,15 +145,19 @@ class Request extends ServerRequest
     }
 
     /**
-     * use this to get respond object to construct a new Response.
+     * return cloned $respond object.
+     * the $request object will not be altered.
+     *
+     * use this to construct a new Response.
      * sets $request in the respond.
      *
      * @return Respond
      */
     public function respond()
     {
-        $this->respond->setRequest($this);
-        return $this->respond;
+        $respond = clone($this->respond);
+        $respond->setRequest($this);
+        return $respond;
     }
 
     /**
