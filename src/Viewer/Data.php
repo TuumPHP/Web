@@ -91,16 +91,14 @@ class Data implements \ArrayAccess, \IteratorAggregate
      */
     function get($key, $default=null)
     {
-        if (!$this->offsetExists($key)) {
-            return $default;
-        }
-        if(is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess) {
+        if ((is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess)
+            && isset($this->_data_[$key])) {
             return $this->_data_[$key];
         }
-        if(is_object($this->_data_)) {
+        if (is_object($this->_data_) && isset($this->_data_->$key)) {
             return $this->_data_->$key;
         }
-        throw new \RuntimeException('unknown view data given');
+        return $default;
     }
 
     /**
@@ -158,9 +156,7 @@ class Data implements \ArrayAccess, \IteratorAggregate
             return array_key_exists($offset, $this->_data_);
         }
         if(is_object($this->_data_)) {
-            if(isset($this->_data_->$offset)) {
-                return true;
-            }
+            return isset($this->_data_->$offset);
         }
         return false;
     }
@@ -173,7 +169,7 @@ class Data implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetGet($offset)
     {
-        return View::escape($this->get($offset, null));
+        return $this->safe($offset);
     }
 
     /**

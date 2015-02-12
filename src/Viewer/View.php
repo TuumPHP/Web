@@ -3,6 +3,11 @@ namespace Tuum\Web\Viewer;
 
 use Psr\Http\Message\UriInterface;
 
+if(!function_exists('Tuum\Web\Viewer\htmlSafe')) {
+    function htmlSafe($string) {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+    }
+}
 /**
  * Class View
  *
@@ -50,7 +55,7 @@ class View
      *
      * @var callable
      */
-    public static $escape = ['self', 'htmlSafe'];
+    public static $escape = 'Tuum\Web\Viewer\htmlSafe';
 
     // +----------------------------------------------------------------------+
     //  construction
@@ -137,7 +142,8 @@ class View
     public static function escape($string)
     {
         if(is_string($string)) {
-            return call_user_func(self::$escape, $string);
+            $func = self::$escape;
+            return $func($string);
         }
         return $string;
     }
