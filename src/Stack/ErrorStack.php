@@ -38,6 +38,20 @@ class ErrorStack implements MiddlewareInterface
     {
         $this->renderer = $renderer;
         $this->debug    = $debug;
+
+        /*
+         * set up whoops and others.
+         */
+        $whoops = new Run;
+        if($this->debug) {
+            error_reporting(E_ALL);
+            $whoops->pushHandler(new PrettyPageHandler);
+        } else {
+            error_reporting(E_ERROR);
+            $whoops->pushHandler($this->renderer);
+        }
+        $whoops->register();
+
     }
 
     /**
@@ -49,15 +63,6 @@ class ErrorStack implements MiddlewareInterface
         /*
          * set up error view, or whoops if debug is true.
          */
-        error_reporting(E_ALL);
-        $whoops = new Run;
-        if($this->debug) {
-            $whoops->pushHandler(new PrettyPageHandler);
-        } else {
-            $whoops->pushHandler($this->renderer);
-        }
-        $whoops->register();
-        
         /*
          * execute the subsequent stack.
          */
