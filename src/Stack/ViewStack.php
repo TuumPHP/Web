@@ -49,14 +49,15 @@ class ViewStack implements MiddlewareInterface
         if (!$response) {
             return $request->respond()->asNotFound();
         }
-        if ($response->isType(Response::TYPE_VIEW)) {
-            return $this->setContents($request, $response);
-        }
-        if (is_string($response)) {
+        if(is_string($response)) {
             return $request->respond()->asText($response);
         }
-        if (is_array($response)) {
+        if(is_array($response)) {
             return $request->respond()->asJson($response);
+        }
+        if ($response instanceof Response &&
+            $response->isType(Response::TYPE_VIEW)) {
+            return $this->setContents($request, $response);
         }
         return $response;
     }
