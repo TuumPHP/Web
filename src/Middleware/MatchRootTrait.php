@@ -40,7 +40,7 @@ trait MatchRootTrait
     {
         // empty means match always.
         if (empty($this->_patterns)) {
-            return true;
+            return $request;
         }
         /*
          * match roots against the path info.

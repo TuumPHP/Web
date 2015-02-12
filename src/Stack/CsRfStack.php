@@ -45,9 +45,10 @@ class CsRfStack  implements MiddlewareInterface
         /*
          * check if token must be verified.
          */
-        if(!$this->isMatch($request)) {
+        if(!$newReq = $this->isMatch($request)) {
             return $this->execNext($request); // maybe not...
         }
+        $request  = $newReq;
         /*
          * validate token
          */
