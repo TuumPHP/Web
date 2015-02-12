@@ -62,7 +62,7 @@ class RouterStack implements MiddlewareInterface
                 $app->prepend($filter);
             }
         }
-        if($route->trailing()) {
+        if($route->matched()) {
             $request = $request->withPathToMatch($route->matched(), $route->trailing());
         }
         $request = $request->withAttribute(App::ROUTE_NAMES, $this->router->getReverseRoute($request));
