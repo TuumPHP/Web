@@ -49,7 +49,7 @@ trait MatchRootTrait
         $method = $request->getMethod();
         foreach ($this->_patterns as $pattern) {
             if ($matched = Matcher::verify($pattern, $path, $method)) {
-                if(isset($matched['trailing'])) {
+                if(isset($matched['matched'])) {
                     return $request->withPathToMatch($matched['matched'], $matched['trailing']);
                 }
                 return $request;
