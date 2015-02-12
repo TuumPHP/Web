@@ -51,12 +51,38 @@ class Inputs
         $found = $this->get($name);
         if(is_null($found)) return false;
         if(!is_null($value)) {
-            if(is_array($found) && in_array($value, $found)) {
-                return true;
+            if(is_array($found)) {
+                return in_array($value, $found);
             }
-            return false;
+            return $value == $found;
         }
         return true;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return string
+     */
+    public function checked($name, $value)
+    {
+        if($this->exists($name, $value)) {
+            return ' checked';
+        }
+        return '';
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return string
+     */
+    public function selected($name, $value)
+    {
+        if($this->exists($name, $value)) {
+            return ' selected';
+        }
+        return '';
     }
 
     /**
@@ -67,20 +93,23 @@ class Inputs
     protected function recurseGet($levels, $inputs)
     {
         if (!is_array($levels)) {
+            if(is_null($inputs) || $inputs === false) {
+                $inputs = '';
+            }
             return $inputs;
         }
         list($key, $next) = each($levels);
-        // object accessing as property
-        if (is_object($inputs) && isset($inputs->$key)) {
-            return $this->recurseGet($next, $inputs->$key);
+        // an array
+        if (is_array($inputs) && array_key_exists($key, $inputs)) {
+            return $this->recurseGet($next, $inputs[$key]);
         }
         // object accessing as ArrayAccess
         if (is_object($inputs) && $inputs instanceof \ArrayAccess && isset($inputs[$key])) {
             return $this->recurseGet($next, $inputs[$key]);
         }
-        // an array
-        if (is_array($inputs) && isset($inputs[$key])) {
-            return $this->recurseGet($next, $inputs[$key]);
+        // object accessing as property
+        if (is_object($inputs) && isset($inputs->$key)) {
+            return $this->recurseGet($next, $inputs->$key);
         }
         return null;
     }

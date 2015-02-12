@@ -39,12 +39,19 @@ class InputsTest extends \PHPUnit_Framework_TestCase
             'test' => [
                 'quality',
                 'assured',
-            ]
+            ],
+            'exact' => 'value',
         ];
         $input = new Inputs($data);
         $this->assertEquals($data['test'], $input->get('test'));
         $this->assertEquals(true, $input->exists('test', 'assured'));
         $this->assertEquals(false, $input->exists('test', 'bad'));
+        $this->assertEquals(true, $input->exists('exact', 'value'));
+
+        $this->assertEquals(' checked',  $input->checked('test', 'assured'));
+        $this->assertEquals(' selected', $input->selected('test', 'assured'));
+        $this->assertEquals('',  $input->checked('test', 'bad'));
+        $this->assertEquals('', $input->selected('test', 'bad'));
     }
 
     /**
@@ -76,5 +83,29 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['test'], $input->get('test'));
         $this->assertEquals('arrayObject', $input->get('test[name]'));
         $this->assertEquals(null, $input->get('test[bad]'));
+    }
+
+    /**
+     * @test
+     */
+    function inputs_returns_empty_string()
+    {
+        $data  = [
+            'test' => [
+                'null' => null,
+                'false' => false,
+                'empty' => '',
+                'zero' => '0',
+                'true' => true,
+                'test' => 'tested',
+            ]
+        ];
+        $input = new Inputs($data);
+        $this->assertTrue('' === $input->get('test[null]'));
+        $this->assertTrue('' === $input->get('test[false]'));
+        $this->assertTrue('' === $input->get('test[empty]'));
+        $this->assertTrue('0' === $input->get('test[zero]'));
+        $this->assertTrue(true === $input->get('test[true]'));
+        $this->assertEquals('tested', $input->get('test[test]'));
     }
 }
