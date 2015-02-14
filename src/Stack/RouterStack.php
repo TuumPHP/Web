@@ -45,10 +45,12 @@ class RouterStack implements MiddlewareInterface
         if (!$this->router) {
             throw new \ErrorException('no router for routing.');
         }
-        if (!$newReq = $this->isMatch($request)) {
+        if (!$matched = $this->isMatch($request)) {
             return $this->execNext($request);
         }
-        $request = $newReq;
+        if(isset($matched['matched'])) {
+            $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
+        }
         $route  = $this->router->match($request);
         if (!$route) {
             return $this->execNext($request);

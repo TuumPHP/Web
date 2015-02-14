@@ -40,8 +40,10 @@ class Middleware implements MiddlewareInterface
      */
     public function __invoke($request)
     {
-        if ($newReq = $this->isMatch($request)) {
-            $request  = $newReq;
+        if ($matched = $this->isMatch($request)) {
+            if(isset($matched['matched'])) {
+                $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
+            }
             $app      = $this->app;
             $response = $app($request);
             if ($response) {
