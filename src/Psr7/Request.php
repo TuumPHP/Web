@@ -18,6 +18,8 @@ use Tuum\Web\Web;
  */
 class Request extends ServerRequest
 {
+    const SESSION_MGR = 'session.mgr';
+    
     /**
      * @var Respond
      */
@@ -166,7 +168,7 @@ class Request extends ServerRequest
      */
     public function withSession($session)
     {
-        return $this->withAttribute('session.mgr', $session);
+        return $this->withAttribute(self::SESSION_MGR, $session);
     }
 
     /**
@@ -174,6 +176,6 @@ class Request extends ServerRequest
      */
     public function getSession()
     {
-        return $this->getAttribute('session.mgr');
+        return $this->getAttribute(self::SESSION_MGR);
     }
 }
