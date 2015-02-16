@@ -1,7 +1,8 @@
 <?php
 namespace Tuum\Web;
 
-use Tuum\Locator\Container;
+use League\Container\Container;
+use Tuum\Locator\Locator;
 use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\Psr7\Request;
@@ -26,10 +27,12 @@ class Web implements MiddlewareInterface
     protected $container;
 
     /**
+     * @param Locator   $locator
      * @param Container $container
      */
-    public function __construct($container)
+    public function __construct($locator, $container)
     {
+        $this->locator   = $locator;
         $this->container = $container;
     }
 
@@ -39,7 +42,7 @@ class Web implements MiddlewareInterface
      */
     public function set($key, $value)
     {
-        $this->container->set($key, $value);
+        $this->container->add($key, $value);
     }
 
     /**
@@ -54,15 +57,31 @@ class Web implements MiddlewareInterface
     }
 
     /**
-     * add a config directory for the container. 
-     * 
+     * add a config directory for the container.
+     *
      * @param string $root
-     * @return $this
      */
     public function setConfigRoot($root)
     {
-        $this->container->config($root);
-        return $this;
+        $this->locator->addRoot($root);
+    }
+
+    /**
+     * @param string $__config
+     * @return mixed|null
+     */
+    public function configure($__config, $__data=[])
+    {
+        if($__file = $this->locator->locate($__config.'.php')) {
+            if(file_exists($__file)) {
+                $app = $this;
+                $dic = $this->container;
+                extract($__data);
+                /** @noinspection PhpIncludeInspection */
+                return include($__file);
+            }
+        }
+        return null;
     }
 
     /**
