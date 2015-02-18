@@ -72,14 +72,16 @@ class Web implements MiddlewareInterface
      */
     public function configure($__config, $__data=[])
     {
-        if($__file = $this->locator->locate($__config.'.php')) {
-            if(file_exists($__file)) {
-                $app = $this;
-                $dic = $this->container;
-                extract($__data);
-                /** @noinspection PhpIncludeInspection */
-                return include($__file);
-            }
+        $__file = $__config . '.php';
+        if(!file_exists($__file)) {
+            $__file = $this->locator->locate($__config.'.php');
+        }
+        if(file_exists($__file)) {
+            $app = $this;
+            $dic = $this->container;
+            extract($__data);
+            /** @noinspection PhpIncludeInspection */
+            return include($__file);
         }
         return null;
     }
