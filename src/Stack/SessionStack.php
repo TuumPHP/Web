@@ -2,6 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Aura\Session\Session;
+use Aura\Session\SessionFactory;
 use Tuum\Web\App;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -15,16 +16,16 @@ class SessionStack implements MiddlewareInterface
     const FLASH_NAME = 'flashed';
 
     /**
-     * @var Session
+     * @var SessionFactory
      */
-    protected $session;
+    private $factory;
 
     /**
-     * @param Session $session
+     * @param SessionFactory $factory
      */
-    public function __construct($session)
+    public function __construct($factory)
     {
-        $this->session = $session;
+        $this->factory = $factory;
     }
 
     /**
@@ -36,12 +37,13 @@ class SessionStack implements MiddlewareInterface
         /*
          * first, copy session data into $request->respond. 
          */
-        $segment = $this->session->getSegment('TuumPHP/WebApplication');
+        $session = $this->factory->newInstance($_COOKIE);
+        $segment = $session->getSegment('TuumPHP/WebApplication');
         $flash   = $segment->getFlash('flashed');
         if ($flash) {
             $request->respondWith()->with($flash);
         }
-        $request = $request->withSession($this->session);
+        $request = $request->withSession($session);
 
         /*
          * execute the subsequent stack.
@@ -58,7 +60,7 @@ class SessionStack implements MiddlewareInterface
         if ($response->isType(Response::TYPE_VIEW)) {
             // currently, nothing to do.
         }
-        $this->session->commit();
+        $session->commit();
         return $response;
     }
 }

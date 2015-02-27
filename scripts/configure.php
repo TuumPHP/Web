@@ -97,8 +97,7 @@ $dic->add('stack/error-stack', function () use ($dic) {
 $dic->add('stack/session-stack', function () use ($dic) {
 
     $factory = new SessionFactory;
-    $session = $factory->newInstance($_COOKIE);
-    return new SessionStack($session);
+    return new SessionStack($factory);
 });
 
 /**
