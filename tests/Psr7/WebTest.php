@@ -28,7 +28,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
 
     function test0()
     {
-        $this->assertEquals('Tuum\Web\Web', get_class($this->app));
+        $this->assertEquals('Tuum\Web\Application', get_class($this->app));
     }
 
     /**

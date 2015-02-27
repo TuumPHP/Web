@@ -53,7 +53,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $con = new Container(new Locator(__DIR__.'/config'));
         $app = new Application($con);
-        $con->set('test-filter', function($request) {
+        $con->add('test-filter', function($request) {
             /** @var Request $request */
             $request->respondWith()->with(
                 'tested', 'filter'

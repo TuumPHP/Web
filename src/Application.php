@@ -2,7 +2,6 @@
 namespace Tuum\Web;
 
 use League\Container\Container;
-use Tuum\Locator\Locator;
 use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\Psr7\Request;
@@ -27,12 +26,10 @@ class Application implements MiddlewareInterface
     protected $container;
 
     /**
-     * @param Locator   $locator
      * @param Container $container
      */
-    public function __construct($locator, $container)
+    public function __construct($container)
     {
-        $this->locator   = $locator;
         $this->container = $container;
     }
 
@@ -57,16 +54,6 @@ class Application implements MiddlewareInterface
     }
 
     /**
-     * add a config directory for the container.
-     *
-     * @param string $root
-     */
-    public function setConfigRoot($root)
-    {
-        $this->locator->addRoot($root);
-    }
-
-    /**
      * @param string $__config
      * @param array  $__data
      * @return mixed|null
@@ -75,7 +62,7 @@ class Application implements MiddlewareInterface
     {
         $__file = $__config . '.php';
         if(!file_exists($__file)) {
-            $__file = $this->locator->locate($__config.'.php');
+            throw new \InvalidArgumentException('Cannot find configuration file: '.$__config);
         }
         if(file_exists($__file)) {
             /** @noinspection PhpUnusedLocalVariableInspection */

@@ -1,7 +1,6 @@
 <?php
 
 use League\Container\Container;
-use Tuum\Locator\Locator;
 use Tuum\Web\Application;
 
 /** --------------------------------------------------------------------------+
@@ -10,6 +9,5 @@ use Tuum\Web\Application;
  */
 
 return new Application(
-    new Locator(),
     new Container()
 );
