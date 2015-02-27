@@ -122,3 +122,21 @@ $dic->add('stack/view-stack', function () use ($dic) {
     );
 });
 
+/**
+ * stack list.
+ *
+ * return list of stacks to push.
+ *
+ */
+$dic->add('stacks', function () {
+    return [
+        /*
+         * basic stack
+         */
+        'stack/error-stack',
+        'stack/session-stack',
+        'stack/cs-rf-stack',
+        'stack/view-stack',
+        'stack/url-mapper-handler',
+    ];
+});
