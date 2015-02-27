@@ -5,12 +5,12 @@ use Tuum\Locator\Container;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
 use Tuum\Web\Psr7\Response;
-use Tuum\Web\Web;
+use Tuum\Web\Application;
 
 class WebTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Web
+     * @var Application
      */
     var $app;
 
@@ -23,7 +23,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = Container::forge();
         $this->container->config(__DIR__ . '/config');
-        $this->app = new Web($this->container);
+        $this->app = new Application($this->container);
     }
 
     function test0()

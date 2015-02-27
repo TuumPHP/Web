@@ -7,7 +7,7 @@ use Tuum\Web\ApplicationInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\App;
-use Tuum\Web\Web;
+use Tuum\Web\Application;
 
 class Dispatcher implements ApplicationInterface
 {
@@ -17,12 +17,12 @@ class Dispatcher implements ApplicationInterface
     protected $route;
 
     /**
-     * @var Web
+     * @var Application
      */
     protected $app;
 
     /**
-     * @param null|Web $app
+     * @param null|Application $app
      */
     public function __construct($app=null)
     {

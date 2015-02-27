@@ -5,7 +5,7 @@ use Tuum\Locator\Container;
 use Tuum\Locator\Locator;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
-use Tuum\Web\Web;
+use Tuum\Web\Application;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +52,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     function filter_applies_request()
     {
         $con = new Container(new Locator(__DIR__.'/config'));
-        $app = new Web($con);
+        $app = new Application($con);
         $con->set('test-filter', function($request) {
             /** @var Request $request */
             $request->respondWith()->with(

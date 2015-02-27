@@ -15,7 +15,7 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-class Web implements MiddlewareInterface
+class Application implements MiddlewareInterface
 {
     use MiddlewareTrait;
 
@@ -120,7 +120,7 @@ class Web implements MiddlewareInterface
      * start a new web application.
      * have same container but no middleware.
      *
-     * @return Web
+     * @return Application
      */
     public function cloneApp()
     {

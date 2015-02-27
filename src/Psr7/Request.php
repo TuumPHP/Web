@@ -5,7 +5,7 @@ use Aura\Session\Session;
 use Phly\Http\ServerRequest;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
-use Tuum\Web\Web;
+use Tuum\Web\Application;
 
 /**
  * Class Request
@@ -26,7 +26,7 @@ class Request extends ServerRequest
     protected $respond;
 
     /**
-     * @var Web
+     * @var Application
      */
     protected $web;
 
@@ -61,7 +61,7 @@ class Request extends ServerRequest
     }
 
     /**
-     * @param Web $web
+     * @param Application $web
      */
     public function setWebApp($web)
     {
@@ -69,7 +69,7 @@ class Request extends ServerRequest
     }
 
     /**
-     * @return Web
+     * @return Application
      */
     public function getWebApp()
     {
