@@ -68,6 +68,7 @@ class Web implements MiddlewareInterface
 
     /**
      * @param string $__config
+     * @param array  $__data
      * @return mixed|null
      */
     public function configure($__config, $__data=[])
@@ -77,7 +78,9 @@ class Web implements MiddlewareInterface
             $__file = $this->locator->locate($__config.'.php');
         }
         if(file_exists($__file)) {
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $app = $this;
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $dic = $this->container;
             extract($__data);
             /** @noinspection PhpIncludeInspection */
