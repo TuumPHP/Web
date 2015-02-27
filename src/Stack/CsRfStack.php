@@ -2,7 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Aura\Session\Session;
-use Tuum\Web\App;
+use Tuum\Web\Web;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -40,8 +40,8 @@ class CsRfStack  implements MiddlewareInterface
          * get token, and set the token value to respond 
          * so that view/response can access it.
          */
-        $token = $session->getCsrfToken(App::TOKEN_NAME);
-        $request->respondWith()->with(App::TOKEN_NAME, $token->getValue());
+        $token = $session->getCsrfToken(Web::TOKEN_NAME);
+        $request->respondWith()->with(Web::TOKEN_NAME, $token->getValue());
         /*
          * check if token must be verified.
          */
@@ -55,7 +55,7 @@ class CsRfStack  implements MiddlewareInterface
          * validate token
          */
         /** @var CsRfFilter $csRfFilter */
-        $csRfFilter = $request->getFilter(App::CS_RF_FILTER);
+        $csRfFilter = $request->getFilter(Web::CS_RF_FILTER);
         if( $response = $csRfFilter($request)) {
             return $response;
         }

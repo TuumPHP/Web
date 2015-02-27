@@ -2,7 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Tuum\Router\RouterInterface;
-use Tuum\Web\App;
+use Tuum\Web\Web;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
@@ -71,7 +71,7 @@ class RouterStack implements MiddlewareInterface
         if($route->matched()) {
             $request = $request->withPathToMatch($route->matched(), $route->trailing());
         }
-        $request = $request->withAttribute(App::ROUTE_NAMES, $this->router->getReverseRoute($request));
+        $request = $request->withAttribute(Web::ROUTE_NAMES, $this->router->getReverseRoute($request));
         return $app($request);
     }
 }

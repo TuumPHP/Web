@@ -95,7 +95,7 @@ class Application implements MiddlewareInterface
      */
     public function setRenderRoot($root)
     {
-        $engine = $this->get(App::RENDER_ENGINE);
+        $engine = $this->get(Web::RENDER_ENGINE);
         $engine->locator->addRoot($root);
         return $this;
     }

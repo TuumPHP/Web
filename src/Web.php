@@ -10,7 +10,7 @@ namespace Tuum\Web;
  *
  *          
  */
-class App
+class Web
 {
     /*
      * directories

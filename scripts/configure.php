@@ -11,7 +11,7 @@ use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\ViewStack;
 use Tuum\Web\Viewer\View;
-use Tuum\Web\App;
+use Tuum\Web\Web;
 
 /** @var Container $dic */
 if (!isset($dic)) {
@@ -28,10 +28,10 @@ if (!isset($dic)) {
  * default is Tuum's view engine.
  * use it as a singleton.
  */
-$dic->add(App::RENDER_ENGINE, function() use($dic) {
+$dic->add(Web::RENDER_ENGINE, function() use($dic) {
 
     return new Renderer(
-        new Locator($dic->get(App::TEMPLATE_DIR))
+        new Locator($dic->get(Web::TEMPLATE_DIR))
     );
 }, true);
 
@@ -40,8 +40,8 @@ $dic->add(App::RENDER_ENGINE, function() use($dic) {
  */
 $dic->add('service/error-renderer', function () use ($dic) {
 
-    $view = new ErrorView($dic->get(App::RENDER_ENGINE), $dic->get(App::DEBUG));
-    $view->setLogger($dic->get(App::LOGGER));
+    $view = new ErrorView($dic->get(Web::RENDER_ENGINE), $dic->get(Web::DEBUG));
+    $view->setLogger($dic->get(Web::LOGGER));
 
     return $view;
 });
@@ -49,7 +49,7 @@ $dic->add('service/error-renderer', function () use ($dic) {
 /**
  * CsRf Filter
  */
-$dic->add(App::CS_RF_FILTER, function () use ($dic) {
+$dic->add(Web::CS_RF_FILTER, function () use ($dic) {
     return new CsRfFilter();
 });
 
@@ -63,7 +63,7 @@ $dic->add(App::CS_RF_FILTER, function () use ($dic) {
  *
  * set to NULL as a default logger
  */
-$dic->add(App::LOGGER, false, true);
+$dic->add(Web::LOGGER, false, true);
 
 /**
  * CsRf Stack
@@ -83,8 +83,8 @@ $dic->add('stack/cs-rf-stack', function () use ($dic) {
 $dic->add('stack/error-stack', function () use ($dic) {
 
     $engine = $dic->get('service/error-renderer');
-    $stack  = new \Tuum\Web\Stack\ErrorStack($engine, $dic->get(App::DEBUG));
-    $stack->setLogger($dic->get(App::LOGGER));
+    $stack  = new \Tuum\Web\Stack\ErrorStack($engine, $dic->get(Web::DEBUG));
+    $stack->setLogger($dic->get(Web::LOGGER));
     return $stack;
 });
 
@@ -105,7 +105,7 @@ $dic->add('stack/session-stack', function () use ($dic) {
  */
 $dic->add('stack/url-mapper-handler', function () use ($dic) {
 
-    $loc = new Locator($dic->get(App::DOCUMENT_DIR));
+    $loc = new Locator($dic->get(Web::DOCUMENT_DIR));
     return new UrlMapper($loc);
 });
 
@@ -116,7 +116,7 @@ $dic->add('stack/view-stack', function () use ($dic) {
 
     $view = new View();
     return new ViewStack(
-        $dic->get(App::RENDER_ENGINE),
+        $dic->get(Web::RENDER_ENGINE),
         $view
     );
 });

@@ -3,7 +3,7 @@ namespace Tuum\Web\Stack;
 
 use Aura\Session\Session;
 use Aura\Session\SessionFactory;
-use Tuum\Web\App;
+use Tuum\Web\Web;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Middleware\MiddlewareTrait;

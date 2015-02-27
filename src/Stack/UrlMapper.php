@@ -4,7 +4,7 @@ namespace Tuum\Web\Stack;
 use Tuum\Locator\LocatorInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
-use Tuum\Web\App;
+use Tuum\Web\Web;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
 
