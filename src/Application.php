@@ -36,10 +36,11 @@ class Application implements MiddlewareInterface
     /**
      * @param string $key
      * @param mixed  $value
+     * @param bool   $singleton
      */
-    public function set($key, $value)
+    public function set($key, $value, $singleton=false)
     {
-        $this->container->add($key, $value);
+        $this->container->add($key, $value, $singleton);
     }
 
     /**

@@ -5,6 +5,7 @@ use League\Container\Container;
 use Tuum\Locator\Locator;
 use Tuum\View\ErrorView;
 use Tuum\View\Tuum\Renderer;
+use Tuum\Web\Application;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\SessionStack;
@@ -13,6 +14,7 @@ use Tuum\Web\Stack\ViewStack;
 use Tuum\Web\Viewer\View;
 use Tuum\Web\Web;
 
+/** @var Application $app */
 /** @var Container $dic */
 if (!isset($dic)) {
     throw new RuntimeException('must set container as $dic.');
@@ -28,7 +30,7 @@ if (!isset($dic)) {
  * default is Tuum's view engine.
  * use it as a singleton.
  */
-$dic->add(Web::RENDER_ENGINE, function() use($dic) {
+$app->set(Web::RENDER_ENGINE, function() use($dic) {
 
     return new Renderer(
         new Locator($dic->get(Web::TEMPLATE_DIR))
@@ -38,7 +40,7 @@ $dic->add(Web::RENDER_ENGINE, function() use($dic) {
 /**
  * rendering error page. should overwrite this service.
  */
-$dic->add('service/error-renderer', function () use ($dic) {
+$app->set('service/error-renderer', function () use ($dic) {
 
     $view = new ErrorView($dic->get(Web::RENDER_ENGINE), $dic->get(Web::DEBUG));
     $view->setLogger($dic->get(Web::LOGGER));
@@ -49,7 +51,7 @@ $dic->add('service/error-renderer', function () use ($dic) {
 /**
  * CsRf Filter
  */
-$dic->add(Web::CS_RF_FILTER, function () use ($dic) {
+$app->set(Web::CS_RF_FILTER, function () use ($dic) {
     return new CsRfFilter();
 });
 
@@ -63,14 +65,14 @@ $dic->add(Web::CS_RF_FILTER, function () use ($dic) {
  *
  * set to NULL as a default logger
  */
-$dic->add(Web::LOGGER, false, true);
+$app->set(Web::LOGGER, false, true);
 
 /**
  * CsRf Stack
  *
  * check for all the post requests.
  */
-$dic->add('stack/cs-rf-stack', function () use ($dic) {
+$app->set('stack/cs-rf-stack', function () use ($dic) {
 
     $stack = new CsRfStack();
     $stack->setRoot('post:/*');
@@ -80,7 +82,7 @@ $dic->add('stack/cs-rf-stack', function () use ($dic) {
 /**
  * ErrorStack
  */
-$dic->add('stack/error-stack', function () use ($dic) {
+$app->set('stack/error-stack', function () use ($dic) {
 
     $engine = $dic->get('service/error-renderer');
     $stack  = new \Tuum\Web\Stack\ErrorStack($engine, $dic->get(Web::DEBUG));
@@ -94,7 +96,7 @@ $dic->add('stack/error-stack', function () use ($dic) {
  * session manager.
  * use Aura/Session as default session manager.
  */
-$dic->add('stack/session-stack', function () use ($dic) {
+$app->set('stack/session-stack', function () use ($dic) {
 
     $factory = new SessionFactory;
     return new SessionStack($factory);
@@ -103,7 +105,7 @@ $dic->add('stack/session-stack', function () use ($dic) {
 /**
  * UrlMapperStack
  */
-$dic->add('stack/url-mapper-handler', function () use ($dic) {
+$app->set('stack/url-mapper-handler', function () use ($dic) {
 
     $loc = new Locator($dic->get(Web::DOCUMENT_DIR));
     return new UrlMapper($loc);
@@ -112,7 +114,7 @@ $dic->add('stack/url-mapper-handler', function () use ($dic) {
 /**
  * ViewStack
  */
-$dic->add('stack/view-stack', function () use ($dic) {
+$app->set('stack/view-stack', function () use ($dic) {
 
     $view = new View();
     return new ViewStack(
@@ -127,7 +129,7 @@ $dic->add('stack/view-stack', function () use ($dic) {
  * return list of stacks to push.
  *
  */
-$dic->add('stacks', function () {
+$app->set('stacks', function () {
     return [
         /*
          * basic stack
