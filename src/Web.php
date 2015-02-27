@@ -98,17 +98,6 @@ class Web implements MiddlewareInterface
     }
 
     /**
-     * @param string $routes
-     * @return mixed
-     */
-    public function execute($routes)
-    {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $app = $this; // to be used in the included file.
-        return include($routes);
-    }
-
-    /**
      * @param Request $request
      * @return Response|null
      */
