@@ -35,6 +35,7 @@ class Web
     const ROUTE_NAMES = 'namedRoutes';
     const RENDER_ENGINE = 'renderer';
     const CS_RF_FILTER = 'csrf';
+    const ROUTER_STACK = 'router-stack';
 
     /**
      * @param array $config

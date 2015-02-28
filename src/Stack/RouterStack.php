@@ -2,6 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Tuum\Router\RouterInterface;
+use Tuum\Routing\RouteCollector;
 use Tuum\Web\Web;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -33,6 +34,14 @@ class RouterStack implements MiddlewareInterface
     {
         $this->router = $router;
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @return mixed|RouteCollector
+     */
+    public function getRouting()
+    {
+        return $this->router->getRouting();
     }
 
     /**

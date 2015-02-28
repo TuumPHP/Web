@@ -3,10 +3,14 @@
 use Aura\Session\SessionFactory;
 use League\Container\Container;
 use Tuum\Locator\Locator;
+use Tuum\Router\Tuum\Router;
 use Tuum\View\ErrorView;
 use Tuum\View\Tuum\Renderer;
 use Tuum\Web\Application;
 use Tuum\Web\Filter\CsRfFilter;
+use Tuum\Web\Stack\Dispatcher;
+use Tuum\Web\Stack\ErrorStack;
+use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\CsRfStack;
@@ -85,7 +89,7 @@ $app->set('stack/cs-rf-stack', function () use ($dic) {
 $app->set('stack/error-stack', function () use ($dic) {
 
     $engine = $dic->get('service/error-renderer');
-    $stack  = new \Tuum\Web\Stack\ErrorStack($engine, $dic->get(Web::DEBUG));
+    $stack  = new ErrorStack($engine, $dic->get(Web::DEBUG));
     $stack->setLogger($dic->get(Web::LOGGER));
     return $stack;
 });
@@ -124,6 +128,17 @@ $app->set('stack/view-stack', function () use ($dic) {
 });
 
 /**
+ * RouterStack
+ * 
+ * a default rendering stack using Tuum's Router
+ */
+$app->set(Web::ROUTER_STACK, function() use ($app) {
+    
+    $router = Router::forge();
+    return new RouterStack($router, new Dispatcher($app));
+});
+
+/**
  * stack list.
  *
  * return list of stacks to push.
@@ -131,9 +146,6 @@ $app->set('stack/view-stack', function () use ($dic) {
  */
 $app->set('stacks', function () {
     return [
-        /*
-         * basic stack
-         */
         'stack/error-stack',
         'stack/session-stack',
         'stack/cs-rf-stack',
