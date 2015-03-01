@@ -2,6 +2,8 @@
 
 use Aura\Session\SessionFactory;
 use League\Container\Container;
+use Tuum\Form\Dates;
+use Tuum\Form\Forms;
 use Tuum\Locator\Locator;
 use Tuum\Router\Tuum\Router;
 use Tuum\View\ErrorView;
@@ -36,9 +38,12 @@ if (!isset($dic)) {
  */
 $app->set(Web::RENDER_ENGINE, function() use($dic) {
 
-    return new Renderer(
+    $view = new Renderer(
         new Locator($dic->get(Web::TEMPLATE_DIR))
     );
+    $view->register('forms', new Forms());
+    $view->register('dates', new Dates());
+    return $view;
 }, true);
 
 /**
