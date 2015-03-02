@@ -10,27 +10,31 @@ use Tuum\Web\MiddlewareInterface;
 class UrlMapper implements MiddlewareInterface
 {
     use MiddlewareTrait;
-    
+
     /**
      * @var LocatorInterface
      */
-    protected $locator;
+    private $locator;
 
-    public $setting = [];
+    /**
+     * @var array
+     */
+    public $handlers = [
+        'raw'  => ['contents', 'asText', true],
+        'html' => ['contents', 'asHtml'],
+        'text' => ['contents', 'asText'],
+        'txt'  => ['contents', 'asText'],
+        'php'  => ['view', 'asView'],
+    ];
 
     /**
      * @param LocatorInterface $locator
+     * @param array            $handler
      */
-    public function __construct($locator)
+    public function __construct($locator, $handler = [])
     {
-        $this->locator = $locator;
-        $this->setting = array(
-            '.html'     => ['asHtml', 'getContents'],
-            '.html.raw' => ['asText', 'getContents', '.html'],
-            '.txt'      => ['asText', 'getContents'],
-            '.text'     => ['asText', 'getContents'],
-            '.php'      => ['asHtml', 'execute' ]
-        );
+        $this->locator  = $locator;
+        $this->handlers = array_merge($handler, $this->handlers);
     }
 
     /**
@@ -40,56 +44,87 @@ class UrlMapper implements MiddlewareInterface
     public function __invoke($request)
     {
         $path    = $request->getUri()->getPath();
-        $setting = $this->findSetting($path);
-        if (!$setting) {
+        $handler = $this->findHandle($path);
+        if (!$handler) {
             return $this->execNext($request);
         }
-        $type   = $setting[0];
-        $method = $setting[1];
-        if (isset($setting[2])) {
-            $newExt = $setting[2];
-            if(isset($setting['extension']) && $oldExt = $setting['extension']) {
-                $path = substr($path, 0, - strlen($oldExt)) . $newExt;
-            } else {
-                $path = $path . $newExt;
-            }
-        }
-        $file    = $this->locator->locate($path);
+        $file = $this->locatePath($path, $handler);
         if (!$file) {
             return $this->execNext($request);
         }
-        return $request->respond()->$type($this->$method($file));
+        $handler['file'] = $file;
+        $method          = $handler[0];
+        /*
+         * execute the handler method.
+         * write down them just to avoid unused private method warning.
+         */
+        if ($method === 'contents') {
+            return $this->renderContents($request, $handler);
+        }
+        if ($method === 'view') {
+            return $this->renderView($request, $handler);
+        }
+        if (is_callable($method)) {
+            return $method($request, $handler);
+        }
+        return $this->$method($request, $handler);
     }
 
     /**
-     * @param string $file
+     * @param string $path
      * @return array
      */
-    public function findSetting($file)
+    private function findHandle($path)
     {
-        foreach ($this->setting as $extension => $setting) {
-            if (substr($file, -strlen($extension)) === $extension) {
-                $setting['extension'] = $extension;
-                return $setting;
-            }
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        if (!$ext) {
+            return []; // must have an extension.
         }
-        return [];
+        if (!array_key_exists($ext, $this->handlers)) {
+            return []; // must have an handler.
+        }
+        $handler              = $this->handlers[$ext];
+        $handler['extension'] = $ext;
+        return $handler;
     }
 
     /**
-     * @param $file
-     * @return string
+     * locate a path from document directory.
+     *
+     * @param string $path
+     * @param array  $handler
+     * @return bool|string
      */
-    public function getContents($file)
+    private function locatePath($path, $handler)
     {
-        return file_get_contents($file);
+        if (isset($handler[2]) && $handler[2]) {
+            $ext  = strlen($handler['extension']) + 1; // set by findHandle method.
+            $path = substr($path, 0, -$ext);
+        }
+        return $this->locator->locate($path);
     }
 
     /**
-     * @param $file
+     * @param Request $request
+     * @param array   $handler
+     * @return Response
      */
-    public function execute($file)
+    private function renderContents($request, $handler)
     {
-        include($file);
+        $file = $handler['file'];
+        $as   = $handler[1]; // asXYZ
+        return $request->respond()->$as(file_get_contents($file));
+    }
+
+    /**
+     * @param Request $request
+     * @param array   $handler
+     * @return Response
+     */
+    private function renderView($request, $handler)
+    {
+        $path = substr($handler['path'], 0, -4);
+        $as   = $handler[1]; // asXYZ
+        return $request->respond()->$as($path);
     }
 }
