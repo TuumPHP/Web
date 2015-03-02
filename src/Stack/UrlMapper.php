@@ -4,7 +4,6 @@ namespace Tuum\Web\Stack;
 use Tuum\Locator\LocatorInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
-use Tuum\Web\Web;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
 
@@ -48,9 +47,12 @@ class UrlMapper implements MiddlewareInterface
         $type   = $setting[0];
         $method = $setting[1];
         if (isset($setting[2])) {
-            $oldExt = $setting['extension'];
             $newExt = $setting[2];
-            $path = substr($path, 0, - strlen($oldExt)) . $newExt;
+            if(isset($setting['extension']) && $oldExt = $setting['extension']) {
+                $path = substr($path, 0, - strlen($oldExt)) . $newExt;
+            } else {
+                $path = $path . $newExt;
+            }
         }
         $file    = $this->locator->locate($path);
         if (!$file) {
