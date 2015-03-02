@@ -20,12 +20,19 @@ class UrlMapper implements MiddlewareInterface
      * @var array
      */
     public $handlers = [
-        'raw'  => ['contents', 'asText', true],
+        'raw'  => ['contents', 'asText', true], // dangerous option.
         'html' => ['contents', 'asHtml'],
         'text' => ['contents', 'asText'],
         'txt'  => ['contents', 'asText'],
         'php'  => ['view', 'asView'],
     ];
+    /**
+     * set to true to allow rendering raw content.
+     * warning: anyone can see the raw PHP file!
+     *
+     * @var bool
+     */
+    public $allow_raw = false;
 
     /**
      * @param LocatorInterface $locator
@@ -48,6 +55,7 @@ class UrlMapper implements MiddlewareInterface
         if (!$handler) {
             return $this->execNext($request);
         }
+        $handler['path'] = $path;
         $file = $this->locatePath($path, $handler);
         if (!$file) {
             return $this->execNext($request);
@@ -79,6 +87,9 @@ class UrlMapper implements MiddlewareInterface
         $ext = pathinfo($path, PATHINFO_EXTENSION);
         if (!$ext) {
             return []; // must have an extension.
+        }
+        if ($ext === 'raw' && !$this->allow_raw) {
+            return [];
         }
         if (!array_key_exists($ext, $this->handlers)) {
             return []; // must have an handler.
