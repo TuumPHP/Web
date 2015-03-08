@@ -14,9 +14,14 @@ use Traversable;
 class Data implements \ArrayAccess, \IteratorAggregate
 {
     /**
-     * @var array
+     * @var array|object
      */
     protected $_data_ = [];
+
+    /**
+     * @var callable
+     */
+    private $escape;
 
     // +----------------------------------------------------------------------+
     //  construction
@@ -89,7 +94,7 @@ class Data implements \ArrayAccess, \IteratorAggregate
      * @param null|mixed   $default
      * @return mixed
      */
-    function get($key, $default=null)
+    public function get($key, $default=null)
     {
         if ((is_array($this->_data_) || $this->_data_ instanceof \ArrayAccess)
             && isset($this->_data_[$key])) {
@@ -117,7 +122,7 @@ class Data implements \ArrayAccess, \IteratorAggregate
      * @param string       $key
      * @return string
      */
-    function safe($key)
+    public function safe($key)
     {
         $html = $this->get($key);
         if(is_string($html)) {
