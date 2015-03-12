@@ -148,4 +148,43 @@ class WebTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['more'=>'done'], $data['inputs']);
         $this->assertEquals('tested', $data['test']);
     }
+
+    /**
+     * @test
+     */    
+    function returnable_updates_request()
+    {
+        $app = $this->app;
+        $app->push( function($req, $return) { 
+            /** @var Request $req */
+            $return($req->withAttribute('test', 'tested-returnable')); 
+        });
+        $app->push( function($req) {
+            /** @var Request $req */
+            return $req->respond()->asView('dummy');
+        });
+        $request  = RequestFactory::fromPath('test');
+        $response = $app->__invoke($request);
+        $this->assertEquals('tested-returnable', $response->getData('test'));
+    }
+
+    /**
+     * @test
+     */
+    function returnable_set_string_data()
+    {
+        $app = $this->app;
+        /** @noinspection PhpUnusedParameterInspection */
+        $app->push( function($req, $return) {
+            /** @var Request $req */
+            $return('returnable-string');
+        });
+        $app->push( function($req) {
+            /** @var Request $req */
+            return $req->respond()->asView('dummy');
+        });
+        $request  = RequestFactory::fromPath('test');
+        $response = $app->__invoke($request);
+        $this->assertEquals('returnable-string', $response->getData('Closure'));
+    }
 }
