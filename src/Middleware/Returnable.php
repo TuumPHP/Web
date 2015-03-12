@@ -55,6 +55,9 @@ class Returnable
         if ($this->return instanceof Request) {
             return $this->return;
         }
+        if (is_array($this->return)) {
+            return $request->withAttributes($this->return);
+        }
 
         return $request->withAttribute($name, $this->return);
     }
