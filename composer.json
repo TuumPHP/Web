@@ -16,7 +16,7 @@
         "tuum/form":"dev-master",
         "aura/session": " 2.0.0-beta2",
         "phly/http": "~0.10.0",
-        "monolog/monolog": "~1.0",
+        "monolog/monolog": "~1.5",
         "league/container": "1.3.0",
         "filp/whoops": "1.1.3"
     },
