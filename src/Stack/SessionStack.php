@@ -1,9 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Aura\Session\Session;
 use Aura\Session\SessionFactory;
-use Tuum\Web\Web;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -41,7 +39,7 @@ class SessionStack implements MiddlewareInterface
         $segment = $session->getSegment('TuumPHP/WebApplication');
         $flash   = $segment->getFlash('flashed');
         if ($flash) {
-            $request->respondWith()->with($flash);
+            $request = $request->withAttributes($flash);
         }
         $request = $request->withSession($session);
 

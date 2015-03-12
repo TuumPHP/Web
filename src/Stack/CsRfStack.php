@@ -34,6 +34,7 @@ class CsRfStack  implements MiddlewareInterface
     {
         // get session. ignore CsRf filter if not set. 
         /** @var Session $session */
+        /** @var Request $request */
         $session = $request->getSession();
         if(!$session) {
             return $this->execNext($request);
@@ -43,7 +44,7 @@ class CsRfStack  implements MiddlewareInterface
          * so that view/response can access it.
          */
         $token = $session->getCsrfToken(Web::TOKEN_NAME);
-        $request->respondWith()->with(Web::TOKEN_NAME, $token->getValue());
+        $request = $request->withAttribute(Web::TOKEN_NAME, $token->getValue());
         /*
          * check if token must be verified.
          */

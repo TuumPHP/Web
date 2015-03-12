@@ -77,21 +77,6 @@ class Request extends ServerRequest
     }
 
     /**
-     * @param string|ApplicationInterface $filter
-     * @return null|Response
-     */
-    public function filter($filter)
-    {
-        if (is_string($filter)) {
-            $filter = $this->web->get($filter);
-        }
-        if ($filter instanceof \Closure) {
-            return $filter($this);
-        }
-        return null;
-    }
-
-    /**
      * @param string|mixed $filter
      * @return MiddlewareInterface|ApplicationInterface
      */
@@ -103,6 +88,19 @@ class Request extends ServerRequest
         return $filter;
     }
 
+    /**
+     * @param array $attributes
+     * @return Request
+     */
+    public function withAttributes(array $attributes)
+    {
+        $new = clone $this;
+        foreach($attributes as $key => $val) {
+            $new = $new->withAttribute($key, $val);
+        }
+        return $new;
+    }
+    
     /**
      * @param string $base
      * @param string $path
@@ -136,17 +134,6 @@ class Request extends ServerRequest
     }
     
     /**
-     * returns new Respond object.
-     *
-     * @return Respond
-     */
-    public function respondWith()
-    {
-        $this->respond = clone($this->respond);
-        return $this->respond;
-    }
-
-    /**
      * return cloned $respond object.
      * the $request object will not be altered.
      *
@@ -159,6 +146,7 @@ class Request extends ServerRequest
     {
         $respond = clone($this->respond);
         $respond->setRequest($this);
+        $respond->with($this->getAttributes());
         return $respond;
     }
 

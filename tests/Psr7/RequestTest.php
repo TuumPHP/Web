@@ -1,11 +1,8 @@
 <?php
 namespace tests\Psr7;
 
-use Tuum\Locator\Container;
-use Tuum\Locator\Locator;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
-use Tuum\Web\Application;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,11 +30,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     function respond_with_sets_data_in_response()
     {
+        /** @var Request $request */
         $request = RequestFactory::fromPath('/path/to', 'get');
-        $request->respondWith()->with(
+        $request = $request->withAttribute(
             'test', 'tested'
         );
-        $request->respondWith()->with([
+        $request = $request->withAttributes([
             'more' => 'done',
         ]);
         $response = $request->respond()->asView('test');
@@ -49,32 +47,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function filter_applies_request()
-    {
-        $con = new Container(new Locator(__DIR__.'/config'));
-        $app = new Application($con);
-        $con->add('test-filter', function($request) {
-            /** @var Request $request */
-            $request->respondWith()->with(
-                'tested', 'filter'
-            );
-        });
-        $request = RequestFactory::fromPath('/path/to', 'get');
-        $request->setWebApp($app);
-        $request->filter('test-filter');
-
-        $response = $request->respond()->asView('test');
-        $data = $response->getData();
-        $this->assertEquals('filter', $data['tested']);
-    }
-
-    /**
-     * @test
-     */
     function respond()
     {
+        /** @var Request $request */
         $request = RequestFactory::fromPath('/path/to', 'get');
-        $request->respondWith()->with( 'test', 'tested');
+        $request = $request->withAttribute( 'test', 'tested');
         $respond = $request->respond()
             ->withMessage('hello')
             ->withInput( ['more' => 'done'])
