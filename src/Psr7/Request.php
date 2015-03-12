@@ -41,6 +41,11 @@ class Request extends ServerRequest
     protected $base_path = '';
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
      * @param array  $serverParams
      * @param array  $fileParams
      * @param null   $uri
@@ -156,7 +161,9 @@ class Request extends ServerRequest
      */
     public function withSession($session)
     {
-        return $this->withAttribute(self::SESSION_MGR, $session);
+        $new = clone $this;
+        $new->session = $session;
+        return $new;
     }
 
     /**
@@ -164,6 +171,6 @@ class Request extends ServerRequest
      */
     public function getSession()
     {
-        return $this->getAttribute(self::SESSION_MGR);
+        return $this->session;
     }
 }
