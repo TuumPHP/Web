@@ -57,7 +57,7 @@ class RouterStack implements MiddlewareInterface
         if (!$matched = $this->isMatch($request)) {
             return $this->execNext($request);
         }
-        if(isset($matched['matched'])) {
+        if (isset($matched['matched'])) {
             $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
         }
         $route  = $this->router->match($request);
@@ -71,6 +71,7 @@ class RouterStack implements MiddlewareInterface
         $this->dispatcher->setRoute($route);
         $app->prepend($this->dispatcher);
 
+        /** @var Request $request ...$request lost track of its type, some how... */
         if ($beforeFilters = $route->before()) {
             foreach($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);

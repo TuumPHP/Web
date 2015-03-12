@@ -27,11 +27,17 @@ class Middleware implements MiddlewareInterface
     protected $app;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @param ApplicationInterface $app
      */
     public function __construct($app)
     {
         $this->app = $app;
+        $this->name = get_class($app);
     }
 
     /**
@@ -45,10 +51,12 @@ class Middleware implements MiddlewareInterface
                 $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
             }
             $app      = $this->app;
-            $response = $app($request);
+            $return   = $this->getReturnable();
+            $response = $app($request, $return);
             if ($response) {
                 return $response;
             }
+            $request  = $return->get($request, $this->name);
         }
         $next = $this->next;
         if ($next) {

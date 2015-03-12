@@ -14,6 +14,14 @@ trait MiddlewareTrait
     protected $next;
 
     /**
+     * @return Returnable
+     */
+    protected function getReturnable()
+    {
+        return Returnable::start();
+    }
+    
+    /**
      * stack up the middleware.
      * converts normal Application into middleware.
      *
