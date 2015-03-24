@@ -2,24 +2,24 @@
 namespace Tuum\Web\Controller;
 
 /**
- * Class ResourceControllerTrait
+ * Class ResourcefulControllerTrait
  *
- * Route patterns for resource type using only get and post methods.
+ * Route patterns similar to Laravel's resource controller.
  *
  * @package Tuum\Web\Controller
  */
-trait ResourceControllerTrait
+trait ResourcefulControllerTrait
 {
     use RouteDispatchTrait;
 
     protected $routes = [
-        'get:/create'       => 'create',
-        'get:/{id}/edit'    => 'edit',
-        'get:/{id}'         => 'get',
         'get:/'             => 'index',
-        'post:/{id}/delete' => 'delete',
-        'post:/{id}'        => 'update',
+        'get:/create'       => 'create',
         'post:/'            => 'insert',
+        'get:/{id}'         => 'get',
+        'get:/{id}/edit'    => 'edit',
+        'put:/{id}'         => 'update',
+        'delete:/{id}'      => 'delete',
     ];
 
     /**
