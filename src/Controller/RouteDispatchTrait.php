@@ -28,13 +28,6 @@ trait RouteDispatchTrait
     {
         $method = $request->getMethod();
         $path   = $request->getPathToMatch();
-        if (strtoupper($method) === 'HEAD') {
-            $response = $this->dispatchRoute($request, $path, 'GET');
-            if ($response) {
-                return $response->withBody(StreamFactory::string(''));
-            }
-            return null;
-        }
         if (strtoupper($method) === 'OPTIONS') {
             return $this->onOptions($path);
         }

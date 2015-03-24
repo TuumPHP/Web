@@ -31,9 +31,6 @@ trait DispatchByMethodTrait
          */
         $params = (array)$request->getQueryParams();
         $method = $request->getMethod();
-        if (strtoupper($method) === 'HEAD') {
-            return $this->onHead($params);
-        }
         if (strtoupper($method) === 'OPTIONS') {
             return $this->onOptions();
         }
@@ -46,22 +43,6 @@ trait DispatchByMethodTrait
          * also setup arguments from route parameters and get query.
          */
         return $this->dispatchMethod($method, $params);
-    }
-
-    /**
-     * @param array $params
-     * @return null|Response
-     */
-    private function onHead($params)
-    {
-        if (!method_exists($this, 'onGet')) {
-            return null;
-        }
-        $response = $this->dispatchMethod('onGet', $params);
-        if($response) {
-            return $response->withBody(StreamFactory::string(''));
-        }
-        return $response;
     }
 
     /**
