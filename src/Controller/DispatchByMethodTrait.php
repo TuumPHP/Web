@@ -16,7 +16,7 @@ trait DispatchByMethodTrait
     /**
      * @param $method
      * @param $params
-     * @return mixed
+     * @return Response|null
      */
     abstract protected function dispatchMethod($method, $params);
     
@@ -31,6 +31,9 @@ trait DispatchByMethodTrait
          */
         $params = (array)$request->getQueryParams();
         $method = $request->getMethod();
+        if (strtoupper($method) === 'HEAD') {
+            return $this->onHead($params);
+        }
         if (strtoupper($method) === 'OPTIONS') {
             return $this->onOptions();
         }
@@ -46,13 +49,29 @@ trait DispatchByMethodTrait
     }
 
     /**
+     * @param array $params
+     * @return null|Response
+     */
+    private function onHead($params)
+    {
+        if (!method_exists($this, 'onGet')) {
+            return null;
+        }
+        $response = $this->dispatchMethod('onGet', $params);
+        if($response) {
+            return $response->withBody(StreamFactory::string(''));
+        }
+        return $response;
+    }
+
+    /**
      * @return Response
      */
     private function onOptions()
     {
         $refClass = new \ReflectionObject($this);
         $methods  = $refClass->getMethods();
-        $options  = ['OPTIONS'];
+        $options  = [];
         foreach($methods as $method ) {
             if(preg_match('/on([_a-zA-Z0-9]+)/', $method->getName(), $match)) {
                 $options[] = strtoupper($match[1]);

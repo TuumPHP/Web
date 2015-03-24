@@ -17,4 +17,12 @@ class ByMethodController extends AbstractController
         return $this->respond
             ->asText('on-put');
     }
+
+    /**
+     * @return Response
+     */
+    protected function onGet()
+    {
+        return $this->respond->asText('on get');
+    }
 }

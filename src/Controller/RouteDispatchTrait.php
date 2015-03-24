@@ -28,19 +28,18 @@ trait RouteDispatchTrait
     {
         $method = $request->getMethod();
         $path   = $request->getPathToMatch();
+        if (strtoupper($method) === 'HEAD') {
+            $response = $this->dispatchRoute($request, $path, 'GET');
+            if ($response) {
+                return $response->withBody(StreamFactory::string(''));
+            }
+            return null;
+        }
         if (strtoupper($method) === 'OPTIONS') {
             return $this->onOptions($path);
         }
-        $routes = $this->getRoutes();
-        foreach ($routes as $pattern => $dispatch) {
-            $params = Matcher::verify($pattern, $path, $method);
-            if ($params) {
-                $params += $request->getQueryParams() ?: [];
-                $method  = 'on'.ucwords($dispatch);
-                return $this->dispatchMethod($method, $params);
-            }
-        }
-        return null;
+
+        return $this->dispatchRoute($request, $path, $method);
     }
 
     /**
@@ -50,7 +49,7 @@ trait RouteDispatchTrait
     private function onOptions($path)
     {
         $routes = $this->getRoutes();
-        $options = ['OPTIONS'];
+        $options = ['OPTIONS', 'HEAD'];
         foreach($routes as $pattern => $dispatch) {
             if($params = Matcher::verify($pattern, $path, '*')) {
                 if(isset($params['method']) && $params['method'] && $params['method']!=='*' ) {
@@ -62,5 +61,25 @@ trait RouteDispatchTrait
         sort($options);
         $list = implode(',', $options);
         return new Response(StreamFactory::string(''), 200, ['Allow'=>$list]);
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $path
+     * @param string  $method
+     * @return Response|null
+     */
+    private function dispatchRoute($request, $path, $method)
+    {
+        $routes = $this->getRoutes();
+        foreach ($routes as $pattern => $dispatch) {
+            $params = Matcher::verify($pattern, $path, $method);
+            if ($params) {
+                $params += $request->getQueryParams() ?: [];
+                $method = 'on' . ucwords($dispatch);
+                return $this->dispatchMethod($method, $params);
+            }
+        }
+        return null;
     }
 }

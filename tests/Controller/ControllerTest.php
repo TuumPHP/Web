@@ -75,11 +75,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new ResourceController();
         $request    = RequestFactory::fromPath('/', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('GET,OPTIONS,POST', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,POST', $response->getHeader('Allow'));
 
         $request    = RequestFactory::fromPath('/123', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('GET,OPTIONS,POST', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,POST', $response->getHeader('Allow'));
     }
 
     /**
@@ -90,10 +90,44 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new ByMethodController();
         $request    = RequestFactory::fromPath('/', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('OPTIONS,PUT', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,PUT', $response->getHeader('Allow'));
 
         $request    = RequestFactory::fromPath('/123', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('OPTIONS,PUT', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,PUT', $response->getHeader('Allow'));
+    }
+
+    /**
+     * @test
+     */
+    function ResourceDispatch_returns_response_without_body()
+    {
+        $controller = new ResourceController();
+        $resGet     = $controller->__invoke(RequestFactory::fromPath('/123', 'get'));
+        $resHead    = $controller->__invoke(RequestFactory::fromPath('/123', 'head'));
+        $bodyGet    = (string) $resGet->getBody();
+        $bodyHead   = (string) $resHead->getBody();
+        $this->assertEquals($resGet->getHeaders(), $resHead->getHeaders());
+        $this->assertNotEmpty($bodyGet);
+        $this->assertEmpty($bodyHead);
+
+        // returns null if bad URL is given.
+        $resHead    = $controller->__invoke(RequestFactory::fromPath('/123/bad', 'head'));
+        $this->assertNull($resHead);
+    }
+
+    /**
+     * @test
+     */
+    function DispatchByMethod_returns_response_without_body()
+    {
+        $controller = new ByMethodController();
+        $resGet     = $controller->__invoke(RequestFactory::fromPath('/', 'get'));
+        $resHead    = $controller->__invoke(RequestFactory::fromPath('/', 'head'));
+        $bodyGet    = (string) $resGet->getBody();
+        $bodyHead   = (string) $resHead->getBody();
+        $this->assertEquals($resGet->getHeaders(), $resHead->getHeaders());
+        $this->assertNotEmpty($bodyGet);
+        $this->assertEmpty($bodyHead);
     }
 }
