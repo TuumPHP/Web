@@ -35,7 +35,7 @@ class Returnable
     }
 
     /**
-     * @param mixed $return
+     * @param Request $return
      */
     public function __invoke($return)
     {
@@ -44,10 +44,9 @@ class Returnable
 
     /**
      * @param Request $request
-     * @param string  $name
      * @return Request
      */
-    public function get($request, $name)
+    public function get($request)
     {
         if (is_null($this->return)) {
             return $request;
@@ -59,6 +58,6 @@ class Returnable
             return $request->withAttributes($this->return);
         }
 
-        return $request->withAttribute($name, $this->return);
+        return $request;
     }
 }

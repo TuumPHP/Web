@@ -56,7 +56,7 @@ class Middleware implements MiddlewareInterface
             if ($response) {
                 return $response;
             }
-            $request  = $return->get($request, $this->name);
+            $request  = $return->get($request);
         }
         $next = $this->next;
         if ($next) {

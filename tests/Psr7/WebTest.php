@@ -171,26 +171,6 @@ class WebTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function returnable_set_string_data()
-    {
-        $app = $this->app;
-        /** @noinspection PhpUnusedParameterInspection */
-        $app->push( function($req, $return) {
-            /** @var Request $req */
-            $return('returnable-string');
-        });
-        $app->push( function($req) {
-            /** @var Request $req */
-            return $req->respond()->asView('dummy');
-        });
-        $request  = RequestFactory::fromPath('test');
-        $response = $app->__invoke($request);
-        $this->assertEquals('returnable-string', $response->getData('Closure'));
-    }
-
-    /**
-     * @test
-     */
     function returnable_set_array_data()
     {
         $app = $this->app;
