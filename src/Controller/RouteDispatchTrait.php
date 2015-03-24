@@ -50,16 +50,17 @@ trait RouteDispatchTrait
     private function onOptions($path)
     {
         $routes = $this->getRoutes();
-        $methods = ['OPTIONS'];
+        $options = ['OPTIONS'];
         foreach($routes as $pattern => $dispatch) {
             if($params = Matcher::verify($pattern, $path, '*')) {
                 if(isset($params['method']) && $params['method'] && $params['method']!=='*' ) {
-                    $methods[] = strtoupper($params['method']);
+                    $options[] = strtoupper($params['method']);
                 }
             }
         }
-        sort($methods);
-        $list = implode(',', $methods);
+        $options = array_unique($options);
+        sort($options);
+        $list = implode(',', $options);
         return new Response(StreamFactory::string(''), 200, ['Allow'=>$list]);
     }
 }

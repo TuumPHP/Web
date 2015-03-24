@@ -70,7 +70,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function http_options_returns_allow_header()
+    function ResourceDispatch_returns_options_in_allow_header()
     {
         $controller = new ResourceController();
         $request    = RequestFactory::fromPath('/', 'options');
@@ -80,5 +80,20 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $request    = RequestFactory::fromPath('/123', 'options');
         $response   = $controller->__invoke($request);
         $this->assertEquals('GET,OPTIONS,POST', $response->getHeader('Allow'));
+    }
+
+    /**
+     * @test
+     */
+    function DispatchByMethod_returns_options_in_allow_header()
+    {
+        $controller = new ByMethodController();
+        $request    = RequestFactory::fromPath('/', 'options');
+        $response   = $controller->__invoke($request);
+        $this->assertEquals('OPTIONS,PUT', $response->getHeader('Allow'));
+
+        $request    = RequestFactory::fromPath('/123', 'options');
+        $response   = $controller->__invoke($request);
+        $this->assertEquals('OPTIONS,PUT', $response->getHeader('Allow'));
     }
 }
