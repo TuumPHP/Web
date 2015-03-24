@@ -66,4 +66,19 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $response   = $controller->__invoke($request);
         $this->assertNull($response);
     }
+
+    /**
+     * @test
+     */
+    function http_options_returns_allow_header()
+    {
+        $controller = new ResourceController();
+        $request    = RequestFactory::fromPath('/', 'options');
+        $response   = $controller->__invoke($request);
+        $this->assertEquals('GET,OPTIONS,POST', $response->getHeader('Allow'));
+
+        $request    = RequestFactory::fromPath('/123', 'options');
+        $response   = $controller->__invoke($request);
+        $this->assertEquals('GET,OPTIONS,POST', $response->getHeader('Allow'));
+    }
 }
