@@ -41,11 +41,11 @@ trait RouteDispatchTrait
      */
     private function onOptions($path)
     {
-        $routes = $this->getRoutes();
+        $routes  = $this->getRoutes();
         $options = ['OPTIONS', 'HEAD'];
-        foreach($routes as $pattern => $dispatch) {
-            if($params = Matcher::verify($pattern, $path, '*')) {
-                if(isset($params['method']) && $params['method'] && $params['method']!=='*' ) {
+        foreach ($routes as $pattern => $dispatch) {
+            if ($params = Matcher::verify($pattern, $path, '*')) {
+                if (isset($params['method']) && $params['method'] && $params['method'] !== '*') {
                     $options[] = strtoupper($params['method']);
                 }
             }
@@ -53,7 +53,7 @@ trait RouteDispatchTrait
         $options = array_unique($options);
         sort($options);
         $list = implode(',', $options);
-        return new Response(StreamFactory::string(''), 200, ['Allow'=>$list]);
+        return new Response(StreamFactory::string(''), 200, ['Allow' => $list]);
     }
 
     /**

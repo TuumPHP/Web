@@ -13,13 +13,13 @@ trait ResourcefulControllerTrait
     use RouteDispatchTrait;
 
     protected $routes = [
-        'get:/'             => 'index',
-        'get:/create'       => 'create',
-        'post:/'            => 'insert',
-        'get:/{id}'         => 'get',
-        'get:/{id}/edit'    => 'edit',
-        'put:/{id}'         => 'update',
-        'delete:/{id}'      => 'delete',
+        'get:/'          => 'index',
+        'get:/create'    => 'create',
+        'post:/'         => 'insert',
+        'get:/{id}'      => 'get',
+        'get:/{id}/edit' => 'edit',
+        'put:/{id}'      => 'update',
+        'delete:/{id}'   => 'delete',
     ];
 
     /**

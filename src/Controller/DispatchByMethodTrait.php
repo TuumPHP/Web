@@ -7,6 +7,7 @@ use Tuum\Web\Psr7\StreamFactory;
 
 /**
  * Class DispatchByMethodTrait
+ *
  * @package Tuum\Controller
  *
  * Dispatching based on request method.
@@ -19,7 +20,7 @@ trait DispatchByMethodTrait
      * @return Response|null
      */
     abstract protected function dispatchMethod($method, $params);
-    
+
     /**
      * @param Request $request
      * @return Response|null;
@@ -34,8 +35,8 @@ trait DispatchByMethodTrait
         if (strtoupper($method) === 'OPTIONS') {
             return $this->onOptions();
         }
-        $method = 'on' . ucwords( $method );
-        if ( !method_exists( $this, $method ) ) {
+        $method = 'on' . ucwords($method);
+        if (!method_exists($this, $method)) {
             return null;
         }
         /*
@@ -53,15 +54,15 @@ trait DispatchByMethodTrait
         $refClass = new \ReflectionObject($this);
         $methods  = $refClass->getMethods();
         $options  = [];
-        foreach($methods as $method ) {
-            if(preg_match('/on([_a-zA-Z0-9]+)/', $method->getName(), $match)) {
+        foreach ($methods as $method) {
+            if (preg_match('/on([_a-zA-Z0-9]+)/', $method->getName(), $match)) {
                 $options[] = strtoupper($match[1]);
             }
         }
         $options = array_unique($options);
         sort($options);
         $list = implode(',', $options);
-        return new Response(StreamFactory::string(''), 200, ['Allow'=>$list]);
+        return new Response(StreamFactory::string(''), 200, ['Allow' => $list]);
     }
 
 }

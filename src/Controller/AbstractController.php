@@ -34,7 +34,7 @@ abstract class AbstractController implements ApplicationInterface
         $this->basePath = $request->getBasePath();
         $this->respond  = $request->respond()->with('basePath', $this->basePath);
 
-        if(strtoupper($request->getMethod()) === 'HEAD') {
+        if (strtoupper($request->getMethod()) === 'HEAD') {
             return $this->onHead($request);
         }
         return $this->dispatch($request);
@@ -59,7 +59,7 @@ abstract class AbstractController implements ApplicationInterface
      * @return Response|null;
      */
     abstract protected function dispatch($request);
-    
+
     /**
      * @param $method
      * @param $params
