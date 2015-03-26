@@ -39,13 +39,11 @@ class Dispatcher implements ApplicationInterface
 
         // prepare object to dispatch.
         if (is_string($class) ) {
-            if (method_exists($class, 'forge')) {
-                $next = $class::forge($this->app);
-            } else {
-                $next = new $class;
-            }
-        } else {
+            $next = $this->app->get($class);
+        } elseif (is_callable($class)) {
             $next = $class;
+        } else {
+            throw new \InvalidArgumentException('no such handler to dispatch');
         }
         // dispatch the next object.
         if ($next instanceof ApplicationInterface) {
