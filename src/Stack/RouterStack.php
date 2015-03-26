@@ -60,7 +60,7 @@ class RouterStack implements MiddlewareInterface
         if (isset($matched['matched'])) {
             $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
         }
-        $route  = $this->router->match($request);
+        $route  = $this->router->match($request->getUri()->getPath(), $request->getMethod());
         if (!$route) {
             return $this->execNext($request);
         }
