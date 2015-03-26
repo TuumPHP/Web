@@ -10,13 +10,13 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "tuum/locator": "0.1.x",
-        "tuum/router": "0.1.x",
-        "tuum/view": "0.1.x",
-        "tuum/form":"0.1.x",
+        "tuum/locator": "0.1.*",
+        "tuum/router": "0.1.*",
+        "tuum/view": "0.1.*",
+        "tuum/form":"0.1.*",
         "aura/session": " 2.0.0-beta2",
         "phly/http": "~0.10.0",
-        "monolog/monolog": "1.x",
+        "monolog/monolog": "1.*",
         "league/container": "1.3.0",
         "filp/whoops": "1.1.3"
     },
