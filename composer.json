@@ -14,7 +14,7 @@
         "tuum/router": "0.1.*",
         "tuum/view": "0.1.*",
         "tuum/form":"0.1.*",
-        "aura/session": " 2.0.0-beta2",
+        "aura/session": " 2.*",
         "phly/http": "~0.10.0",
         "monolog/monolog": "1.*",
         "league/container": "1.3.0",
