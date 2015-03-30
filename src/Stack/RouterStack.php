@@ -3,6 +3,7 @@ namespace Tuum\Web\Stack;
 
 use Tuum\Router\RouterInterface;
 use Tuum\Routing\RouteCollector;
+use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Web;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -15,6 +16,8 @@ class RouterStack implements MiddlewareInterface
     use MiddlewareTrait;
     
     use MatchRootTrait;
+    
+    use BeforeFilterTrait;
     
     /**
      * @var RouterInterface
@@ -72,6 +75,12 @@ class RouterStack implements MiddlewareInterface
         $app->prepend($this->dispatcher);
 
         /** @var Request $request ...$request lost track of its type, some how... */
+        if ($this->_beforeFilters) {
+            foreach($this->_beforeFilters as $filter) {
+                $filter = $request->getFilter($filter);
+                $app->prepend($filter);
+            }
+        }
         if ($beforeFilters = $route->before()) {
             foreach($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
