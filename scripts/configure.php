@@ -7,7 +7,7 @@ use Tuum\Form\Forms;
 use Tuum\Locator\Locator;
 use Tuum\Router\Tuum\Router;
 use Tuum\View\ErrorView;
-use Tuum\View\Tuum\Renderer;
+use Tuum\View\Renderer;
 use Tuum\Web\Application;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Stack\Dispatcher;
