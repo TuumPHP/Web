@@ -38,15 +38,15 @@ if (!isset($dic)) {
  */
 $app->set(Web::RENDER_ENGINE, function() use($dic) {
 
-    $view = new Renderer(
-        new Locator($dic->get(Web::TEMPLATE_DIR))
-    );
+    $locator = new Locator($dic->get(Web::TEMPLATE_DIR));
     if($doc_root = $dic->get(Web::DOCUMENT_DIR)) {
         // also render php documents
-        $view->locator->addRoot($doc_root);
+        $locator->addRoot($doc_root);
     }
-    $view->register('forms', new Forms());
-    $view->register('dates', new Dates());
+    $renderer = new Renderer($locator);
+    $renderer->register('forms', new Forms());
+    $renderer->register('dates', new Dates());
+    $view = new \Tuum\View\View($renderer, new Tuum\View\Values\Value());
     return $view;
 }, true);
 

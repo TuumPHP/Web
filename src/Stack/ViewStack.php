@@ -70,7 +70,8 @@ class ViewStack implements MiddlewareInterface
     protected function setContents($request, $response)
     {
         // render view file.
-        $data = $this->prepareData($request, $response);
+        $data = $response->getData();
+        $data['uri'] = $request->getUri();
         $file = $response->getViewFile();
         $content = $this->engine->render($file, $data);
         $response = $response->withBody(StreamFactory::string($content));

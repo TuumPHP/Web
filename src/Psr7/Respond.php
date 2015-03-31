@@ -2,6 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Psr\Http\Message\UriInterface;
+use Tuum\View\Values\Value;
 use Tuum\Web\Viewer\Message;
 
 /**
@@ -96,7 +97,7 @@ class Respond
      */
     public function withInput(array $input)
     {
-        return $this->with('inputs', $input);
+        return $this->with(Value::INPUTS, $input);
     }
 
     /**
@@ -105,7 +106,7 @@ class Respond
      */
     public function withInputErrors(array $errors)
     {
-        return $this->with('errors', $errors);
+        return $this->with(Value::ERRORS, $errors);
     }
 
     /**
@@ -114,7 +115,7 @@ class Respond
      */
     public function withMessage($message)
     {
-        $this->merge('messages', [
+        $this->merge(Value::MESSAGE, [
             'message' => $message,
             'type' => Message::MESSAGE,
         ]);
@@ -127,7 +128,7 @@ class Respond
      */
     public function withNotice($message)
     {
-        $this->merge('messages', [
+        $this->merge(Value::MESSAGE, [
             'message' => $message,
             'type' => Message::ALERT,
         ]);
@@ -140,7 +141,7 @@ class Respond
      */
     public function withError($message)
     {
-        $this->merge('messages', [
+        $this->merge(Value::MESSAGE, [
             'message' => $message,
             'type' => Message::ERROR,
         ]);
