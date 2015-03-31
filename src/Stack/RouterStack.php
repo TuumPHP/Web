@@ -75,7 +75,7 @@ class RouterStack implements MiddlewareInterface
         $app->prepend($this->dispatcher);
 
         /** @var Request $request ...$request lost track of its type, some how... */
-        if ($this->_beforeFilters) {
+        if (!empty($this->_beforeFilters)) {
             foreach($this->_beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
                 $app->prepend($filter);
