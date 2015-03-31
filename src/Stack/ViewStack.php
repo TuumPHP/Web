@@ -77,17 +77,4 @@ class ViewStack implements MiddlewareInterface
         $response = $response->withBody(StreamFactory::string($content));
         return $response;
     }
-
-    /**
-     * @param Request           $request
-     * @param Response          $response
-     * @return mixed
-     */
-    protected function prepareData($request, $response)
-    {
-        $data = $response->getData();
-        $data['uri'] = $request->getUri();
-        $data = ['view' => $this->view->withData($data)];
-        return $data;
-    }
 }
