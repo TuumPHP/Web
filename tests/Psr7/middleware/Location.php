@@ -17,7 +17,7 @@ class Location implements ApplicationInterface
             ->with( 'test', 'tested')
             ->withMessage('message-test')
             ->withInput(['more'=>'done'])
-            ->asPath('tested-location.php')
+            ->toPath('tested-location.php')
             ;
     }
 

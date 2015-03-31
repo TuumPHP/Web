@@ -53,7 +53,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     function location_redirect()
     {
-        $res = $this->respond->asRedirectUri('/test');
+        $res = $this->respond->toAbsoluteUri('/test');
         $this->assertEquals( '/test', $res->getLocation() );
         $this->assertTrue($res->isType(Response::TYPE_REDIRECT));
     }

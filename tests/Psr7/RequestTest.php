@@ -58,7 +58,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ->withInputErrors(['input' => 'errors'])
         ;
         $this->assertEquals('Tuum\Web\Psr7\Respond', get_class($respond));
-        $response= $respond->asRedirectUri('tested');
+        $response= $respond->toAbsoluteUri('tested');
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
         $data = $response->getData();
         $this->assertEquals('tested',                $data['test']);

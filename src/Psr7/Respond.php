@@ -203,7 +203,7 @@ class Respond
      * @param UriInterface|string $uri
      * @return Response
      */
-    public function asRedirectUri($uri)
+    public function toAbsoluteUri($uri)
     {
         return Response::redirect($uri, $this->data);
     }
@@ -215,10 +215,22 @@ class Respond
      * @param string $path
      * @return Response
      */
-    public function asPath($path)
+    public function toPath($path)
     {
         $uri = $this->request->getUri()->withPath($path);
-        return $this->asRedirectUri($uri);
+        return $this->toAbsoluteUri($uri);
+    }
+
+    /**
+     * @param string $path
+     * @return Response
+     */
+    public function toBasePath($path='')
+    {
+        $path = '/' . ltrim($path, '/');
+        $path = $this->request->getBasePath() . $path;
+        $uri = $this->request->getUri()->withPath($path);
+        return $this->toAbsoluteUri($uri);
     }
 
     /**
