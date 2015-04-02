@@ -24,8 +24,6 @@ class CsRfStack  implements MiddlewareInterface
 
     use MatchRootTrait;
 
-    public static $name = 'CsRf-Stack';
-    
     /**
      * @param Request          $request
      * @param callable|null    $next
@@ -64,7 +62,7 @@ class CsRfStack  implements MiddlewareInterface
         if( $response = $csRfFilter($request, $return)) {
             return $response;
         }
-        $request  = $return->get($request, self::$name);
+        $request  = $return->get($request);
         return $this->execNext($request); // GOOD!
     }
 }
