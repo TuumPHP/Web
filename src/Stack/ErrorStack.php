@@ -73,7 +73,7 @@ class ErrorStack implements MiddlewareInterface
          * check for error response. 
          */
         if( !$response ) {
-            return $request->respond()->asNotFound();
+            $response = $request->respond()->asNotFound();
         }
         if( !$response->isType(Response::TYPE_ERROR)) {
             return $response;
