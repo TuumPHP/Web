@@ -1,7 +1,6 @@
 <?php
 namespace tests\Psr7\middleware;
 
-use Phly\Http\Stream;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -13,10 +12,11 @@ class Increment implements MiddlewareInterface
     use MiddlewareTrait;
 
     /**
-     * @param Request  $request
-     * @return Response
+     * @param Request          $request
+     * @param callable|null    $next
+     * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $next=null)
     {
         /*
          * execute the subsequent stack.

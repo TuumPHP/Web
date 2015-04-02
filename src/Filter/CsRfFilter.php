@@ -11,10 +11,11 @@ class CsRfFilter implements ApplicationInterface
 {
 
     /**
-     * @param Request $request
+     * @param Request          $request
+     * @param callable|null    $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $next=null)
     {
         /*
          * get token from session. ignore CsRf if session is not set.

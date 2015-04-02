@@ -78,10 +78,11 @@ class Application implements MiddlewareInterface
     }
 
     /**
-     * @param Request $request
-     * @return Response|null
+     * @param Request          $request
+     * @param callable|null    $next
+     * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $next=null)
     {
         if(is_object($request) && method_exists($request, 'setWebApp')) {
             $request->setWebApp($this);

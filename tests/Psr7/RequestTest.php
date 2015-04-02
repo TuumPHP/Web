@@ -1,6 +1,7 @@
 <?php
 namespace tests\Psr7;
 
+use Tuum\View\Values\Value;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
 
@@ -62,8 +63,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
         $data = $response->getData();
         $this->assertEquals('tested',                $data['test']);
-        $this->assertEquals([['message' => 'hello','type'=>'message']],  $data['messages']);
-        $this->assertEquals(['more'    => 'done'],   $data['inputs']);
-        $this->assertEquals(['input'   => 'errors'], $data['errors']);
+        $this->assertEquals([['message' => 'hello','type'=>'message']],  $data[Value::MESSAGE]);
+        $this->assertEquals(['more'    => 'done'],   $data[Value::INPUTS]);
+        $this->assertEquals(['input'   => 'errors'], $data[Value::ERRORS]);
     }
 }

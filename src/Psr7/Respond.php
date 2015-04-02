@@ -26,9 +26,9 @@ class Respond
      * @var array
      */
     protected $data = [
-        'messages' => [],
-        'inputs' => [],
-        'errors' => [],
+        Value::MESSAGE => [],
+        Value::INPUTS => [],
+        Value::ERRORS => [],
     ];
 
     /**

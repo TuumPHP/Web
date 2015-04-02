@@ -27,10 +27,11 @@ class CsRfStack  implements MiddlewareInterface
     public static $name = 'CsRf-Stack';
     
     /**
-     * @param Request $request
+     * @param Request          $request
+     * @param callable|null    $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $next=null)
     {
         // get session. ignore CsRf filter if not set. 
         /** @var Session $session */

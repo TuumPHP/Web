@@ -55,10 +55,11 @@ class ErrorStack implements MiddlewareInterface
     }
 
     /**
-     * @param Request  $request
+     * @param Request          $request
+     * @param callable|null    $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $next=null)
     {
         /*
          * set up error view, or whoops if debug is true.

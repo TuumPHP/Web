@@ -2,6 +2,7 @@
 namespace Tuum\Web\Viewer;
 
 use Psr\Http\Message\UriInterface;
+use Tuum\View\Values\Value;
 
 if(!function_exists('Tuum\Web\Viewer\htmlSafe')) {
     function htmlSafe($string) {
@@ -91,10 +92,10 @@ class View
     protected function setData($data)
     {
         if(empty($data)) return;
-        $this->inputs  = new Inputs($this->bite($data, 'inputs'));
-        $this->errors  = new Errors($this->bite($data, 'errors'));
-        $this->message = new Message($this->bite($data, 'messages'));
-        $this->uri     = new Message($this->bite($data, 'uri'));
+        $this->inputs  = new Inputs($this->bite($data, Value::INPUTS));
+        $this->errors  = new Errors($this->bite($data, Value::ERRORS));
+        $this->message = new Message($this->bite($data, Value::MESSAGE));
+        $this->uri     = new Message($this->bite($data, Value::URI));
         $this->values  = new Inputs($data);
         $this->data    = new Data($data);
     }

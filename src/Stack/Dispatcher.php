@@ -6,7 +6,6 @@ use Tuum\Router\Route;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
-use Tuum\Web\Web;
 use Tuum\Web\Application;
 
 class Dispatcher implements ApplicationInterface
@@ -30,10 +29,11 @@ class Dispatcher implements ApplicationInterface
     }
     
     /**
-     * @param Request $request
+     * @param Request          $request
+     * @param callable|null    $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $next=null)
     {
         $class = $this->route->handle();
 
