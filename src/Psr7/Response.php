@@ -40,22 +40,6 @@ class Response extends BaseResponse
     }
 
     /**
-     * @param string|array $key
-     * @param null|mixed   $value
-     * @return Response
-     */
-    public function withData($key, $value=null)
-    {
-        $new = clone($this);
-        if(is_array($key)) {
-            $new->data = array_merge($this->data, $key);
-        } else {
-            $new->data[$key] = $value;
-        }
-        return $new;
-    }
-
-    /**
      * @param null|string $key
      * @return array
      */

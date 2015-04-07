@@ -26,31 +26,6 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function with_data()
-    {
-        $res1 = $this->respond->asHtml('test');
-        $this->assertEquals( null, $res1->getLocation() );
-
-        $res2 = $res1->withData( 'test', 'tested');
-        $this->assertNotSame($res1, $res2);
-        
-        $data = $res2->getData('test');
-        $this->assertEquals('tested', $data);
-
-        $data = $res2->getData();
-        $this->assertEquals(['test' => 'tested'], $data);
-
-        $res2 = $res2->withData( ['more' => 'done' ]);
-        $data = $res2->getData();
-        $this->assertEquals([
-            'test' => 'tested',
-            'more' => 'done',
-        ], $data);
-    }
-
-    /**
-     * @test
-     */
     function location_redirect()
     {
         $res = $this->respond->toAbsoluteUri('/test');
