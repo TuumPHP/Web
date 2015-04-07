@@ -14,7 +14,7 @@ class ByMethodController extends AbstractController
      */
     protected function onPut()
     {
-        return $this->respond
+        return $this->respond()
             ->asText('on-put');
     }
 
@@ -23,6 +23,6 @@ class ByMethodController extends AbstractController
      */
     protected function onGet()
     {
-        return $this->respond->asText('on get');
+        return $this->respond()->asText('on get');
     }
 }

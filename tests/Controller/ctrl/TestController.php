@@ -13,7 +13,7 @@ class TestController extends AbstractController
      */
     protected function dispatch($request)
     {
-        return $this->respond
+        return $this->respond()
             ->withMessage('dispatched')
             ->withNotice('noticed')
             ->withError('withoutError')

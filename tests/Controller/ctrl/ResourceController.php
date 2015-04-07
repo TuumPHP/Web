@@ -15,7 +15,7 @@ class ResourceController extends AbstractController
      */
     protected function onGet($id)
     {
-        return $this->respond
+        return $this->respond()
             ->asText('on-get:'.$id);
     }
 }

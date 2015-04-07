@@ -6,6 +6,7 @@ use Phly\Http\ServerRequest;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Application;
+use Tuum\Web\View\Value;
 
 /**
  * Class Request
@@ -152,6 +153,23 @@ class Request extends ServerRequest
         $respond = clone($this->respond);
         $respond->setRequest($this);
         $respond->with($this->getAttributes())->with('basePath', $this->getBasePath());
+        return $respond;
+    }
+
+    /**
+     * @param array $list
+     * @return Respond
+     */
+    public function redirect($list=[])
+    {
+        $data = $this->getAttributes();
+        $list = $list + [Value::INPUTS, Value::ERRORS, Value::MESSAGE];
+        $data = array_filter($data, function($key) use($list) {
+            return in_array($key, $list);
+        });
+        $respond = clone($this->respond);
+        $respond->setRequest($this);
+        $respond->with($data)->with('basePath', $this->getBasePath());
         return $respond;
     }
 

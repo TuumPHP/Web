@@ -15,16 +15,6 @@ abstract class AbstractController implements ApplicationInterface
     protected $request;
 
     /**
-     * @var Respond
-     */
-    protected $respond;
-
-    /**
-     * @var string
-     */
-    protected $basePath;
-
-    /**
      * @param Request          $request
      * @param callable|null    $next
      * @return null|Response
@@ -32,13 +22,28 @@ abstract class AbstractController implements ApplicationInterface
     public function __invoke($request, $next=null)
     {
         $this->request  = $request;
-        $this->basePath = $request->getBasePath();
-        $this->respond  = $request->respond();
 
         if (strtoupper($request->getMethod()) === 'HEAD') {
             return $this->onHead($request);
         }
         return $this->dispatch($request);
+    }
+
+    /**
+     * @return Respond
+     */
+    protected function respond()
+    {
+        return $this->request->respond();
+    }
+
+    /**
+     * @param array $list
+     * @return Respond
+     */
+    protected function redirect($list=[])
+    {
+        return $this->request->redirect($list);
     }
 
     /**

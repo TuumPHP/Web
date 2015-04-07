@@ -55,7 +55,7 @@ trait DispatchByMethodTrait
         $methods  = $refClass->getMethods();
         $options  = [];
         foreach ($methods as $method) {
-            if (preg_match('/on([_a-zA-Z0-9]+)/', $method->getName(), $match)) {
+            if (preg_match('/^on([_a-zA-Z0-9]+)$/', $method->getName(), $match)) {
                 $options[] = strtoupper($match[1]);
             }
         }
