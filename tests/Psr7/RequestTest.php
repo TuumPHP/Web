@@ -1,6 +1,7 @@
 <?php
 namespace tests\Psr7;
 
+use Tuum\Web\Psr7\Response;
 use Tuum\Web\View\Value;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
@@ -53,13 +54,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         /** @var Request $request */
         $request = RequestFactory::fromPath('/path/to', 'get');
         $request = $request->withAttribute( 'test', 'tested');
-        $respond = $request->redirect(['test'])
+        $respond = $request->respond()
             ->withMessage('hello')
             ->withInput( ['more' => 'done'])
             ->withInputErrors(['input' => 'errors'])
         ;
-        $this->assertEquals('Tuum\Web\Psr7\Redirect', get_class($respond));
-        $response= $respond->toAbsoluteUri('tested');
+        $this->assertEquals('Tuum\Web\Psr7\Respond', get_class($respond));
+        $response= $respond->asView('tested');
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
         $data = $response->getData();
         $this->assertEquals('tested',                $data['test']);
@@ -67,4 +68,34 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['more'    => 'done'],   $data[Value::INPUTS]);
         $this->assertEquals(['input'   => 'errors'], $data[Value::ERRORS]);
     }
+
+    /**
+     * @test
+     */
+    function redirect_with_base_path()
+    {
+        /** @var Request $request */
+        $request = RequestFactory::fromPath('/path/to', 'get');
+        $request = $request->withAttribute( 'test', 'tested')->withAttribute('more', 'none');
+        $request = $request->withPathToMatch('/path', 'to');
+        $redirect= $request->redirect(['test'])
+            ->withMessage('hello')
+            ->withInput( ['more' => 'done'])
+            ->withInputErrors(['input' => 'errors'])
+        ;
+        $this->assertEquals('Tuum\Web\Psr7\Redirect', get_class($redirect));
+        $response= $redirect->toBasePath('more');
+
+        $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
+        $this->assertTrue($response->isType(Response::TYPE_REDIRECT));
+        $this->assertEquals('/path/more', $response->getLocation());
+
+        $data = $response->getData();
+        $this->assertArrayHasKey('test', $data);
+        $this->assertArrayNotHasKey('more', $data);
+        $this->assertEquals('tested', $data['test']);
+
+        $this->assertEquals([['message' => 'hello','type'=>'message']],  $data[Value::MESSAGE]);
+        $this->assertEquals(['more'    => 'done'],   $data[Value::INPUTS]);
+        $this->assertEquals(['input'   => 'errors'], $data[Value::ERRORS]);    }
 }
