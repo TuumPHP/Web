@@ -1,6 +1,7 @@
 <?php
 namespace tests\Psr7;
 
+use Tuum\Web\Psr7\Redirect;
 use Tuum\Web\Psr7\Respond;
 use Tuum\Web\Psr7\Response;
 
@@ -11,9 +12,15 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     protected $respond;
 
+    /**
+     * @var Redirect
+     */
+    private $redirect;
+
     function setup()
     {
         $this->respond = new Respond();
+        $this->redirect = new Redirect();
     }
     
     function test0()
@@ -28,7 +35,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     function location_redirect()
     {
-        $res = $this->respond->toAbsoluteUri('/test');
+        $res = $this->redirect->toAbsoluteUri('/test');
         $this->assertEquals( '/test', $res->getLocation() );
         $this->assertTrue($res->isType(Response::TYPE_REDIRECT));
     }

@@ -53,12 +53,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         /** @var Request $request */
         $request = RequestFactory::fromPath('/path/to', 'get');
         $request = $request->withAttribute( 'test', 'tested');
-        $respond = $request->respond()
+        $respond = $request->redirect(['test'])
             ->withMessage('hello')
             ->withInput( ['more' => 'done'])
             ->withInputErrors(['input' => 'errors'])
         ;
-        $this->assertEquals('Tuum\Web\Psr7\Respond', get_class($respond));
+        $this->assertEquals('Tuum\Web\Psr7\Redirect', get_class($respond));
         $response= $respond->toAbsoluteUri('tested');
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
         $data = $response->getData();

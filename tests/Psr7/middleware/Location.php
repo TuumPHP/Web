@@ -14,7 +14,7 @@ class Location implements ApplicationInterface
      */
     public function __invoke($request, $next=null)
     {
-        return $request->respond()
+        return $request->redirect()
             ->with( 'test', 'tested')
             ->withMessage('message-test')
             ->withInput(['more'=>'done'])

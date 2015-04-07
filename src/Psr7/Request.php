@@ -27,6 +27,11 @@ class Request extends ServerRequest
     protected $respond;
 
     /**
+     * @var Redirect
+     */
+    private $redirect;
+
+    /**
      * @var Application
      */
     protected $web;
@@ -63,6 +68,7 @@ class Request extends ServerRequest
         array $headers = []
     ) {
         $this->respond = new Respond();
+        $this->redirect = new Redirect();
         parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
     }
 
@@ -158,16 +164,18 @@ class Request extends ServerRequest
 
     /**
      * @param array $list
-     * @return Respond
+     * @return Redirect
      */
     public function redirect($list=[])
     {
-        $data = $this->getAttributes();
-        $list = $list + [Value::INPUTS, Value::ERRORS, Value::MESSAGE];
-        $data = array_filter($data, function($key) use($list) {
-            return in_array($key, $list);
-        });
-        $respond = clone($this->respond);
+        $data = (array) $this->getAttributes();
+        $list = array_merge($list, [Value::INPUTS, Value::ERRORS, Value::MESSAGE]);
+        foreach($data as $key => $v) {
+            if(!in_array($key, $list)) {
+                unset($data[$key]);
+            }
+        }
+        $respond = clone($this->redirect);
         $respond->setRequest($this);
         $respond->with($data)->with('basePath', $this->getBasePath());
         return $respond;
