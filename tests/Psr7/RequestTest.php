@@ -41,8 +41,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         ]);
         $response = $request->respond()->asView('test');
         $data = $response->getData();
-        $this->assertEquals('tested', $data['test']);
-        $this->assertEquals('done', $data['more']);
+        $this->assertEquals('tested', $data[Value::DATA]['test']);
+        $this->assertEquals('done', $data[Value::DATA]['more']);
     }
 
     /**
@@ -62,7 +62,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $response= $respond->toAbsoluteUri('tested');
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
         $data = $response->getData();
-        $this->assertEquals('tested',                $data['test']);
+        $this->assertEquals('tested',                $data[Value::DATA]['test']);
         $this->assertEquals([['message' => 'hello','type'=>'message']],  $data[Value::MESSAGE]);
         $this->assertEquals(['more'    => 'done'],   $data[Value::INPUTS]);
         $this->assertEquals(['input'   => 'errors'], $data[Value::ERRORS]);

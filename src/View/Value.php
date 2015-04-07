@@ -19,6 +19,7 @@ class Value
     const MESSAGE = '-message-view';
     const INPUTS = '-input-view';
     const ERRORS = '-errors-view';
+    const DATA = '-data-view';
     const URI = '-uri-view';
 
     /**
@@ -45,6 +46,11 @@ class Value
      * @var UriInterface
      */
     private $uri;
+
+    /**
+     * @var array
+     */
+    private $rest = [];
 
     /**
      * @var callable
@@ -97,7 +103,8 @@ class Value
         $this->errors  = Errors::forge($bite(self::ERRORS));
         $this->message = Message::forge($bite(self::MESSAGE));
         $this->uri     = $bite(self::URI);
-        $this->data    = Data::forge($bite(), $this->getEscape());
+        $this->data    = Data::forge($bite(self::DATA), $this->getEscape());
+        $this->rest    = $bite();
     }
 
     /**
@@ -124,6 +131,9 @@ class Value
     {
         if (isset($this->$key)) {
             return $this->$key;
+        }
+        if (array_key_exists($key, $this->rest)) {
+            return $this->rest[$key];
         }
         return null;
     }

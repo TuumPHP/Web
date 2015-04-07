@@ -37,7 +37,7 @@ class ValueTest extends \PHPUnit_Framework_TestCase
             ->withError('error-tested')
             ->with( ['more' => 'done'])
         ;
-        $data = $res->get();
+        $data = $res->getAll();
         $value = (new Value())->forge($data);
         $this->assertEquals('tested', $value->inputs->raw('input'));
         $this->assertEquals('tested', $value->errors->raw('errors'));
