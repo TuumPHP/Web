@@ -3,7 +3,7 @@ namespace Tuum\Web\Psr7;
 
 use Psr\Http\Message\UriInterface;
 use Tuum\Web\View\Value;
-use Tuum\Web\Viewer\Message;
+use Tuum\Web\View\Message;
 
 /**
  * Class Respond
