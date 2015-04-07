@@ -151,7 +151,7 @@ class Request extends ServerRequest
     {
         $respond = clone($this->respond);
         $respond->setRequest($this);
-        $respond->with($this->getAttributes());
+        $respond->with($this->getAttributes())->with('basePath', $this->getBasePath());
         return $respond;
     }
 

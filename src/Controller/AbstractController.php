@@ -33,7 +33,7 @@ abstract class AbstractController implements ApplicationInterface
     {
         $this->request  = $request;
         $this->basePath = $request->getBasePath();
-        $this->respond  = $request->respond()->with('basePath', $this->basePath);
+        $this->respond  = $request->respond();
 
         if (strtoupper($request->getMethod()) === 'HEAD') {
             return $this->onHead($request);
