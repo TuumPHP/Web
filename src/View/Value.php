@@ -108,7 +108,7 @@ class Value
      */
     public static function htmlSafe($string)
     {
-        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+        return is_string($string) ?htmlspecialchars($string, ENT_QUOTES, 'UTF-8') : $string;
     }
 
     // +----------------------------------------------------------------------+

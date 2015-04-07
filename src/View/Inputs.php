@@ -37,7 +37,7 @@ class Inputs
         }
         $blank = clone(static::$self);
         $blank->inputs = $data;
-        $blank->escape = $escape ?: 'Tuum\View\Value::htmlSafe';
+        $blank->escape = $escape ?: ['Tuum\Web\View\Value','htmlSafe'];
         return $blank;
     }
 

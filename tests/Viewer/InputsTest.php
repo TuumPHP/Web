@@ -1,13 +1,13 @@
 <?php
 namespace tests\Viewer;
 
-use Tuum\Web\Viewer\Inputs;
+use Tuum\Web\View\Inputs;
 
 class InputsTest extends \PHPUnit_Framework_TestCase
 {
     function test0()
     {
-        $this->assertEquals('Tuum\Web\Viewer\Inputs', get_class(new Inputs()));
+        $this->assertEquals('Tuum\Web\View\Inputs', get_class(Inputs::forge()));
     }
 
     /**
@@ -21,8 +21,7 @@ class InputsTest extends \PHPUnit_Framework_TestCase
                 'quality' => 'assured'
             ]
         ];
-        $input = new Inputs();
-        $input->setInputs($data);
+        $input = Inputs::forge($data);
         $this->assertEquals('tested', $input->get('test'));
         $this->assertEquals(['quality' => 'assured'], $input->get('more'));
         $this->assertEquals('assured', $input->get('more[quality]'));
@@ -42,7 +41,7 @@ class InputsTest extends \PHPUnit_Framework_TestCase
             ],
             'exact' => 'value',
         ];
-        $input = new Inputs($data);
+        $input = Inputs::forge($data);
         $this->assertEquals($data['test'], $input->get('test'));
         $this->assertEquals(true, $input->exists('test', 'assured'));
         $this->assertEquals(false, $input->exists('test', 'bad'));
@@ -64,7 +63,7 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         $object->type = 'object';
 
         $data  = ['test' => $object];
-        $input = new Inputs($data);
+        $input = Inputs::forge($data);
         $this->assertEquals($data['test'], $input->get('test'));
         $this->assertEquals('stdClass', $input->get('test[name]'));
         $this->assertEquals(null, $input->get('test[bad]'));
@@ -79,7 +78,7 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         $object['name'] = 'arrayObject';
         $object['type'] = 'object';
         $data  = ['test' => $object];
-        $input = new Inputs($data);
+        $input = Inputs::forge($data);
         $this->assertEquals($data['test'], $input->get('test'));
         $this->assertEquals('arrayObject', $input->get('test[name]'));
         $this->assertEquals(null, $input->get('test[bad]'));
@@ -100,7 +99,7 @@ class InputsTest extends \PHPUnit_Framework_TestCase
                 'test' => 'tested',
             ]
         ];
-        $input = new Inputs($data);
+        $input = Inputs::forge($data);
         $this->assertTrue('' === $input->get('test[null]'));
         $this->assertTrue('' === $input->get('test[false]'));
         $this->assertTrue('' === $input->get('test[empty]'));

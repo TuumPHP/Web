@@ -16,15 +16,9 @@ class Errors
     /**
      * @param array|Inputs $errors
      */
-    private function __construct($errors=null)
+    private function __construct($errors=[])
     {
-        if(!$errors) {
-            $errors = Inputs::forge();
-        }
-        elseif(is_array($errors)) {
-            $errors = Inputs::forge($errors);
-        }
-        $this->errors = $errors;
+        $this->errors = Inputs::forge($errors);
     }
 
     /**

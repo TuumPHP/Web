@@ -5,7 +5,7 @@ use tests\Controller\ctrl\ByMethodController;
 use tests\Controller\ctrl\ResourceController;
 use tests\Controller\ctrl\TestController;
 use Tuum\Web\Psr7\RequestFactory;
-use Tuum\Web\Viewer\View;
+use Tuum\Web\View\Value;
 
 require_once(dirname(__DIR__).'/autoloader.php');
 
@@ -25,14 +25,14 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('responded', $response->getViewFile());
 
         $data = $response->getData();
-        $view = new View($data);
+        $view = (new Value)->forge($data);
         $this->assertEquals(
             '<div class="alert alert-success">dispatched</div>'.
             '<div class="alert alert-info">noticed</div>'.
             '<div class="alert alert-danger">withoutError</div>',
             (string)$view->message);
-        $this->assertEquals('tested', $view->inputs->get('input'));
-        $this->assertEquals('error', $view->errors->get('has'));
+        $this->assertEquals('tested', $view->inputs->raw('input'));
+        $this->assertEquals('error', $view->errors->raw('has'));
     }
 
     /**

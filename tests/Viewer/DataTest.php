@@ -1,7 +1,7 @@
 <?php
 namespace tests\Viewer;
 
-use Tuum\Web\Viewer\Data;
+use Tuum\Web\View\Data;
 
 require_once(dirname(__DIR__).'/autoloader.php');
 
@@ -9,7 +9,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 {
     function test0()
     {
-        $this->assertEquals('Tuum\Web\Viewer\Data', get_class(new Data()));
+        $this->assertEquals('Tuum\Web\View\Data', get_class(new Data()));
     }
 
     /**
@@ -21,28 +21,29 @@ class DataTest extends \PHPUnit_Framework_TestCase
             'text' => 'tested',
             'html' => '<bold>',
         ];
-        $view = new Data($data);
+        $dd = new Data($data);
 
         // getting values
-        $this->assertEquals('tested', $view['text']);
-        $this->assertEquals('tested', $view->text);
-        $this->assertEquals('&lt;bold&gt;', $view['html']);
-        $this->assertEquals('<bold>', $view->html);
+        $this->assertEquals('tested', $dd['text']);
+        $this->assertEquals('tested', $dd->text);
+        $this->assertEquals('&lt;bold&gt;', $dd['html']);
+        $this->assertEquals('&lt;bold&gt;', $dd->html);
+        $this->assertEquals('<bold>', $dd->raw('html'));
 
         // check existence
-        $this->assertTrue($view->offsetExists('text'));
-        $this->assertFalse($view->offsetExists('none'));
-        $this->assertTrue(isset($view['text']));
-        $this->assertFalse(isset($view['none']));
+        $this->assertTrue($dd->offsetExists('text'));
+        $this->assertFalse($dd->offsetExists('none'));
+        $this->assertTrue(isset($dd['text']));
+        $this->assertFalse(isset($dd['none']));
 
         // html escaping
-        $this->assertEquals('&lt;bold&gt;', $view->safe('html'));
-        $this->assertEquals(null, $view->safe('none'));
+        $this->assertEquals('&lt;bold&gt;', $dd->get('html'));
+        $this->assertEquals(null, $dd->get('none'));
 
         // hidden tags
-        $this->assertEquals(null, $view->hiddenTag('none'));
-        $this->assertEquals("<input type='hidden' name='text' value='tested' />", $view->hiddenTag('text'));
-        $this->assertEquals("<input type='hidden' name='html' value='&lt;bold&gt;' />", $view->hiddenTag('html'));
+        $this->assertEquals(null, $dd->hiddenTag('none'));
+        $this->assertEquals("<input type='hidden' name='text' value='tested' />", $dd->hiddenTag('text'));
+        $this->assertEquals("<input type='hidden' name='html' value='&lt;bold&gt;' />", $dd->hiddenTag('html'));
     }
 
     /**
@@ -54,8 +55,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
             'text' => 'tested',
             'more' => 'done',
         ];
-        $view = new Data($data);
-        foreach($view as $key => $value) {
+        $dd = new Data($data);
+        foreach($dd as $key => $value) {
             $this->assertEquals($data[$key], $value);
         }
     }
@@ -64,47 +65,10 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     function withKey_returns_new_view_object()
     {
-        $view1 = new Data(['test'=>['more' => 'testing']]);
-        $view2 = $view1->withKey('test');
-        $this->assertEquals(['more' => 'testing'], $view1->test);
-        $this->assertEquals('testing', $view2->more);
-    }
-
-    /**
-     * @test
-     */
-    function safe_escapes_and_htmlSafe_as_default()
-    {
-        $view = new Data();
-        $this->assertEquals('&lt;bold&gt;', $view->esc('<bold>'));
-        $this->assertEquals('a&#039;b', $view->esc('a\'b'));
-
-        // change escape functions
-        $esc = \Tuum\Web\Viewer\View::$escape;
-        \Tuum\Web\Viewer\View::$escape = 'addslashes';
-        $this->assertEquals('<bold>', $view->esc('<bold>'));
-        $this->assertEquals('a\\\'b', $view->esc('a\'b'));
-        \Tuum\Web\Viewer\View::$escape = $esc;
-    }
-
-    /**
-     * @test
-     * @expectedException \RuntimeException
-     */
-    function offsetSet_throws_exception()
-    {
-        $view = new Data();
-        $view['test'] = 'tested';
-    }
-
-    /**
-     * @test
-     * @expectedException \RuntimeException
-     */
-    function offsetUnSet_throws_exception()
-    {
-        $view = new Data(['test'=>'tested']);
-        unset($view['test']);
+        $d1 = new Data(['test'=>['more' => 'testing']]);
+        $d2 = $d1->extractKey('test');
+        $this->assertEquals(['more' => 'testing'], $d1->test);
+        $this->assertEquals('testing', $d2->more);
     }
 
     /**
@@ -112,10 +76,10 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     function can_set_value_as_property()
     {
-        $view = new Data();
-        $view->test = 'tested';
-        $this->assertEquals('tested', $view->test);
-        $this->assertEquals(null, $view['test']);
+        $dd = new Data();
+        $dd->test = 'tested';
+        $this->assertEquals('tested', $dd->test);
+        $this->assertEquals(null, $dd['test']);
     }
 
     /**
@@ -125,8 +89,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new \stdClass();
         $obj->test = 'tested';
-        $view = new Data($obj);
-        $this->assertEquals('tested', $view->get('test'));
+        $dd = new Data($obj);
+        $this->assertEquals('tested', $dd->get('test'));
     }
 
     /**
@@ -135,8 +99,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
     function view_can_handle_arrayAccess_object()
     {
         $obj = new \ArrayObject(['test'=>'tested']);
-        $view = new Data($obj);
-        $this->assertEquals('tested', $view->get('test'));
+        $dd = new Data($obj);
+        $this->assertEquals('tested', $dd->get('test'));
     }
     /**
      * @test
@@ -147,19 +111,19 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $obj1->test = 'tested';
         $obj2 = new \stdClass();
         $obj2->test = 'done';
-        $view = new Data([
+        $dd = new Data([
             'list' => [
                 $obj1,
                 $obj2
             ]
         ]);
-        $list = $view->withKey('list');
-        $this->assertEquals('Tuum\Web\Viewer\Data', get_class($list));
+        $list = $dd->extractKey('list');
+        $this->assertEquals('Tuum\Web\View\Data', get_class($list));
 
         $answer = ['tested', 'done'];
         foreach($list->getKeys() as $key) {
-            $object = $list->withKey($key);
-            $this->assertEquals('Tuum\Web\Viewer\Data', get_class($object));
+            $object = $list->extractKey($key);
+            $this->assertEquals('Tuum\Web\View\Data', get_class($object));
             $this->assertEquals($answer[$key], $object->test);
         }
     }
