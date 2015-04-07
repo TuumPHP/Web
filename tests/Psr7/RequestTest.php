@@ -1,7 +1,7 @@
 <?php
 namespace tests\Psr7;
 
-use Tuum\View\Values\Value;
+use Tuum\Web\View\Value;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
 

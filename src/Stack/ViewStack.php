@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Tuum\Web\Viewer\View;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\View\ViewEngineInterface;
@@ -19,18 +18,11 @@ class ViewStack implements MiddlewareInterface
     public $engine;
 
     /**
-     * @var View
-     */
-    public $view;
-
-    /**
      * @param ViewEngineInterface $engine
-     * @param View                $view
      */
-    public function __construct($engine, $view)
+    public function __construct($engine)
     {
         $this->engine = $engine;
-        $this->view   = $view;
     }
 
     /**

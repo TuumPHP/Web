@@ -17,7 +17,8 @@ use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\ViewStack;
-use Tuum\Web\Viewer\View;
+use Tuum\Web\View\Value;
+use Tuum\Web\View\View;
 use Tuum\Web\Web;
 
 /** @var Application $app */
@@ -46,7 +47,7 @@ $app->set(Web::RENDER_ENGINE, function() use($dic) {
     $renderer = new Renderer($locator);
     $renderer->register('forms', new Forms());
     $renderer->register('dates', new Dates());
-    $view = new \Tuum\View\View($renderer, new Tuum\View\Values\Value());
+    $view = new View($renderer, new Value());
     return $view;
 }, true);
 
@@ -133,10 +134,8 @@ $app->set('stack/url-mapper-handler', function () use ($dic) {
  */
 $app->set('stack/view-stack', function () use ($dic) {
 
-    $view = new View();
     return new ViewStack(
-        $dic->get(Web::RENDER_ENGINE),
-        $view
+        $dic->get(Web::RENDER_ENGINE)
     );
 });
 

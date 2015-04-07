@@ -2,7 +2,7 @@
 namespace tests\Psr7;
 
 use Tuum\Locator\Container;
-use Tuum\View\Values\Value;
+use Tuum\Web\View\Value;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\RequestFactory;
 use Tuum\Web\Psr7\Response;

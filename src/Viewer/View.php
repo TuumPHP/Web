@@ -2,7 +2,7 @@
 namespace Tuum\Web\Viewer;
 
 use Psr\Http\Message\UriInterface;
-use Tuum\View\Values\Value;
+use Tuum\Web\View\Value;
 
 if(!function_exists('Tuum\Web\Viewer\htmlSafe')) {
     function htmlSafe($string) {
