@@ -124,7 +124,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/tested-location.php', $response->getHeader('location'));
         $this->assertTrue( $response->isType(Response::TYPE_REDIRECT));
         $data = $response->getData();
-        $this->assertEquals('tested', $data[Value::DATA]['test']);
+        $this->assertEquals('tested', $data['test']);
         $this->assertEquals([['message'=>'message-test','type'=>'message']], $data[Value::MESSAGE]);
         $this->assertEquals(['more'=>'done'], $data[Value::INPUTS]);
     }
@@ -144,10 +144,10 @@ class WebTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( $response->isType(Response::TYPE_VIEW));
         $this->assertEquals('tested-view', $response->getViewFile());
         $data = $response->getData();
-        $this->assertEquals('tested', $data[Value::DATA]['test']);
+        $this->assertEquals('tested', $data['test']);
         $this->assertEquals([['message'=>'tested', 'type'=>'error']], $data[Value::MESSAGE]);
         $this->assertEquals(['more'=>'done'], $data[Value::INPUTS]);
-        $this->assertEquals('tested', $data[Value::DATA]['test']);
+        $this->assertEquals('tested', $data['test']);
     }
 
     /**
@@ -166,8 +166,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
         });
         $request  = RequestFactory::fromPath('test');
         $response = $app->__invoke($request);
-        $data = $response->getData();
-        $this->assertEquals('tested-returnable', $data[Value::DATA]['test']);
+        $this->assertEquals('tested-returnable', $response->getData('test'));
     }
 
     /**
@@ -187,7 +186,6 @@ class WebTest extends \PHPUnit_Framework_TestCase
         });
         $request  = RequestFactory::fromPath('test');
         $response = $app->__invoke($request);
-        $data = $response->getData();
-        $this->assertEquals('returnable-array', $data[Value::DATA]['test']);
+        $this->assertEquals('returnable-array', $response->getData('test'));
     }
 }

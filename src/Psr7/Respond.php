@@ -25,16 +25,10 @@ class Respond
     /**
      * @var array
      */
-    protected $data = [];
-
-    /**
-     * @var array
-     */
-    protected $helpers = [
+    protected $data = [
         Value::MESSAGE => [],
         Value::INPUTS => [],
         Value::ERRORS => [],
-        Value::DATA => [],
     ];
 
     /**
@@ -58,12 +52,15 @@ class Respond
     }
 
     /**
-     * @return array
+     * @param null|string $key
+     * @return array|mixed
      */
-    public function getAll()
+    public function get($key=null)
     {
-        $this->helpers[Value::DATA] = $this->data;
-        return $this->helpers;
+        if(is_null($key)) {
+            return $this->data;
+        }
+        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
 
     /**
@@ -85,24 +82,13 @@ class Respond
     /**
      * @param string $key
      * @param mixed  $value
-     * @return $this
      */
-    private function withHelper($key, $value)
+    protected function merge($key, $value)
     {
-        $this->helpers[$key] = $value;
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param mixed  $value
-     */
-    private function merge($key, $value)
-    {
-        if( !isset($this->helpers[$key])) {
-            $this->helpers[$key] = [];
+        if( !isset($this->data[$key])) {
+            $this->data[$key] = [];
         }
-        $this->helpers[$key][] = $value;
+        $this->data[$key][] = $value;
     }
 
     /**
@@ -111,7 +97,7 @@ class Respond
      */
     public function withInput(array $input)
     {
-        return $this->withHelper(Value::INPUTS, $input);
+        return $this->with(Value::INPUTS, $input);
     }
 
     /**
@@ -120,7 +106,7 @@ class Respond
      */
     public function withInputErrors(array $errors)
     {
-        return $this->withHelper(Value::ERRORS, $errors);
+        return $this->with(Value::ERRORS, $errors);
     }
 
     /**
@@ -171,7 +157,7 @@ class Respond
      */
     public function asView($file)
     {
-        return Response::view($file, $this->getAll());
+        return Response::view($file, $this->data);
     }
 
     /**
@@ -219,7 +205,7 @@ class Respond
      */
     public function toAbsoluteUri($uri)
     {
-        return Response::redirect($uri, $this->getAll());
+        return Response::redirect($uri, $this->data);
     }
 
     /**
@@ -255,7 +241,7 @@ class Respond
      */
     public function asError($status=self::INTERNAL_ERROR)
     {
-        return Response::error($status, $this->getAll());
+        return Response::error($status, $this->data);
     }
 
     /**
