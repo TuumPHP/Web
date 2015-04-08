@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Controller;
 
-use Tuum\Routing\Matcher;
+use Tuum\Router\Matcher;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Psr7\StreamFactory;

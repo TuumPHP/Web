@@ -5,7 +5,7 @@ use League\Container\Container;
 use Tuum\Form\Dates;
 use Tuum\Form\Forms;
 use Tuum\Locator\Locator;
-use Tuum\Router\Tuum\Router;
+use Tuum\Router\Router;
 use Tuum\View\ErrorView;
 use Tuum\View\Renderer;
 use Tuum\Web\Application;
@@ -146,7 +146,7 @@ $app->set('stack/view-stack', function () use ($dic) {
  */
 $app->set(Web::ROUTER_STACK, function() use ($app) {
     
-    $router = Router::forge();
+    $router = new Router();
     return new RouterStack($router, new Dispatcher($app));
 });
 

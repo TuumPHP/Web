@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Middleware;
 
-use Tuum\Routing\Matcher;
+use Tuum\Router\Matcher;
 use Tuum\Web\Psr7\Request;
 
 /**

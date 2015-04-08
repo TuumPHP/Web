@@ -2,7 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Tuum\Router\RouterInterface;
-use Tuum\Routing\RouteCollector;
+use Tuum\Router\RouteCollector;
 use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Web;
 use Tuum\Web\Middleware\MatchRootTrait;
