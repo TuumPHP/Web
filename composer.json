@@ -11,8 +11,8 @@
     "minimum-stability": "dev",
     "require": {
         "tuum/locator": "0.1.*",
-        "tuum/router": "0.2.*",
-        "tuum/view": "0.1.*",
+        "tuum/router": "0.3.*",
+        "tuum/view": "0.2.*",
         "tuum/form":"0.1.*",
         "aura/session": " 2.*",
         "phly/http": "~0.10.0",
