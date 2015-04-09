@@ -49,7 +49,7 @@ class Value
     /**
      * @var callable
      */
-    private $escape = ['Tuum\Web\View\Value','htmlSafe'];
+    private $escape = ['Tuum\Web\View\Value', 'htmlSafe'];
 
     /**
      * @param null|callable $escape
@@ -108,7 +108,7 @@ class Value
      */
     public static function htmlSafe($string)
     {
-        return is_string($string) ?htmlspecialchars($string, ENT_QUOTES, 'UTF-8') : $string;
+        return is_string($string) ? htmlspecialchars($string, ENT_QUOTES, 'UTF-8') : $string;
     }
 
     // +----------------------------------------------------------------------+

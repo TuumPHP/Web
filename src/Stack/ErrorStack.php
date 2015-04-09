@@ -14,7 +14,7 @@ use Whoops\Run;
 class ErrorStack implements MiddlewareInterface
 {
     use MiddlewareTrait;
-    
+
     /**
      * @var ErrorView
      */
@@ -24,17 +24,17 @@ class ErrorStack implements MiddlewareInterface
      * @var null|LoggerInterface
      */
     protected $logger;
-    
+
     /**
      * @var bool
      */
     protected $debug;
 
     /**
-     * @param ErrorView  $renderer
-     * @param bool       $debug
+     * @param ErrorView $renderer
+     * @param bool      $debug
      */
-    public function __construct($renderer, $debug=false)
+    public function __construct($renderer, $debug = false)
     {
         $this->renderer = $renderer;
         $this->debug    = $debug;
@@ -43,7 +43,7 @@ class ErrorStack implements MiddlewareInterface
          * set up whoops and others.
          */
         $whoops = new Run;
-        if($this->debug) {
+        if ($this->debug) {
             error_reporting(E_ALL);
             $whoops->pushHandler(new PrettyPageHandler);
         } else {
@@ -55,11 +55,11 @@ class ErrorStack implements MiddlewareInterface
     }
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         /*
          * set up error view, or whoops if debug is true.
@@ -72,16 +72,16 @@ class ErrorStack implements MiddlewareInterface
         /*
          * check for error response. 
          */
-        if( !$response ) {
+        if (!$response) {
             $response = $request->respond()->asNotFound();
         }
-        if( !$response->isType(Response::TYPE_ERROR)) {
+        if (!$response->isType(Response::TYPE_ERROR)) {
             return $response;
         }
-        if( $this->logger ) {
-            $this->logger->error('ErrorRelease: received an error response: '.$response->getStatusCode());
+        if ($this->logger) {
+            $this->logger->error('ErrorRelease: received an error response: ' . $response->getStatusCode());
         }
-        $content = $this->renderer->render($response->getStatusCode(), $response->getData());
+        $content  = $this->renderer->render($response->getStatusCode(), $response->getData());
         $response = $response->withBody(StreamFactory::string($content));
         return $response;
     }

@@ -36,19 +36,19 @@ class Middleware implements MiddlewareInterface
      */
     public function __construct($app)
     {
-        $this->app = $app;
+        $this->app  = $app;
         $this->name = get_class($app);
     }
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         if ($matched = $this->isMatch($request)) {
-            if(isset($matched['matched'])) {
+            if (isset($matched['matched'])) {
                 $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
             }
             $app      = $this->app;
@@ -57,7 +57,7 @@ class Middleware implements MiddlewareInterface
             if ($response) {
                 return $response;
             }
-            $request  = $return->get($request);
+            $request = $return->get($request);
         }
         $next = $this->next;
         if ($next) {

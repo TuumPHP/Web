@@ -11,8 +11,8 @@ abstract class AbstractResponseFactory
      */
     protected $data = [
         Value::MESSAGE => [],
-        Value::INPUTS => [],
-        Value::ERRORS => [],
+        Value::INPUTS  => [],
+        Value::ERRORS  => [],
     ];
 
     /**
@@ -32,9 +32,9 @@ abstract class AbstractResponseFactory
      * @param null|string $key
      * @return array|mixed
      */
-    public function get($key=null)
+    public function get($key = null)
     {
-        if(is_null($key)) {
+        if (is_null($key)) {
             return $this->data;
         }
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
@@ -62,7 +62,7 @@ abstract class AbstractResponseFactory
      */
     protected function merge($key, $value)
     {
-        if( !isset($this->data[$key])) {
+        if (!isset($this->data[$key])) {
             $this->data[$key] = [];
         }
         $this->data[$key][] = $value;
@@ -94,7 +94,7 @@ abstract class AbstractResponseFactory
     {
         $this->merge(Value::MESSAGE, [
             'message' => $message,
-            'type' => Message::MESSAGE,
+            'type'    => Message::MESSAGE,
         ]);
         return $this;
     }
@@ -107,7 +107,7 @@ abstract class AbstractResponseFactory
     {
         $this->merge(Value::MESSAGE, [
             'message' => $message,
-            'type' => Message::ALERT,
+            'type'    => Message::ALERT,
         ]);
         return $this;
     }
@@ -120,7 +120,7 @@ abstract class AbstractResponseFactory
     {
         $this->merge(Value::MESSAGE, [
             'message' => $message,
-            'type' => Message::ERROR,
+            'type'    => Message::ERROR,
         ]);
         return $this;
     }

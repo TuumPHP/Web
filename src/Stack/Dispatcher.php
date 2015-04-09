@@ -23,22 +23,22 @@ class Dispatcher implements ApplicationInterface
     /**
      * @param null|Application $app
      */
-    public function __construct($app=null)
+    public function __construct($app = null)
     {
         $this->app = $app;
     }
-    
+
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         $class = $this->route->handle();
 
         // prepare object to dispatch.
-        if (is_string($class) ) {
+        if (is_string($class)) {
             $next = $this->app->get($class);
         } elseif (is_callable($class)) {
             $next = $class;
@@ -61,7 +61,7 @@ class Dispatcher implements ApplicationInterface
      */
     public function withRoute($route)
     {
-        $dispatch = clone($this);
+        $dispatch        = clone($this);
         $dispatch->route = $route;
         return $dispatch;
     }

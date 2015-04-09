@@ -20,7 +20,7 @@ trait MiddlewareTrait
     {
         return Returnable::start();
     }
-    
+
     /**
      * stack up the middleware.
      * converts normal Application into middleware.
@@ -30,7 +30,7 @@ trait MiddlewareTrait
      */
     public function push($handler)
     {
-        if(!$handler) {
+        if (!$handler) {
             return $this;
         }
         if ($this->next) {
@@ -52,7 +52,7 @@ trait MiddlewareTrait
      */
     public function prepend($handler)
     {
-        if(!$handler) {
+        if (!$handler) {
             return $this;
         }
         if (!$handler instanceof MiddlewareInterface) {
@@ -70,7 +70,7 @@ trait MiddlewareTrait
      */
     protected function execNext($request)
     {
-        if(!$this->next) {
+        if (!$this->next) {
             return null;
         }
         $next = $this->next;

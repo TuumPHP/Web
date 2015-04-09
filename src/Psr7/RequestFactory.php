@@ -18,11 +18,11 @@ class RequestFactory extends ServerRequestFactory
      * order to marshal the request URI and headers.
      *
      * @see fromServer()
-     * @param array $server $_SERVER superglobal
-     * @param array $query $_GET superglobal
-     * @param array $body $_POST superglobal
+     * @param array $server  $_SERVER superglobal
+     * @param array $query   $_GET superglobal
+     * @param array $body    $_POST superglobal
      * @param array $cookies $_COOKIE superglobal
-     * @param array $files $_FILES superglobal
+     * @param array $files   $_FILES superglobal
      * @return Request
      */
     public static function fromGlobals(
@@ -33,10 +33,10 @@ class RequestFactory extends ServerRequestFactory
         array $files = null
     ) {
         $server  = self::normalizeServer($server ?: $_SERVER);
-        $files   = $files   ?: $_FILES;
+        $files   = $files ?: $_FILES;
         $cookies = $cookies ?: $_COOKIE;
-        $query   = $query   ?: $_GET;
-        $body    = $body    ?: $_POST;
+        $query   = $query ?: $_GET;
+        $body    = $body ?: $_POST;
         $headers = self::marshalHeaders($server);
         $request = new Request(
             $server,
@@ -51,8 +51,7 @@ class RequestFactory extends ServerRequestFactory
             ->withSession((new SessionFactory)->newInstance($cookies))
             ->withCookieParams($cookies)
             ->withQueryParams($query)
-            ->withBodyParams($body)
-            ;
+            ->withBodyParams($body);
     }
 
     /**

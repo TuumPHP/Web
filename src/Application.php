@@ -38,7 +38,7 @@ class Application implements MiddlewareInterface
      * @param mixed  $value
      * @param bool   $singleton
      */
-    public function set($key, $value, $singleton=false)
+    public function set($key, $value, $singleton = false)
     {
         $this->container->add($key, $value, $singleton);
     }
@@ -48,7 +48,7 @@ class Application implements MiddlewareInterface
      * @param array  $data
      * @return mixed
      */
-    public function get($key, $data=[])
+    public function get($key, $data = [])
     {
         $data['app'] = $this;
         return $this->container->get($key, $data);
@@ -59,13 +59,13 @@ class Application implements MiddlewareInterface
      * @param array  $__data
      * @return mixed|null
      */
-    public function configure($__config, $__data=[])
+    public function configure($__config, $__data = [])
     {
         $__file = $__config . '.php';
-        if(!file_exists($__file)) {
-            throw new \InvalidArgumentException('Cannot find configuration file: '.$__config);
+        if (!file_exists($__file)) {
+            throw new \InvalidArgumentException('Cannot find configuration file: ' . $__config);
         }
-        if(file_exists($__file)) {
+        if (file_exists($__file)) {
             /** @noinspection PhpUnusedLocalVariableInspection */
             $app = $this;
             /** @noinspection PhpUnusedLocalVariableInspection */
@@ -78,17 +78,17 @@ class Application implements MiddlewareInterface
     }
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
-        if(is_object($request) && method_exists($request, 'setWebApp')) {
+        if (is_object($request) && method_exists($request, 'setWebApp')) {
             $request->setWebApp($this);
         }
         $app = $this->next;
-        if($app) {
+        if ($app) {
             return $app($request);
         }
         return $request->respond()->asError();
@@ -102,7 +102,7 @@ class Application implements MiddlewareInterface
      */
     public function cloneApp()
     {
-        $new = clone($this);
+        $new       = clone($this);
         $new->next = null;
         return $new;
     }
