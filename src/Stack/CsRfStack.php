@@ -18,39 +18,39 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web\Stack
  */
-class CsRfStack  implements MiddlewareInterface
+class CsRfStack implements MiddlewareInterface
 {
     use MiddlewareTrait;
 
     use MatchRootTrait;
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         // get session. ignore CsRf filter if not set. 
         /** @var Session $session */
         /** @var Request $request */
         $session = $request->getSession();
-        if(!$session) {
+        if (!$session) {
             return $this->execNext($request);
         }
         /*
          * get token, and set the token value to respond 
          * so that view/response can access it.
          */
-        $token = $session->getCsrfToken(Web::TOKEN_NAME);
+        $token   = $session->getCsrfToken();
         $request = $request->withAttribute(Web::TOKEN_NAME, $token->getValue());
         /*
          * check if token must be verified.
          */
-        if(!$matched = $this->isMatch($request)) {
+        if (!$matched = $this->isMatch($request)) {
             return $this->execNext($request); // maybe not...
         }
-        if(isset($matched['matched'])) {
+        if (isset($matched['matched'])) {
             $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
         }
         /*
@@ -59,10 +59,10 @@ class CsRfStack  implements MiddlewareInterface
         /** @var CsRfFilter $csRfFilter */
         $csRfFilter = $request->getFilter(Web::CS_RF_FILTER);
         $return     = $this->getReturnable();
-        if( $response = $csRfFilter($request, $return)) {
+        if ($response = $csRfFilter($request, $return)) {
             return $response;
         }
-        $request  = $return->get($request);
+        $request = $return->get($request);
         return $this->execNext($request); // GOOD!
     }
 }

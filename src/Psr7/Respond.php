@@ -19,7 +19,7 @@ class Respond extends AbstractResponseFactory
     const INTERNAL_ERROR = '500';
 
     /**
-     * 
+     *
      */
     public function __construct()
     {
@@ -79,7 +79,7 @@ class Respond extends AbstractResponseFactory
      * @param int|string $status
      * @return Response
      */
-    public function asError($status=self::INTERNAL_ERROR)
+    public function asError($status = self::INTERNAL_ERROR)
     {
         return Response::error($status, $this->data);
     }

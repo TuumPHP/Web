@@ -15,9 +15,9 @@ use Tuum\Web\Psr7\Response;
 interface ApplicationInterface
 {
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null);
+    public function __invoke($request, $next = null);
 }

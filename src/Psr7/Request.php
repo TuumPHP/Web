@@ -3,6 +3,7 @@ namespace Tuum\Web\Psr7;
 
 use Aura\Session\Session;
 use Phly\Http\ServerRequest;
+use Psr\Http\Message\UriInterface;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Application;
@@ -20,7 +21,7 @@ use Tuum\Web\View\Value;
 class Request extends ServerRequest
 {
     const SESSION_MGR = 'session.mgr';
-    
+
     /**
      * @var Respond
      */
@@ -52,12 +53,12 @@ class Request extends ServerRequest
     private $session;
 
     /**
-     * @param array  $serverParams
-     * @param array  $fileParams
-     * @param null   $uri
-     * @param null   $method
-     * @param string $body
-     * @param array  $headers
+     * @param array             $serverParams
+     * @param array             $fileParams
+     * @param UriInterface|null $uri
+     * @param string|null       $method
+     * @param string            $body
+     * @param array             $headers
      */
     public function __construct(
         array $serverParams = [],
@@ -67,7 +68,7 @@ class Request extends ServerRequest
         $body = 'php://input',
         array $headers = []
     ) {
-        $this->respond = new Respond();
+        $this->respond  = new Respond();
         $this->redirect = new Redirect();
         parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
     }
@@ -107,12 +108,12 @@ class Request extends ServerRequest
     public function withAttributes(array $attributes)
     {
         $new = clone $this;
-        foreach($attributes as $key => $val) {
+        foreach ($attributes as $key => $val) {
             $new = $new->withAttribute($key, $val);
         }
         return $new;
     }
-    
+
     /**
      * @param string $base
      * @param string $path
@@ -120,18 +121,18 @@ class Request extends ServerRequest
      */
     public function withPathToMatch($base, $path)
     {
-        $new = clone $this;
+        $new                = clone $this;
         $new->base_path     = $base;
         $new->path_to_match = $path;
         return $new;
     }
-    
+
     /**
      * @return string
      */
     public function getPathToMatch()
     {
-        if(is_null($this->path_to_match)) {
+        if (is_null($this->path_to_match)) {
             return $this->getUri()->getPath();
         }
         return $this->path_to_match;
@@ -144,7 +145,7 @@ class Request extends ServerRequest
     {
         return $this->base_path;
     }
-    
+
     /**
      * return cloned $respond object.
      * the $request object will not be altered.
@@ -166,12 +167,12 @@ class Request extends ServerRequest
      * @param array $list
      * @return Redirect
      */
-    public function redirect($list=[])
+    public function redirect($list = [])
     {
-        $data = (array) $this->getAttributes();
+        $data = (array)$this->getAttributes();
         $list = array_merge($list, [Value::INPUTS, Value::ERRORS, Value::MESSAGE]);
-        foreach($data as $key => $v) {
-            if(!in_array($key, $list)) {
+        foreach ($data as $key => $v) {
+            if (!in_array($key, $list)) {
                 unset($data[$key]);
             }
         }
@@ -187,7 +188,7 @@ class Request extends ServerRequest
      */
     public function withSession($session)
     {
-        $new = clone $this;
+        $new          = clone $this;
         $new->session = $session;
         return $new;
     }

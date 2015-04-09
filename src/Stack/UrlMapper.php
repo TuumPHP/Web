@@ -45,19 +45,19 @@ class UrlMapper implements MiddlewareInterface
     }
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         $path    = $request->getUri()->getPath();
         $handler = $this->findHandle($path);
-        if (!$handler) {
+        if (empty($handler)) {
             return $this->execNext($request);
         }
         $handler['path'] = $path;
-        $file = $this->locatePath($path, $handler);
+        $file            = $this->locatePath($path, $handler);
         if (!$file) {
             return $this->execNext($request);
         }

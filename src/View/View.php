@@ -26,11 +26,11 @@ class View implements ViewEngineInterface
      * @param Renderer   $renderer
      * @param null|Value $value
      */
-    public function __construct($renderer, $value=null)
+    public function __construct($renderer, $value = null)
     {
         $this->renderer = $renderer;
         $this->locator  = $renderer->locator; // bad!
-        $this->value = $value;
+        $this->value    = $value;
     }
 
     /**
@@ -44,7 +44,7 @@ class View implements ViewEngineInterface
     public function render($file, $data = [])
     {
         if ($this->value) {
-            $data = ['view' => $this->value->forge($data) ];
+            $data = ['view' => $this->value->withData($data)];
         }
         return $this->renderer->render($file, $data);
     }

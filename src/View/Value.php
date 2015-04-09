@@ -65,7 +65,7 @@ class Value
      * @param array $data
      * @return $this
      */
-    public function forge($data)
+    public function withData($data)
     {
         $blank = clone($this);
         $blank->setup($data);

@@ -22,7 +22,7 @@ trait RouteDispatchTrait
 
     /**
      * @param Request $request
-     * @return Response|null;
+     * @return Response|null
      */
     protected function dispatch($request)
     {
@@ -67,7 +67,7 @@ trait RouteDispatchTrait
         $routes = $this->getRoutes();
         foreach ($routes as $pattern => $dispatch) {
             $params = Matcher::verify($pattern, $path, $method);
-            if ($params) {
+            if (!empty($params)) {
                 $params += $request->getQueryParams() ?: [];
                 $method = 'on' . ucwords($dispatch);
                 return $this->dispatchMethod($method, $params);

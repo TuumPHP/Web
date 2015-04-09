@@ -32,7 +32,7 @@ trait MatchRootTrait
      * check if matches with given roots.
      * returns true/false, but
      * if the matched root has trails, returns new $request with a path to match.
-     * 
+     *
      * @param Request $request
      * @return bool|array
      */

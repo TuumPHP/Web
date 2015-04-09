@@ -11,18 +11,18 @@ class CsRfFilter implements ApplicationInterface
 {
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         /*
          * get token from session. ignore CsRf if session is not set.
          */
         /** @var Session $session */
         $session = $request->getSession();
-        if(!$session) {
+        if (!$session) {
             return null;
         }
         $token = $session->getCsrfToken(Web::TOKEN_NAME);
@@ -30,9 +30,10 @@ class CsRfFilter implements ApplicationInterface
          * check for token in post data.
          */
         $posts = $request->getBodyParams();
-        if( isset($posts[Web::TOKEN_NAME]) &&
+        if (isset($posts[Web::TOKEN_NAME]) &&
             $posts[Web::TOKEN_NAME] &&
-            $token->isValid($posts[Web::TOKEN_NAME])) {
+            $token->isValid($posts[Web::TOKEN_NAME])
+        ) {
             return null; // GOOD!
         }
         return $request->respond()->asForbidden(); // BAD!!!

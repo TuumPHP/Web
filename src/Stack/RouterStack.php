@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Tuum\Router\Route;
 use Tuum\Router\RouterInterface;
 use Tuum\Router\RouteCollector;
 use Tuum\Web\Middleware\BeforeFilterTrait;
@@ -14,11 +15,11 @@ use Tuum\Web\Psr7\Response;
 class RouterStack implements MiddlewareInterface
 {
     use MiddlewareTrait;
-    
+
     use MatchRootTrait;
-    
+
     use BeforeFilterTrait;
-    
+
     /**
      * @var RouterInterface
      */
@@ -30,12 +31,12 @@ class RouterStack implements MiddlewareInterface
     public $dispatcher;
 
     /**
-     * @param RouterInterface    $router
-     * @param Dispatcher         $dispatcher
+     * @param RouterInterface $router
+     * @param Dispatcher      $dispatcher
      */
     public function __construct($router, $dispatcher)
     {
-        $this->router = $router;
+        $this->router     = $router;
         $this->dispatcher = $dispatcher;
     }
 
@@ -53,7 +54,7 @@ class RouterStack implements MiddlewareInterface
      * @return null|Response
      * @throws \ErrorException
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         if (!$this->router) {
             throw new \ErrorException('no router for routing.');
@@ -64,34 +65,42 @@ class RouterStack implements MiddlewareInterface
         if (isset($matched['matched'])) {
             $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
         }
-        $route  = $this->router->match($request->getUri()->getPath(), $request->getMethod());
+        $route = $this->router->match($request->getUri()->getPath(), $request->getMethod());
         if (!$route) {
             return $this->execNext($request);
         }
-        /*
-         * execute the dispatcher and filters using blank new web application.
-         */
-        $app = $request->getWebApp()->cloneApp();
-        $this->dispatcher->setRoute($route);
-        $app->prepend($this->dispatcher);
+        return $this->dispatch($request, $route);
 
-        /** @var Request $request ...$request lost track of its type, some how... */
+    }
+
+    /**
+     * execute the dispatcher and filters using blank new web application.
+     *
+     * @param Request $request
+     * @param Route   $route
+     * @return mixed
+     */
+    private function dispatch($request, $route)
+    {
+        $app = $request->getWebApp()->cloneApp();
+        $app->prepend($this->dispatcher->withRoute($route));
+
         if (!empty($this->_beforeFilters)) {
-            foreach($this->_beforeFilters as $filter) {
+            foreach ($this->_beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
                 $app->prepend($filter);
             }
         }
         if ($beforeFilters = $route->before()) {
-            foreach($beforeFilters as $filter) {
+            foreach ($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
                 $app->prepend($filter);
             }
         }
-        if($route->matched()) {
+        if ($route->matched()) {
             $request = $request->withPathToMatch($route->matched(), $route->trailing());
         }
-        $request = $request->withAttribute(Web::ROUTE_NAMES, $this->router->getReverseRoute($request));
+        $request = $request->withAttribute(Web::ROUTE_NAMES, $this->router->getReverseRoute());
         return $app($request);
     }
 }

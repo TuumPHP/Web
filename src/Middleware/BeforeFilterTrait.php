@@ -9,6 +9,7 @@ use Tuum\Web\Psr7\Response;
 
 /**
  * Class StackFilterTrait
+ *
  * @package Tuum\Web\Stack
  *
  * apply filters if matched, but before the main handle.

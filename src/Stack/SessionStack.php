@@ -27,22 +27,24 @@ class SessionStack implements MiddlewareInterface
     }
 
     /**
-     * @param Request          $request
-     * @param callable|null    $next
+     * @param Request       $request
+     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request, $next = null)
     {
         /*
          * first, copy session data into $request->respond. 
          */
-        $session = $this->factory->newInstance($_COOKIE);
+        $session = $request->getSession();
+        if (!$session) {
+            return $this->execNext($request);
+        }
         $segment = $session->getSegment('TuumPHP/WebApplication');
         $flash   = $segment->getFlash('flashed');
         if ($flash) {
             $request = $request->withAttributes($flash);
         }
-        $request = $request->withSession($session);
 
         /*
          * execute the subsequent stack.
@@ -53,11 +55,8 @@ class SessionStack implements MiddlewareInterface
          * copy data from $response into session. 
          */
         if ($response->isType(Response::TYPE_REDIRECT)) {
-            $data  = $response->getData();
+            $data = $response->getData();
             $segment->setFlash('flashed', $data);
-        }
-        if ($response->isType(Response::TYPE_VIEW)) {
-            // currently, nothing to do.
         }
         $session->commit();
         return $response;

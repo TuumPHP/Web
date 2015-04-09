@@ -25,7 +25,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('responded', $response->getViewFile());
 
         $data = $response->getData();
-        $view = (new Value)->forge($data);
+        $view = (new Value)->withData($data);
         $this->assertEquals(
             '<div class="alert alert-success">dispatched</div>'.
             '<div class="alert alert-info">noticed</div>'.

@@ -18,7 +18,7 @@ class Response extends BaseResponse
     /**
      * @var array
      */
-    protected $data=[];
+    protected $data = [];
 
     /**
      * @var string
@@ -43,9 +43,9 @@ class Response extends BaseResponse
      * @param null|string $key
      * @return array
      */
-    public function getData($key=null)
+    public function getData($key = null)
     {
-        if(!is_null($key)) {
+        if (!is_null($key)) {
             return array_key_exists($key, $this->data) ? $this->data[$key] : null;
         }
         return $this->data;
@@ -72,29 +72,29 @@ class Response extends BaseResponse
      * @param array  $data
      * @return Response
      */
-    public static function view($file, $data=[])
+    public static function view($file, $data = [])
     {
-        $self = new self;
+        $self            = new self;
         $self->view_file = $file;
-        $self->data = $data;
-        $self->type = self::TYPE_VIEW;
+        $self->data      = $data;
+        $self->type      = self::TYPE_VIEW;
         return $self;
     }
 
     /**
      * @param string|UriInterface $uri
-     * @param array  $data
+     * @param array               $data
      * @return Response
      */
-    public static function redirect($uri, $data=[])
+    public static function redirect($uri, $data = [])
     {
-        if($uri instanceof UriInterface) {
-            $uri = (string) $uri;
+        if ($uri instanceof UriInterface) {
+            $uri = (string)$uri;
         }
-        $self = new self('php://memory', '302', ['Location' => $uri ]);
+        $self              = new self('php://memory', '302', ['Location' => $uri]);
         $self->redirect_to = $uri;
-        $self->data = $data;
-        $self->type = self::TYPE_REDIRECT;
+        $self->data        = $data;
+        $self->type        = self::TYPE_REDIRECT;
         return $self;
     }
 
@@ -103,9 +103,9 @@ class Response extends BaseResponse
      * @param array $data
      * @return Response
      */
-    public static function error($status, $data=[])
+    public static function error($status, $data = [])
     {
-        $self = new self('php://memory', $status);
+        $self       = new self('php://memory', $status);
         $self->data = $data;
         $self->type = self::TYPE_ERROR;
         return $self;
@@ -116,7 +116,7 @@ class Response extends BaseResponse
      */
     public function send()
     {
-        if(!headers_sent()) {
+        if (!headers_sent()) {
             $this->sendHeaders();
         }
         echo $this->getBody();

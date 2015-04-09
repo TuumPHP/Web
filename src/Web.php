@@ -10,14 +10,14 @@ use League\Container\Container;
  *          web application.
  *
  *
- *          
+ *
  */
 class Web
 {
     /*
      * directories
      */
-    const CONFIG_DIR   = 'dir.config';
+    const CONFIG_DIR = 'dir.config';
     const TEMPLATE_DIR = 'dir.view';
     const DOCUMENT_DIR = 'dir.resource';
     const VAR_DATA_DIR = 'dir.variable';
@@ -50,17 +50,17 @@ class Web
         /*
          * set up directories.
          */
-        $app->set(Web::CONFIG_DIR,   $config[Web::CONFIG_DIR]);
+        $app->set(Web::CONFIG_DIR, $config[Web::CONFIG_DIR]);
         $app->set(Web::TEMPLATE_DIR, $config[Web::TEMPLATE_DIR]);
         $app->set(Web::DOCUMENT_DIR, $config[Web::DOCUMENT_DIR]);
         $app->set(Web::VAR_DATA_DIR, $config[Web::VAR_DATA_DIR]);
-        $app->set(Web::DEBUG,        $config[Web::DEBUG]);
+        $app->set(Web::DEBUG, $config[Web::DEBUG]);
 
         /*
          * load a default configuration. 
          */
-        $app->configure(dirname(__DIR__).'/scripts/configure');
-        
+        $app->configure(dirname(__DIR__) . '/scripts/configure');
+
         return $app;
     }
 }
