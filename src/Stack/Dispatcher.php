@@ -57,9 +57,12 @@ class Dispatcher implements ApplicationInterface
 
     /**
      * @param Route $route
+     * @return Dispatcher
      */
-    public function setRoute($route)
+    public function withRoute($route)
     {
-        $this->route = $route;
+        $dispatch = clone($this);
+        $dispatch->route = $route;
+        return $dispatch;
     }
 }
