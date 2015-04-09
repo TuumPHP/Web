@@ -62,7 +62,7 @@ abstract class AbstractController implements ApplicationInterface
 
     /**
      * @param Request $request
-     * @return Response|null;
+     * @return Response|null
      */
     abstract protected function dispatch($request);
 

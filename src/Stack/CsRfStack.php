@@ -18,7 +18,7 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web\Stack
  */
-class CsRfStack  implements MiddlewareInterface
+class CsRfStack implements MiddlewareInterface
 {
     use MiddlewareTrait;
 
@@ -42,7 +42,7 @@ class CsRfStack  implements MiddlewareInterface
          * get token, and set the token value to respond 
          * so that view/response can access it.
          */
-        $token = $session->getCsrfToken(Web::TOKEN_NAME);
+        $token = $session->getCsrfToken();
         $request = $request->withAttribute(Web::TOKEN_NAME, $token->getValue());
         /*
          * check if token must be verified.

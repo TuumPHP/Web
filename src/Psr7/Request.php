@@ -55,8 +55,8 @@ class Request extends ServerRequest
     /**
      * @param array  $serverParams
      * @param array  $fileParams
-     * @param null|UriInterface   $uri
-     * @param null   $method
+     * @param UriInterface|null   $uri
+     * @param string|null  $method
      * @param string $body
      * @param array  $headers
      */

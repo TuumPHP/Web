@@ -38,8 +38,7 @@ class SessionStack implements MiddlewareInterface
          */
         $session = $request->getSession();
         if(!$session) {
-            $session = $this->factory->newInstance($_COOKIE);
-            $request = $request->withSession($session);
+            return $this->execNext($request);
         }
         $segment = $session->getSegment('TuumPHP/WebApplication');
         $flash   = $segment->getFlash('flashed');
@@ -58,9 +57,6 @@ class SessionStack implements MiddlewareInterface
         if ($response->isType(Response::TYPE_REDIRECT)) {
             $data  = $response->getData();
             $segment->setFlash('flashed', $data);
-        }
-        if ($response->isType(Response::TYPE_VIEW)) {
-            // currently, nothing to do.
         }
         $session->commit();
         return $response;

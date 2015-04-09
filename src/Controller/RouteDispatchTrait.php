@@ -22,7 +22,7 @@ trait RouteDispatchTrait
 
     /**
      * @param Request $request
-     * @return Response|null;
+     * @return Response|null
      */
     protected function dispatch($request)
     {

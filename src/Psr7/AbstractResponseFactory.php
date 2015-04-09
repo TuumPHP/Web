@@ -42,7 +42,7 @@ abstract class AbstractResponseFactory
 
     /**
      * @param string|array $key
-     * @param null         $value
+     * @param mixed        $value
      * @return $this
      */
     public function with($key, $value = null)
