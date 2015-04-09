@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\View;
 
-use Psr\Http\Message\UriInterface;
+use Tuum\View\DataView;
 use Tuum\View\Helper\Data;
 use Tuum\View\Helper\Errors;
 use Tuum\View\Helper\Escape;
@@ -11,55 +11,15 @@ use Tuum\View\Helper\Message;
 /**
  * Class Value
  *
- * @package Tuum\View\Values
+ * @package Tuum\Web\View\Values
  *
- * @property Errors           $errors
- * @property Inputs           $inputs
- * @property Message          $message
- * @property Data             $data
- * @property UriInterface     $uri
  */
-class Value
+class Value extends DataView
 {
     const MESSAGE = '-message-view';
     const INPUTS = '-input-view';
     const ERRORS = '-errors-view';
     const URI = '-uri-view';
-
-    /**
-     * @var Data
-     */
-    private $data;
-
-    /**
-     * @var Message
-     */
-    private $message;
-
-    /**
-     * @var Inputs
-     */
-    private $inputs;
-
-    /**
-     * @var Errors
-     */
-    private $errors;
-
-    /**
-     * @var UriInterface
-     */
-    private $uri;
-
-    /**
-     * @param null|callable $escape
-     */
-    public function __construct($escape = null)
-    {
-        if (is_callable($escape)) {
-            $this->escape = $escape;
-        }
-    }
 
     /**
      * @param array $data
@@ -92,26 +52,11 @@ class Value
             }
             return [];
         };
-        $escape        = $this->escape ?: new Escape();
-        $this->inputs  = Inputs::forge($bite(self::INPUTS), $escape);
+        $this->inputs  = Inputs::forge($bite(self::INPUTS), $this->escape);
         $this->errors  = Errors::forge($bite(self::ERRORS));
         $this->message = Message::forge($bite(self::MESSAGE));
         $this->uri     = $bite(self::URI);
-        $this->data    = Data::forge($bite(), $escape);
-    }
-
-    /**
-     * accessing its internal properties.
-     *
-     * @param string $key
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        if (isset($this->$key)) {
-            return $this->$key;
-        }
-        return null;
+        $this->data    = Data::forge($bite(), $this->escape);
     }
 
 }
