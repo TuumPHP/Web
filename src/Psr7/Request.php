@@ -3,6 +3,7 @@ namespace Tuum\Web\Psr7;
 
 use Aura\Session\Session;
 use Phly\Http\ServerRequest;
+use Psr\Http\Message\UriInterface;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Application;
@@ -54,7 +55,7 @@ class Request extends ServerRequest
     /**
      * @param array  $serverParams
      * @param array  $fileParams
-     * @param null   $uri
+     * @param null|UriInterface   $uri
      * @param null   $method
      * @param string $body
      * @param array  $headers

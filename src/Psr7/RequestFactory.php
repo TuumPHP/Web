@@ -34,6 +34,9 @@ class RequestFactory extends ServerRequestFactory
     ) {
         $server  = self::normalizeServer($server ?: $_SERVER);
         $files   = $files   ?: $_FILES;
+        $cookies = $cookies ?: $_COOKIE;
+        $query   = $query   ?: $_GET;
+        $body    = $body    ?: $_POST;
         $headers = self::marshalHeaders($server);
         $request = new Request(
             $server,
@@ -45,10 +48,10 @@ class RequestFactory extends ServerRequestFactory
         );
 
         return $request
-            ->withSession((new SessionFactory)->newInstance($cookies ?: $_COOKIE))
-            ->withCookieParams($cookies ?: $_COOKIE)
-            ->withQueryParams($query ?: $_GET)
-            ->withBodyParams($body ?: $_POST)
+            ->withSession((new SessionFactory)->newInstance($cookies))
+            ->withCookieParams($cookies)
+            ->withQueryParams($query)
+            ->withBodyParams($body)
             ;
     }
 
