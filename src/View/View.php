@@ -44,7 +44,7 @@ class View implements ViewEngineInterface
     public function render($file, $data = [])
     {
         if ($this->value) {
-            $data = ['view' => $this->value->forge($data) ];
+            $data = ['view' => $this->value->withData($data) ];
         }
         return $this->renderer->render($file, $data);
     }
