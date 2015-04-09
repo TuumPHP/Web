@@ -27,11 +27,11 @@ class Returnable
      */
     public static function start()
     {
-        if (!static::$self) {
-            static::$self = new Returnable();
+        if (!self::$self) {
+            self::$self = new Returnable();
         }
 
-        return clone(static::$self);
+        return clone(self::$self);
     }
 
     /**

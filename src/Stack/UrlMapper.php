@@ -53,7 +53,7 @@ class UrlMapper implements MiddlewareInterface
     {
         $path    = $request->getUri()->getPath();
         $handler = $this->findHandle($path);
-        if (!$handler) {
+        if (empty($handler)) {
             return $this->execNext($request);
         }
         $handler['path'] = $path;

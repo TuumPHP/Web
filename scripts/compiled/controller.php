@@ -8,6 +8,9 @@ class MyController extends AbstractController
 {
     use ResourceControllerTrait;
 
+    /**
+     * @return null
+     */
     function onGet() {
         return null;
     }

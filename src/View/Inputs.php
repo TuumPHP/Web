@@ -32,10 +32,10 @@ class Inputs
      */
     public static function forge($data = [], $escape = null)
     {
-        if (!static::$self) {
-            static::$self = new static();
+        if (!self::$self) {
+            self::$self = new static();
         }
-        $blank = clone(static::$self);
+        $blank = clone(self::$self);
         $blank->inputs = $data;
         $blank->escape = $escape ?: ['Tuum\Web\View\Value','htmlSafe'];
         return $blank;
@@ -130,8 +130,8 @@ class Inputs
      * returns null if not found. or
      * returns an empty space if key is set but has not real value.
      *
-     * @param array $levels
-     * @param array $inputs
+     * @param array|string $levels
+     * @param array|mixed  $inputs
      * @return mixed
      */
     private function recurseGet($levels, $inputs)

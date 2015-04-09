@@ -28,9 +28,7 @@ class Message
      */
     private function __construct($data = [])
     {
-        if ($data) {
-            $this->messages = $data;
-        }
+        $this->messages = $data;
     }
 
     /**

@@ -14,7 +14,7 @@ class Errors
     public $format = '<p class="text-danger">%s</p>';
 
     /**
-     * @param array|Inputs $errors
+     * @param array $errors
      */
     private function __construct($errors=[])
     {
