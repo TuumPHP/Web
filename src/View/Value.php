@@ -4,7 +4,6 @@ namespace Tuum\Web\View;
 use Tuum\View\DataView;
 use Tuum\View\Helper\Data;
 use Tuum\View\Helper\Errors;
-use Tuum\View\Helper\Escape;
 use Tuum\View\Helper\Inputs;
 use Tuum\View\Helper\Message;
 

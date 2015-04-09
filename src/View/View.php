@@ -8,7 +8,7 @@ use Tuum\View\ViewEngineInterface;
 class View implements ViewEngineInterface
 {
     /**
-     * @var Renderer
+     * @var ViewEngineInterface
      */
     private $renderer;
 
