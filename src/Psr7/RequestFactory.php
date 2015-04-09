@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Psr7;
 
+use Aura\Session\SessionFactory;
 use Phly\Http\ServerRequestFactory;
 use Phly\Http\Uri;
 
@@ -44,9 +45,11 @@ class RequestFactory extends ServerRequestFactory
         );
 
         return $request
+            ->withSession((new SessionFactory)->newInstance($cookies ?: $_COOKIE))
             ->withCookieParams($cookies ?: $_COOKIE)
             ->withQueryParams($query ?: $_GET)
-            ->withBodyParams($body ?: $_POST);
+            ->withBodyParams($body ?: $_POST)
+            ;
     }
 
     /**

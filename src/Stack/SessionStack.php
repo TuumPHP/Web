@@ -36,13 +36,16 @@ class SessionStack implements MiddlewareInterface
         /*
          * first, copy session data into $request->respond. 
          */
-        $session = $this->factory->newInstance($_COOKIE);
+        $session = $request->getSession();
+        if(!$session) {
+            $session = $this->factory->newInstance($_COOKIE);
+            $request = $request->withSession($session);
+        }
         $segment = $session->getSegment('TuumPHP/WebApplication');
         $flash   = $segment->getFlash('flashed');
         if ($flash) {
             $request = $request->withAttributes($flash);
         }
-        $request = $request->withSession($session);
 
         /*
          * execute the subsequent stack.
