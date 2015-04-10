@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\View;
 
+use Psr\Http\Message\UriInterface;
 use Tuum\View\DataView;
 use Tuum\View\Helper\Data;
 use Tuum\View\Helper\Errors;
@@ -19,6 +20,11 @@ class Value extends DataView
     const INPUTS = '-input-view';
     const ERRORS = '-errors-view';
     const URI = '-uri-view';
+
+    /**
+     * @var UriInterface
+     */
+    public $uri;
 
     /**
      * @param array $data
