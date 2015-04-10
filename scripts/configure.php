@@ -5,6 +5,7 @@ use League\Container\Container;
 use Tuum\Form\Dates;
 use Tuum\Form\Forms;
 use Tuum\Locator\Locator;
+use Tuum\Router\ReverseRoute;
 use Tuum\Router\Router;
 use Tuum\View\ErrorView;
 use Tuum\View\Renderer;
@@ -33,6 +34,7 @@ if (!isset($dic)) {
 
 /**
  * Rendering Engine (Template)
+ * Singleton!
  *
  * default is Tuum's view engine.
  * use it as a singleton.
@@ -63,12 +65,17 @@ $app->set('service/error-renderer', function () use ($dic) {
 });
 
 /**
- * CsRf Filter
+ * Reverse Route for named routes.
+ * Singleton!
  */
 $app->set(Web::CS_RF_FILTER, function () use ($dic) {
     return new CsRfFilter();
 });
 
+$app->set(Web::ROUTE_NAMES, function() use ($app) {
+
+    return new ReverseRoute();
+}, true);
 
 /** --------------------------------------------------------------------------+
  *   Set Up Stacks
@@ -147,6 +154,7 @@ $app->set('stack/view-stack', function () use ($dic) {
 $app->set(Web::ROUTER_STACK, function() use ($app) {
     
     $router = new Router();
+    $router->setReverseRoute($app->get(Web::ROUTE_NAMES));
     return new RouterStack($router, new Dispatcher($app));
 });
 
