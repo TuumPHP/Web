@@ -2,6 +2,7 @@
 namespace Tuum\Web\Controller;
 
 use Tuum\Web\ApplicationInterface;
+use Tuum\Web\Psr7\Redirect;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Respond;
 use Tuum\Web\Psr7\Response;
@@ -39,7 +40,7 @@ abstract class AbstractController implements ApplicationInterface
 
     /**
      * @param array $list
-     * @return Respond
+     * @return Redirect
      */
     protected function redirect($list = [])
     {
