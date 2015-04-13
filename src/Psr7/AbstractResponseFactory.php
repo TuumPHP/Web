@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Psr7;
 
-use Tuum\View\Helper\Message;
+use Tuum\Form\Data\Message;
 use Tuum\Web\View\Value;
 
 abstract class AbstractResponseFactory

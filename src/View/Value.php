@@ -2,11 +2,11 @@
 namespace Tuum\Web\View;
 
 use Psr\Http\Message\UriInterface;
-use Tuum\View\DataView;
-use Tuum\View\Helper\Data;
-use Tuum\View\Helper\Errors;
-use Tuum\View\Helper\Inputs;
-use Tuum\View\Helper\Message;
+use Tuum\Form\DataView;
+use Tuum\Form\Data\Data;
+use Tuum\Form\Data\Errors;
+use Tuum\Form\Data\Inputs;
+use Tuum\Form\Data\Message;
 
 /**
  * Class Value
