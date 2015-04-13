@@ -62,6 +62,7 @@ class Value extends DataView
         $this->message = Message::forge($bite(self::MESSAGE));
         $this->uri     = $bite(self::URI);
         $this->data    = Data::forge($bite(), $this->escape);
+        $this->setInputs($this->inputs);
     }
 
 }
