@@ -47,8 +47,6 @@ $app->set(Web::RENDER_ENGINE, function() use($dic) {
         $locator->addRoot($doc_root);
     }
     $renderer = new Renderer($locator);
-    $renderer->register('forms', new Forms());
-    $renderer->register('dates', new Dates());
     $view = new View($renderer, new Value());
     return $view;
 }, true);
