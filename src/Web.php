@@ -73,18 +73,19 @@ class Web extends Application
      * @param bool   $debug
      * @return $this
      */
-    public static function forge($app_dir, $debug=false)
+    public static function forge($app_dir, $debug = false)
     {
-        $app = new self();
-        $app->container  = new Container();
+        $app            = new self();
+        $app->container = new Container();
 
         // set up directories.
         $app_dir         = rtrim($app_dir, '/');
-        $app->config_dir = $app_dir.'/config';
-        $app->view_dir   = $app_dir.'/views';
-        $app->vars_dir   = dirname($app_dir).'/var';
-        $app->env_file   = $app->vars_dir.'/environment';
+        $app->config_dir = $app_dir . '/config';
+        $app->view_dir   = $app_dir . '/views';
+        $app->vars_dir   = dirname($app_dir) . '/var';
+        $app->env_file   = $app->vars_dir . '/environment';
         $app->debug      = $debug;
+
         return $app;
     }
 
@@ -94,18 +95,19 @@ class Web extends Application
     public function setup()
     {
         // configuration.
-        $this->configure($this->config_dir.'/configure');
-        if($this->debug) {
-            $this->configure($this->config_dir.'/configure-debug');
+        $this->configure($this->config_dir . '/configure');
+        if ($this->debug) {
+            $this->configure($this->config_dir . '/configure-debug');
         }
         // environment.
         /** @noinspection PhpIncludeInspection */
-        if(file_exists($this->env_file)) {
-            $environment = (array) $this->configure($this->env_file);
-            foreach($environment as $env) {
+        if (file_exists($this->env_file)) {
+            $environment = (array)$this->configure($this->env_file);
+            foreach ($environment as $env) {
                 $this->configure($this->config_dir . "/{$env}/configure");
             }
         }
+
         return $this;
     }
 
@@ -114,17 +116,18 @@ class Web extends Application
      */
     public function getViewEngine()
     {
-        if($this->container->isSingleton(self::RENDER_ENGINE)) {
+        if ($this->container->isSingleton(self::RENDER_ENGINE)) {
             return $this->container->get(self::RENDER_ENGINE);
         }
         $locator = new Locator($this->view_dir);
-        if($doc_root = $this->docs_dir) {
+        if ($doc_root = $this->docs_dir) {
             // also render php documents
             $locator->addRoot($doc_root);
         }
         $renderer = new Renderer($locator);
-        $view = new View($renderer, new Value());
+        $view     = new View($renderer, new Value());
         $this->container->singleton(self::RENDER_ENGINE, $view);
+
         return $view;
     }
 
@@ -165,11 +168,12 @@ class Web extends Application
     {
         $this->set(self::CS_RF_FILTER, 'Tuum\Web\Filter\CsRfFilter');
         $stack = new CsRfStack($this->get(self::CS_RF_FILTER));
-        $root  = (array) $root;
-        foreach($root as $r) {
+        $root  = (array)$root;
+        foreach ($root as $r) {
             $stack->setRoot($r);
         }
         $this->push($stack);
+
         return $this;
     }
 
@@ -183,6 +187,7 @@ class Web extends Application
         $stack  = new ErrorStack($engine, $this->debug);
         $stack->setLogger($this->getLog());
         $this->push($stack);
+
         return $this;
     }
 
@@ -192,8 +197,9 @@ class Web extends Application
     public function pushSessionStack()
     {
         $factory = new SessionFactory;
-        $stack = new SessionStack($factory);
+        $stack   = new SessionStack($factory);
         $this->push($stack);
+
         return $this;
     }
 
@@ -207,8 +213,9 @@ class Web extends Application
         $view->setRoot($dir); // to render some files as template.
 
         $locator = new Locator($dir);
-        $stack = new UrlMapper($locator);
+        $stack   = new UrlMapper($locator);
         $this->push($stack);
+
         return $this;
     }
 
@@ -221,6 +228,7 @@ class Web extends Application
             $this->getViewEngine()
         );
         $this->push($stack);
+
         return $this;
     }
 
@@ -231,12 +239,13 @@ class Web extends Application
     public function pushRoutes(array $routes)
     {
         $names = new ReverseRoute();
-        foreach($routes as $route) {
+        foreach ($routes as $route) {
             $router = new Router();
             $router->setReverseRoute($names);
             $stack = new RouterStack($router, new Dispatcher($this));
             $this->push($this->configure($route, ['stack' => $stack]));
         }
+
         return $this;
     }
 
