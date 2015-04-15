@@ -92,7 +92,7 @@ class Web extends Application
     /**
      * @return $this
      */
-    public function setup()
+    public function loadConfig()
     {
         // configuration.
         $this->configure($this->config_dir . '/configure');
