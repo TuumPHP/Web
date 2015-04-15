@@ -54,7 +54,7 @@ class Web extends Application
     const CS_RF_FILTER = 'csrf';
     const ROUTER_STACK = 'router-stack';
 
-    public $debug = true;
+    public $debug = false;
     public $config_dir;
     public $view_dir;
     public $docs_dir;
@@ -70,10 +70,9 @@ class Web extends Application
 
     /**
      * @param string $app_dir
-     * @param bool   $debug
      * @return $this
      */
-    public static function forge($app_dir, $debug = false)
+    public static function forge($app_dir)
     {
         $app            = new self();
         $app->container = new Container();
@@ -83,31 +82,37 @@ class Web extends Application
         $app->config_dir = $app_dir . '/config';
         $app->view_dir   = $app_dir . '/views';
         $app->vars_dir   = dirname($app_dir) . '/var';
-        $app->env_file   = $app->vars_dir . '/environment';
-        $app->debug      = $debug;
 
         return $app;
     }
 
     /**
+     * @param bool $debug
      * @return $this
      */
-    public function loadConfig()
+    public function loadConfig($debug=false)
     {
-        // configuration.
+        $this->debug = $debug;
         $this->configure($this->config_dir . '/configure');
         if ($this->debug) {
             $this->configure($this->config_dir . '/configure-debug');
         }
-        // environment.
+        return $this;
+    }
+
+    /**
+     * @param string $env_file
+     * @return $this
+     */
+    public function loadEnvironment($env_file) 
+    {
         /** @noinspection PhpIncludeInspection */
-        if (file_exists($this->env_file)) {
-            $environment = (array)$this->configure($this->env_file);
-            foreach ($environment as $env) {
+        if (file_exists($env_file)) {
+            $environments = (array)$this->configure($env_file);
+            foreach ($environments as $env) {
                 $this->configure($this->config_dir . "/{$env}/configure");
             }
         }
-
         return $this;
     }
 
