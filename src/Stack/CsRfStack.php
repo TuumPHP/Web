@@ -25,6 +25,19 @@ class CsRfStack implements MiddlewareInterface
     use MatchRootTrait;
 
     /**
+     * @var CsRfFilter
+     */
+    private $csRfFilter;
+
+    /**
+     * @param CsRfFilter $filter
+     */
+    public function __construct($filter)
+    {
+        $this->csRfFilter = $filter;
+    }
+
+    /**
      * @param Request       $request
      * @param callable|null $next
      * @return null|Response
@@ -57,9 +70,8 @@ class CsRfStack implements MiddlewareInterface
          * validate token
          */
         /** @var CsRfFilter $csRfFilter */
-        $csRfFilter = $request->getFilter(Web::CS_RF_FILTER);
         $return     = $this->getReturnable();
-        if ($response = $csRfFilter($request, $return)) {
+        if ($response = $this->csRfFilter->__invoke($request, $return)) {
             return $response;
         }
         $request = $return->get($request);

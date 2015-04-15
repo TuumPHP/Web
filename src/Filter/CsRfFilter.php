@@ -9,6 +9,9 @@ use Tuum\Web\Psr7\Response;
 
 class CsRfFilter implements ApplicationInterface
 {
+    public function __construct()
+    {
+    }
 
     /**
      * @param Request       $request

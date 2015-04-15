@@ -48,4 +48,29 @@ class View implements ViewEngineInterface
         }
         return $this->renderer->render($file, $data);
     }
+
+    /**
+     * set layout file.
+     *
+     * @param string $file
+     * @param array  $data
+     * @return $this
+     */
+    public function setLayout($file, $data = [])
+    {
+        $this->renderer->setLayout($file, $data);
+        return $this;
+    }
+
+    /**
+     * set root directory of template files.
+     *
+     * @param $dir
+     * @return $this
+     */
+    public function setRoot($dir)
+    {
+        $this->renderer->setRoot($dir);
+        return $this;
+    }
 }
