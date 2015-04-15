@@ -218,6 +218,7 @@ class Web extends Application
     }
 
     /**
+     * @param array $routes
      * @return $this
      */
     public function pushRoutes(array $routes)
@@ -227,23 +228,9 @@ class Web extends Application
             $router = new Router();
             $router->setReverseRoute($names);
             $stack = new RouterStack($router, new Dispatcher($this));
-            $this->push($this->evaluateRoutes($route, $stack));
+            $this->push($this->configure($route, ['stack' => $stack]));
         }
         return $this;
-    }
-
-    /**
-     * @param string $file
-     * @param RouterStack $stack
-     * @return mixed
-     */
-    private function evaluateRoutes($file, $stack)
-    {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $app = $this;
-        /** @noinspection PhpIncludeInspection */
-        include($file);
-        return $stack;
     }
 
     /**
