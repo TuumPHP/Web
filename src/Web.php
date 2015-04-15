@@ -69,37 +69,44 @@ class Web extends Application
     }
 
     /**
-     * @param string $dir
+     * @param string $app_dir
      * @param bool   $debug
      * @return $this
      */
-    public static function forge($dir, $debug=false)
+    public static function forge($app_dir, $debug=false)
     {
         $app = new self();
         $app->container  = new Container();
 
         // set up directories.
-        $dir = rtrim($dir, '/');
-        $app->config_dir = $dir.'/config';
-        $app->view_dir   = $dir.'/views';
-        $app->vars_dir   = dirname($dir).'/var';
-        $app->env_file   = $app->vars_dir.'/environment.php';
+        $app_dir         = rtrim($app_dir, '/');
+        $app->config_dir = $app_dir.'/config';
+        $app->view_dir   = $app_dir.'/views';
+        $app->vars_dir   = dirname($app_dir).'/var';
+        $app->env_file   = $app->vars_dir.'/environment';
         $app->debug      = $debug;
+        return $app;
+    }
 
+    /**
+     * @return $this
+     */
+    public function setup()
+    {
         // configuration.
-        $app->configure($app->config_dir.'/configure');
-        if($debug) {
-            $app->configure($app->config_dir.'/configure-debug');
+        $this->configure($this->config_dir.'/configure');
+        if($this->debug) {
+            $this->configure($this->config_dir.'/configure-debug');
         }
         // environment.
         /** @noinspection PhpIncludeInspection */
-        if(file_exists($app->env_file)) {
-            $environment = (array) include($app->env_file);
+        if(file_exists($this->env_file)) {
+            $environment = (array) $this->configure($this->env_file);
             foreach($environment as $env) {
-                $app->configure($app->config_dir."/{$env}/configure");
+                $this->configure($this->config_dir . "/{$env}/configure");
             }
         }
-        return $app;
+        return $this;
     }
 
     /**
@@ -192,7 +199,7 @@ class Web extends Application
 
     /**
      * @param string $dir
-     * @return $this|null
+     * @return $this
      */
     public function pushUrlMapper($dir)
     {
@@ -233,30 +240,4 @@ class Web extends Application
         return $this;
     }
 
-    /**
-     * @param array $config
-     * @return Application
-     */
-    public static function getApp(array $config)
-    {
-        $app = new self(
-            new Container()
-        );
-
-        /*
-         * set up directories.
-         */
-        $app->set(Web::CONFIG_DIR, $config[Web::CONFIG_DIR]);
-        $app->set(Web::TEMPLATE_DIR, $config[Web::TEMPLATE_DIR]);
-        $app->set(Web::DOCUMENT_DIR, $config[Web::DOCUMENT_DIR]);
-        $app->set(Web::VAR_DATA_DIR, $config[Web::VAR_DATA_DIR]);
-        $app->set(Web::DEBUG, $config[Web::DEBUG]);
-
-        /*
-         * load a default configuration. 
-         */
-        $app->configure(dirname(__DIR__) . '/scripts/configure');
-
-        return $app;
-    }
 }
