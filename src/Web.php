@@ -106,12 +106,9 @@ class Web extends Application
      */
     public function loadEnvironment($env_file) 
     {
-        /** @noinspection PhpIncludeInspection */
-        if (file_exists($env_file)) {
-            $environments = (array)$this->configure($env_file);
-            foreach ($environments as $env) {
-                $this->configure($this->config_dir . "/{$env}/configure");
-            }
+        $environments = (array)$this->configure($env_file);
+        foreach ($environments as $env) {
+            $this->configure($this->config_dir . "/{$env}/configure");
         }
         return $this;
     }
