@@ -33,17 +33,8 @@ use Whoops\Run;
 class Web extends Application
 {
     /*
-     * directories
-     */
-    const CONFIG_DIR = 'dir.config';
-    const TEMPLATE_DIR = 'dir.view';
-    const DOCUMENT_DIR = 'dir.resource';
-    const VAR_DATA_DIR = 'dir.variable';
-
-    /*
      * values
      */
-    const DEBUG = 'debug';
     const TOKEN_NAME = '_token';
 
     /*
@@ -53,7 +44,6 @@ class Web extends Application
     const ROUTE_NAMES = 'namedRoutes';
     const RENDER_ENGINE = 'renderer';
     const CS_RF_FILTER = 'csrf';
-    const ROUTER_STACK = 'router-stack';
     const ERROR_VIEWS = 'error-view-files';
 
     public $debug = false;
@@ -64,7 +54,9 @@ class Web extends Application
     public $env_file;
 
     /**
+     * constructor.
      *
+     * @param Container $container
      */
     public function __construct($container)
     {
@@ -80,17 +72,29 @@ class Web extends Application
     {
         $app            = new self(new Container());
         $app->debug     = $debug;
-
-        // set up directories.
-        $app_dir         = rtrim($app_dir, '/');
-        $app->config_dir = $app_dir . '/config';
-        $app->view_dir   = $app_dir . '/views';
-        $app->vars_dir   = dirname($app_dir) . '/var';
+        $app->setAppRoot($app_dir);
 
         return $app;
     }
 
     /**
+     * all in one set up.
+     *
+     * @param string $env_file
+     * @return $this
+     */
+    public function setup($env_file)
+    {
+        $this
+            ->loadConfig()
+            ->loadEnvironment($env_file)
+            ->catchError();
+        return $this;
+    }
+
+    /**
+     * set up working directories.
+     *
      * @param string $app_dir
      * @return $this
      */
@@ -104,6 +108,39 @@ class Web extends Application
     }
 
     /**
+     * loads the main configuration for the application.
+     *
+     * @param null|bool $debug
+     * @return $this
+     */
+    public function loadConfig($debug=null)
+    {
+        $debug = is_null($debug)? $this->debug: $debug;
+        $this->configure($this->config_dir . '/configure');
+        if ($debug) {
+            $this->configure($this->config_dir . '/configure-debug');
+        }
+        return $this;
+    }
+
+    /**
+     * loads the environment based configuration.
+     *
+     * @param string $env_file
+     * @return $this
+     */
+    public function loadEnvironment($env_file) 
+    {
+        $environments = (array)$this->configure($env_file);
+        foreach ($environments as $env) {
+            $this->configure($this->config_dir . "/{$env}/configure");
+        }
+        return $this;
+    }
+
+    /**
+     * set up global exception handler.
+     *
      * @param null|bool $debug
      * @return $this
      */
@@ -119,33 +156,6 @@ class Web extends Application
             $whoops->pushHandler($this->getErrorView());
         }
         $whoops->register();
-        return $this;
-    }
-
-    /**
-     * @param null|bool $debug
-     * @return $this
-     */
-    public function loadConfig($debug=null)
-    {
-        $debug = is_null($debug)? $this->debug: $debug;
-        $this->configure($this->config_dir . '/configure');
-        if ($debug) {
-            $this->configure($this->config_dir . '/configure-debug');
-        }
-        return $this;
-    }
-
-    /**
-     * @param string $env_file
-     * @return $this
-     */
-    public function loadEnvironment($env_file) 
-    {
-        $environments = (array)$this->configure($env_file);
-        foreach ($environments as $env) {
-            $this->configure($this->config_dir . "/{$env}/configure");
-        }
         return $this;
     }
 
@@ -172,7 +182,7 @@ class Web extends Application
     /**
      * @return ErrorView|null
      */
-    protected function getErrorView()
+    public function getErrorView()
     {
         $error_files = (array)$this->get(Web::ERROR_VIEWS);
         if (empty($error_files)) {
@@ -188,7 +198,7 @@ class Web extends Application
     /**
      * @return \Psr\Log\LoggerInterface
      */
-    protected function getLog()
+    public function getLog()
     {
         return $this->container->get(self::LOGGER);
     }
