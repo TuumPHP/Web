@@ -12,13 +12,14 @@ use Tuum\View\ViewEngineInterface;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\Dispatcher;
-use Tuum\Web\Stack\ErrorStack;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\ViewStack;
 use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 
 /**
  * Class App
@@ -53,6 +54,7 @@ class Web extends Application
     const RENDER_ENGINE = 'renderer';
     const CS_RF_FILTER = 'csrf';
     const ROUTER_STACK = 'router-stack';
+    const ERROR_VIEWS = 'error-view-files';
 
     public $debug = false;
     public $config_dir;
@@ -64,18 +66,20 @@ class Web extends Application
     /**
      *
      */
-    public function __construct()
+    public function __construct($container)
     {
+        $this->container = $container;
     }
 
     /**
      * @param string $app_dir
+     * @param bool   $debug
      * @return $this
      */
-    public static function forge($app_dir)
+    public static function forge($app_dir, $debug=false)
     {
-        $app            = new self();
-        $app->container = new Container();
+        $app            = new self(new Container());
+        $app->debug     = $debug;
 
         // set up directories.
         $app_dir         = rtrim($app_dir, '/');
@@ -87,14 +91,46 @@ class Web extends Application
     }
 
     /**
-     * @param bool $debug
+     * @param string $app_dir
      * @return $this
      */
-    public function loadConfig($debug=false)
+    public function setAppRoot($app_dir)
     {
-        $this->debug = $debug;
+        $app_dir          = rtrim($app_dir, '/');
+        $this->config_dir = $app_dir . '/config';
+        $this->view_dir   = $app_dir . '/views';
+        $this->vars_dir   = dirname($app_dir) . '/var';
+        return $this;
+    }
+
+    /**
+     * @param null|bool $debug
+     * @return $this
+     */
+    public function catchError($debug=null)
+    {
+        $debug = is_null($debug)? $this->debug: $debug;
+        $whoops = new Run;
+        if ($debug) {
+            error_reporting(E_ALL);
+            $whoops->pushHandler(new PrettyPageHandler);
+        } else {
+            error_reporting(E_ERROR);
+            $whoops->pushHandler($this->getErrorView());
+        }
+        $whoops->register();
+        return $this;
+    }
+
+    /**
+     * @param null|bool $debug
+     * @return $this
+     */
+    public function loadConfig($debug=null)
+    {
+        $debug = is_null($debug)? $this->debug: $debug;
         $this->configure($this->config_dir . '/configure');
-        if ($this->debug) {
+        if ($debug) {
             $this->configure($this->config_dir . '/configure-debug');
         }
         return $this;
@@ -134,11 +170,14 @@ class Web extends Application
     }
 
     /**
-     * @param array $error_files
-     * @return ErrorView
+     * @return ErrorView|null
      */
-    protected function getErrorView(array $error_files)
+    protected function getErrorView()
     {
+        $error_files = (array)$this->get(Web::ERROR_VIEWS);
+        if (empty($error_files)) {
+            return null;
+        }
         $view = new ErrorView($this->getViewEngine(), $this->debug);
         $view->setLogger($this->getLog());
         $view->error_files = $error_files;
@@ -180,20 +219,6 @@ class Web extends Application
     }
 
     /**
-     * @param array $error_files
-     * @return $this
-     */
-    public function pushErrorStack(array $error_files)
-    {
-        $engine = $this->getErrorView($error_files);
-        $stack  = new ErrorStack($engine, $this->debug);
-        $stack->setLogger($this->getLog());
-        $this->push($stack);
-
-        return $this;
-    }
-
-    /**
      * @return $this
      */
     public function pushSessionStack()
@@ -227,7 +252,9 @@ class Web extends Application
     public function pushViewStack()
     {
         $stack = new ViewStack(
-            $this->getViewEngine()
+            $this->getViewEngine(),
+            $this->getErrorView(),
+            $this->getLog()
         );
         $this->push($stack);
 

@@ -1,6 +1,8 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Psr\Log\LoggerInterface;
+use Tuum\View\ErrorView;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\View\ViewEngineInterface;
@@ -15,14 +17,28 @@ class ViewStack implements MiddlewareInterface
     /**
      * @var ViewEngineInterface
      */
-    public $engine;
+    private $engine;
 
     /**
-     * @param ViewEngineInterface $engine
+     * @var ErrorView
      */
-    public function __construct($engine)
+    private $error;
+
+    /**
+     * @var null|LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param ViewEngineInterface  $engine
+     * @param ErrorView            $errorView
+     * @param null|LoggerInterface $logger
+     */
+    public function __construct($engine, $errorView, $logger)
     {
         $this->engine = $engine;
+        $this->error  = $errorView;
+        $this->logger = $logger;
     }
 
     /**
@@ -39,20 +55,46 @@ class ViewStack implements MiddlewareInterface
          */
         $response = $this->execNext($request);
 
+        /*
+         * if no response, convert to not-found response.
+         */
         if (!$response) {
-            return $request->respond()->asNotFound();
+            $response = $request->respond()->asNotFound();
         }
+        // in case $response is a text or an array.
         if (is_string($response)) {
             return $request->respond()->asText($response);
         }
         if (is_array($response)) {
             return $request->respond()->asJson($response);
         }
-        if ($response instanceof Response &&
-            $response->isType(Response::TYPE_VIEW)
-        ) {
+        // what's this? just return it.
+        if (!$response instanceof Response) {
+            return $response;
+        }
+        /*
+         * fill up contents for VIEW and ERROR responses.
+         */
+        if ($response->isType(Response::TYPE_VIEW)) {
             return $this->setContents($request, $response);
         }
+        if ($response->isType(Response::TYPE_ERROR)) {
+            return $this->setErrorView($response);
+        }
+        return $response;
+    }
+
+    /**
+     * @param Response $response
+     * @return Response
+     */
+    protected function setErrorView($response)
+    {
+        if ($this->logger) {
+            $this->logger->error('ErrorRelease: received an error response: ' . $response->getStatusCode());
+        }
+        $content  = $this->error->render($response->getStatusCode(), $response->getData());
+        $response = $response->withBody(StreamFactory::string($content));
         return $response;
     }
 
