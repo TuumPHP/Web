@@ -28,7 +28,7 @@ class SessionStackTest extends \PHPUnit_Framework_TestCase
      */
     function getSessionSegment()
     {
-        return $this->factory->newInstance($_COOKIE)->getSegment('TuumPHP/WebApplication');
+        return $this->factory->newInstance($_COOKIE)->getSegment('TuumFW');
     }
 
     function test0()

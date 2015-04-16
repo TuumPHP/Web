@@ -40,7 +40,7 @@ class SessionStack implements MiddlewareInterface
         if (!$session) {
             return $this->execNext($request);
         }
-        $segment = $session->getSegment('TuumPHP/WebApplication');
+        $segment = $session->getSegment('TuumFW');
         $flash   = $segment->getFlash('flashed');
         if ($flash) {
             $request = $request->withAttributes($flash);
