@@ -45,6 +45,7 @@ class Web implements MiddlewareInterface
     const RENDER_ENGINE = 'renderer';
     const CS_RF_FILTER = 'csrf';
     const ERROR_VIEWS = 'error-view-files';
+    const REFERRER_URI = 'referrer-uri';
 
     /**
      * @var Application

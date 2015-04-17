@@ -2,6 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Psr\Http\Message\UriInterface;
+use Tuum\Web\Web;
 
 class Redirect extends AbstractResponseFactory
 {
@@ -40,6 +41,15 @@ class Redirect extends AbstractResponseFactory
         $path = '/' . ltrim($path, '/');
         $path = $this->request->getBasePath() . $path;
         $uri  = $this->request->getUri()->withPath($path);
+        return $this->toAbsoluteUri($uri);
+    }
+
+    /**
+     * @return Response
+     */
+    public function toReferrer()
+    {
+        $uri = $this->request->getAttribute(Web::REFERRER_URI);
         return $this->toAbsoluteUri($uri);
     }
 

@@ -6,6 +6,7 @@ use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
+use Tuum\Web\Web;
 
 class SessionStack implements MiddlewareInterface
 {
@@ -42,9 +43,8 @@ class SessionStack implements MiddlewareInterface
         }
         $segment = $session->getSegment('TuumFW');
         $flash   = $segment->getFlash('flashed');
-        if ($flash) {
-            $request = $request->withAttributes($flash);
-        }
+        $flash[Web::REFERRER_URI] = $segment->get(Web::REFERRER_URI, null);
+        $request = $request->withAttributes($flash);
 
         /*
          * execute the subsequent stack.
@@ -57,6 +57,9 @@ class SessionStack implements MiddlewareInterface
         if ($response->isType(Response::TYPE_REDIRECT)) {
             $data = $response->getData();
             $segment->setFlash('flashed', $data);
+        }
+        elseif ($response->isType(Response::TYPE_VIEW)) {
+            $segment->set(Web::REFERRER_URI, $request->getUri()->__toString());
         }
         $session->commit();
         return $response;
