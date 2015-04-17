@@ -22,10 +22,13 @@ abstract class AbstractResponseFactory
 
     /**
      * @param Request $request
+     * @return $this
      */
-    public function setRequest($request)
+    public function withRequest($request)
     {
-        $this->request = $request;
+        $self = clone($this);
+        $self->request = $request;
+        return $self;
     }
 
     /**

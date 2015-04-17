@@ -157,8 +157,7 @@ class Request extends ServerRequest
      */
     public function respond()
     {
-        $respond = clone($this->respond);
-        $respond->setRequest($this);
+        $respond = $this->respond->withRequest($this);
         $respond->with($this->getAttributes())->with('basePath', $this->getBasePath());
         return $respond;
     }
@@ -176,8 +175,7 @@ class Request extends ServerRequest
                 unset($data[$key]);
             }
         }
-        $respond = clone($this->redirect);
-        $respond->setRequest($this);
+        $respond = $this->redirect->withRequest($this);
         $respond->with($data)->with('basePath', $this->getBasePath());
         return $respond;
     }
