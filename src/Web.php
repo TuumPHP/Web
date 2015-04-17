@@ -7,16 +7,16 @@ use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\Router;
 use Tuum\View\ErrorView;
-use Tuum\View\Renderer;
 use Tuum\View\ViewEngineInterface;
 use Tuum\Web\Filter\CsRfFilter;
+use Tuum\Web\Psr7\Request;
+use Tuum\Web\Psr7\Response;
 use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\Dispatcher;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\ViewStack;
-use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -30,7 +30,7 @@ use Whoops\Run;
  *
  *
  */
-class Web extends Application
+class Web implements MiddlewareInterface
 {
     /*
      * values
@@ -46,6 +46,11 @@ class Web extends Application
     const CS_RF_FILTER = 'csrf';
     const ERROR_VIEWS = 'error-view-files';
 
+    /**
+     * @var Application
+     */
+    private $app;
+    
     public $debug = false;
     public $config_dir;
     public $view_dir;
@@ -56,11 +61,11 @@ class Web extends Application
     /**
      * constructor.
      *
-     * @param Container $container
+     * @param Application $app
      */
-    public function __construct($container)
+    public function __construct($app)
     {
-        $this->container = $container;
+        $this->app = $app;
     }
 
     /**
@@ -70,7 +75,7 @@ class Web extends Application
      */
     public static function forge($app_dir, $debug=false)
     {
-        $app            = new self(new Container());
+        $app            = new self(new Application(new Container()));
         $app->debug     = $debug;
         $app->setAppRoot($app_dir);
 
@@ -164,19 +169,7 @@ class Web extends Application
      */
     public function getViewEngine()
     {
-        if ($this->container->isSingleton(self::RENDER_ENGINE)) {
-            return $this->container->get(self::RENDER_ENGINE);
-        }
-        $locator = new Locator($this->view_dir);
-        if ($doc_root = $this->docs_dir) {
-            // also render php documents
-            $locator->addRoot($doc_root);
-        }
-        $renderer = new Renderer($locator);
-        $view     = new View($renderer, new Value());
-        $this->container->singleton(self::RENDER_ENGINE, $view);
-
-        return $view;
+        return $this->app->get(self::RENDER_ENGINE);
     }
 
     /**
@@ -184,7 +177,7 @@ class Web extends Application
      */
     public function getErrorView()
     {
-        $error_files = (array)$this->get(Web::ERROR_VIEWS);
+        $error_files = (array)$this->app->get(Web::ERROR_VIEWS);
         if (empty($error_files)) {
             return null;
         }
@@ -200,7 +193,7 @@ class Web extends Application
      */
     public function getLog()
     {
-        return $this->container->get(self::LOGGER);
+        return $this->app->get(self::LOGGER);
     }
 
     /**
@@ -217,8 +210,8 @@ class Web extends Application
      */
     public function pushCsRfStack($root = 'post:/*')
     {
-        $this->set(self::CS_RF_FILTER, 'Tuum\Web\Filter\CsRfFilter');
-        $stack = new CsRfStack($this->get(self::CS_RF_FILTER));
+        $this->app->set(self::CS_RF_FILTER, 'Tuum\Web\Filter\CsRfFilter');
+        $stack = new CsRfStack($this->app->get(self::CS_RF_FILTER));
         $root  = (array)$root;
         foreach ($root as $r) {
             $stack->setRoot($r);
@@ -281,11 +274,57 @@ class Web extends Application
         foreach ($routes as $route) {
             $router = new Router();
             $router->setReverseRoute($names);
-            $stack = new RouterStack($router, new Dispatcher($this));
+            $stack = new RouterStack($router, new Dispatcher($this->app));
             $this->push($this->configure($route, ['stack' => $stack]));
         }
 
         return $this;
     }
 
+    /**
+     * @param string $name
+     * @param array  $data
+     * @return mixed|null
+     */
+    public function configure($name, $data = [])
+    {
+        $data['web'] = $this;
+        return $this->app->configure($name, $data);
+    }
+
+    /**
+     * @param Request       $request
+     * @param callable|null $next
+     * @return null|Response
+     */
+    public function __invoke($request, $next = null)
+    {
+        return $this->app->__invoke($request, $next);
+    }
+
+    /**
+     * stack up the SplStack.
+     * converts normal HttpKernel into Stackable.
+     *
+     * @param ApplicationInterface $handler
+     * @return $this
+     */
+    public function push($handler)
+    {
+        $this->app->push($handler);
+        return $this;
+    }
+
+    /**
+     * prepends a new middleware/application at the
+     * beginning of the stack. returns the prepended stack.
+     *
+     * @param ApplicationInterface $handler
+     * @return $this
+     */
+    public function prepend($handler)
+    {
+        $this->app->prepend($handler);
+        return $this;
+    }
 }
