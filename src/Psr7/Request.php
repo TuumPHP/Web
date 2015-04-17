@@ -158,7 +158,7 @@ class Request extends ServerRequest
     public function respond()
     {
         $respond = $this->respond->withRequest($this);
-        $respond->with($this->getAttributes())->with('basePath', $this->getBasePath());
+        $respond->with($this->getAttributes());
         return $respond;
     }
 
@@ -176,7 +176,7 @@ class Request extends ServerRequest
             }
         }
         $respond = $this->redirect->withRequest($this);
-        $respond->with($data)->with('basePath', $this->getBasePath());
+        $respond->with($data);
         return $respond;
     }
 

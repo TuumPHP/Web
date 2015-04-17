@@ -28,6 +28,7 @@ abstract class AbstractResponseFactory
     {
         $self = clone($this);
         $self->request = $request;
+        $self->with('basePath', $request->getBasePath());
         return $self;
     }
 
