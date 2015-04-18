@@ -3,6 +3,9 @@ namespace Tuum\Web;
 
 use Aura\Session\SessionFactory;
 use League\Container\Container;
+use Monolog\Handler\FingersCrossedHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\Router;
@@ -167,6 +170,8 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * get shared view engine, Renderer as default. 
+     * 
      * @return ViewEngineInterface|View
      */
     public function getViewEngine()
@@ -186,6 +191,8 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * get error view render, ErrorView,
+     * 
      * @return ErrorView|null
      */
     public function getErrorView()
@@ -202,11 +209,22 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * get shared logger. use Monolog as default.
+     * 
      * @return \Psr\Log\LoggerInterface
      */
     public function getLog()
     {
-        return $this->app->get(self::LOGGER);
+        if($this->app->exists(Web::LOGGER)) {
+            return $this->app->get(Web::LOGGER);
+        }
+        $var_dir = $this->vars_dir . '/log/app.log';
+        $logger  = new Logger('log');
+        $logger->pushHandler(
+            new FingersCrossedHandler(new StreamHandler($var_dir, Logger::DEBUG))
+        );
+        $this->app->set(Web::LOGGER, $logger, true);
+        return $logger;
     }
 
     /**
