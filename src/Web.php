@@ -7,8 +7,8 @@ use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\Router;
 use Tuum\View\ErrorView;
+use Tuum\View\Renderer;
 use Tuum\View\ViewEngineInterface;
-use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Stack\CsRfStack;
@@ -17,6 +17,7 @@ use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\ViewStack;
+use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -170,7 +171,18 @@ class Web implements MiddlewareInterface
      */
     public function getViewEngine()
     {
-        return $this->app->get(self::RENDER_ENGINE);
+        if($this->app->exists(Web::RENDER_ENGINE)) {
+            return $this->app->get(Web::RENDER_ENGINE);
+        }
+        $locator = new Locator($this->view_dir);
+        if ($doc_root = $this->docs_dir) {
+            // also render php documents
+            $locator->addRoot($doc_root);
+        }
+        $renderer = new Renderer($locator);
+        $view = new View($renderer, new Value());
+        $this->app->set(self::RENDER_ENGINE, $view, true);
+        return $view;
     }
 
     /**
@@ -195,14 +207,6 @@ class Web implements MiddlewareInterface
     public function getLog()
     {
         return $this->app->get(self::LOGGER);
-    }
-
-    /**
-     * @return CsRfFilter
-     */
-    protected function getCsRfFilter()
-    {
-        return new CsRfFilter();
     }
 
     /**
