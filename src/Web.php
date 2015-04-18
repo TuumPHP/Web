@@ -6,10 +6,13 @@ use League\Container\Container;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Psr\Log\Test\LoggerInterfaceTest;
 use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
+use Tuum\Router\ReverseRouteInterface;
 use Tuum\Router\Router;
+use Tuum\Router\RouterInterface;
 use Tuum\View\ErrorView;
 use Tuum\View\Renderer;
 use Tuum\View\ViewEngineInterface;
@@ -214,7 +217,7 @@ class Web implements MiddlewareInterface
     /**
      * get shared logger. use Monolog as default.
      * 
-     * @return \Psr\Log\LoggerInterface
+     * @return LoggerInterface
      */
     public function getLog()
     {
@@ -291,15 +294,42 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @return RouterInterface
+     */
+    public function getRouter()
+    {
+        if ($this->app->exists(RouterInterface::class)) {
+            return $this->app->get(RouterInterface::class);
+        }
+        $this->app->set(RouterInterface::class, function() {
+            $router = new Router();
+            $router->setReverseRoute($this->getRouteNames());
+            return $router;
+        });
+        return $this->app->get(RouterInterface::class);
+    }
+
+    /**
+     * @return ReverseRouteInterface
+     */
+    public function getRouteNames()
+    {
+        if ($this->app->exists(ReverseRouteInterface::class)) {
+            return $this->app->get(ReverseRouteInterface::class);
+        }
+        $names = new ReverseRoute();
+        $this->app->set(ReverseRouteInterface::class, $names, true);
+        return $names;
+    }
+    
+    /**
      * @param array $routes
      * @return $this
      */
     public function pushRoutes(array $routes)
     {
-        $names = new ReverseRoute();
         foreach ($routes as $route) {
-            $router = new Router();
-            $router->setReverseRoute($names);
+            $router = $this->getRouter();
             $stack = new RouterStack($router, new Dispatcher($this->app));
             $this->push($this->configure($route, ['stack' => $stack]));
         }
