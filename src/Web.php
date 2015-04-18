@@ -6,6 +6,7 @@ use League\Container\Container;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\Test\LoggerInterfaceTest;
 use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\Router;
@@ -44,7 +45,6 @@ class Web implements MiddlewareInterface
     /*
      * services and filters
      */
-    const LOGGER = 'logger';
     const ROUTE_NAMES = 'namedRoutes';
     const RENDER_ENGINE = 'renderer';
     const CS_RF_FILTER = 'csrf';
@@ -219,15 +219,15 @@ class Web implements MiddlewareInterface
      */
     public function getLog()
     {
-        if($this->app->exists(Web::LOGGER)) {
-            return $this->app->get(Web::LOGGER);
+        if($this->app->exists(LoggerInterfaceTest::class)) {
+            return $this->app->get(LoggerInterfaceTest::class);
         }
         $var_dir = $this->vars_dir . '/log/app.log';
         $logger  = new Logger('log');
         $logger->pushHandler(
             new FingersCrossedHandler(new StreamHandler($var_dir, Logger::DEBUG))
         );
-        $this->app->set(Web::LOGGER, $logger, true);
+        $this->app->set(LoggerInterfaceTest::class, $logger, true);
         return $logger;
     }
 
