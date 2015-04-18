@@ -46,7 +46,6 @@ class Web implements MiddlewareInterface
      * services and filters
      */
     const ROUTE_NAMES = 'namedRoutes';
-    const RENDER_ENGINE = 'renderer';
     const CS_RF_FILTER = 'csrf';
     const ERROR_VIEWS = 'error-view-files';
     const REFERRER_URI = 'referrer-uri';
@@ -176,8 +175,8 @@ class Web implements MiddlewareInterface
      */
     public function getViewEngine()
     {
-        if($this->app->exists(Web::RENDER_ENGINE)) {
-            return $this->app->get(Web::RENDER_ENGINE);
+        if($this->app->exists(ViewEngineInterface::class)) {
+            return $this->app->get(ViewEngineInterface::class);
         }
         $locator = new Locator($this->view_dir);
         if ($doc_root = $this->docs_dir) {
@@ -186,7 +185,7 @@ class Web implements MiddlewareInterface
         }
         $renderer = new Renderer($locator);
         $view = new View($renderer, new Value());
-        $this->app->set(self::RENDER_ENGINE, $view, true);
+        $this->app->set(ViewEngineInterface::class, $view, true);
         return $view;
     }
 
