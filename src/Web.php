@@ -16,6 +16,7 @@ use Tuum\Router\RouterInterface;
 use Tuum\View\ErrorView;
 use Tuum\View\Renderer;
 use Tuum\View\ViewEngineInterface;
+use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Stack\CsRfStack;
@@ -48,8 +49,6 @@ class Web implements MiddlewareInterface
     /*
      * services and filters
      */
-    const ROUTE_NAMES = 'namedRoutes';
-    const CS_RF_FILTER = 'csrf';
     const ERROR_VIEWS = 'error-view-files';
     const REFERRER_URI = 'referrer-uri';
 
@@ -239,8 +238,7 @@ class Web implements MiddlewareInterface
      */
     public function pushCsRfStack($root = 'post:/*')
     {
-        $this->app->set(self::CS_RF_FILTER, 'Tuum\Web\Filter\CsRfFilter');
-        $stack = new CsRfStack($this->app->get(self::CS_RF_FILTER));
+        $stack = new CsRfStack($this->app->get(CsRfFilter::class));
         $root  = (array)$root;
         foreach ($root as $r) {
             $stack->setRoot($r);

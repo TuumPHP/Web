@@ -5,7 +5,6 @@ use Tuum\Router\Route;
 use Tuum\Router\RouterInterface;
 use Tuum\Router\RouteCollector;
 use Tuum\Web\Middleware\BeforeFilterTrait;
-use Tuum\Web\Web;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
@@ -100,7 +99,6 @@ class RouterStack implements MiddlewareInterface
         if ($route->matched()) {
             $request = $request->withPathToMatch($route->matched(), $route->trailing());
         }
-        $request = $request->withAttribute(Web::ROUTE_NAMES, $this->router->getReverseRoute());
         return $app($request);
     }
 }
