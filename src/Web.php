@@ -7,7 +7,6 @@ use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Psr\Log\Test\LoggerInterfaceTest;
 use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\ReverseRouteInterface;
@@ -220,15 +219,15 @@ class Web implements MiddlewareInterface
      */
     public function getLog()
     {
-        if($this->app->exists(LoggerInterfaceTest::class)) {
-            return $this->app->get(LoggerInterfaceTest::class);
+        if($this->app->exists(LoggerInterface::class)) {
+            return $this->app->get(LoggerInterface::class);
         }
         $var_dir = $this->vars_dir . '/log/app.log';
         $logger  = new Logger('log');
         $logger->pushHandler(
             new FingersCrossedHandler(new StreamHandler($var_dir, Logger::DEBUG))
         );
-        $this->app->set(LoggerInterfaceTest::class, $logger, true);
+        $this->app->set(LoggerInterface::class, $logger, true);
         return $logger;
     }
 
