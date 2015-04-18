@@ -202,6 +202,10 @@ class Web implements MiddlewareInterface
             return null;
         }
         $view = new ErrorView($this->getViewEngine(), $this->debug);
+        if (isset($error_files[0])) {
+            $view->default_error_file = $error_files[0];
+            unset($error_files[0]);
+        }
         $view->setLogger($this->getLog());
         $view->error_files = $error_files;
 
