@@ -55,6 +55,15 @@ class Application implements MiddlewareInterface
     }
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    public function exists($key)
+    {
+        return isset($this->container[$key]);
+    }
+
+    /**
      * @param string $__config
      * @param array  $__data
      * @return mixed|null
