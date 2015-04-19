@@ -37,6 +37,11 @@ class Respond extends AbstractResponseFactory
         return Response::view($file, $this->data);
     }
 
+    public function asContents($html)
+    {
+        return Response::contents($html, $this->data);
+    }
+
     /**
      * returns a string as a plain text.
      *

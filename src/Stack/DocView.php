@@ -169,7 +169,7 @@ class DocView implements MiddlewareInterface
             throw new \InvalidArgumentException('no converter for CommonMark file');
         }
         $html = $this->markUp->getHtml($path.'.'.$ext);
-        return $request->respond()->asHtml($html);
+        return $request->respond()->asContents($html);
 
     }
 }

@@ -21,7 +21,7 @@ class Response extends BaseResponse
     protected $data = [];
 
     /**
-     * @var string
+     * @var string|\Closure
      */
     protected $view_file;
 
@@ -52,7 +52,7 @@ class Response extends BaseResponse
     }
 
     /**
-     * @return string
+     * @return string|\Closure
      */
     public function getViewFile()
     {
@@ -77,6 +77,18 @@ class Response extends BaseResponse
         $self            = new self;
         $self->view_file = $file;
         $self->data      = $data;
+        $self->type      = self::TYPE_VIEW;
+        return $self;
+    }
+
+    /**
+     * @param $html
+     * @return Response
+     */    
+    public static function contents($html)
+    {
+        $self            = new self;
+        $self->view_file = function() use($html) {return $html;};
         $self->type      = self::TYPE_VIEW;
         return $self;
     }
