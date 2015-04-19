@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Tuum\Locator\CommonMark;
 use Tuum\Locator\LocatorInterface;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -18,6 +19,11 @@ class DocView implements MiddlewareInterface
      * @var LocatorInterface
      */
     private $locator;
+
+    /**
+     * @var CommonMark
+     */
+    private $markUp;
 
     /**
      * specify the extension => mime type.
@@ -64,9 +70,10 @@ class DocView implements MiddlewareInterface
     /**
      * @param LocatorInterface $locator
      */
-    public function __construct($locator)
+    public function __construct($locator, $mark = null)
     {
         $this->locator  = $locator;
+        $this->markUp   = $mark;
     }
 
     /**
@@ -126,14 +133,13 @@ class DocView implements MiddlewareInterface
     /**
      * @param Request $request
      * @param string  $path
-     * @param string  $ext
      * @return null|Response
      */
     private function handleView($request, $path)
     {
         foreach($this->view_extensions as $ext => $handler) {
             if ($file_loc = $this->locator->locate($path.'.'.$ext)) {
-                return $this->$handler($request, $path, $file_loc);
+                return $this->$handler($request, $path, $ext);
             }
         }
         return null;
@@ -142,10 +148,9 @@ class DocView implements MiddlewareInterface
     /**
      * @param Request $request
      * @param string  $path
-     * @param string  $file_loc
      * @return null|Response
      */
-    private function evaluatePhp($request, $path, $file_loc)
+    private function evaluatePhp($request, $path)
     {
         return $request->respond()->asView($path);
     }
@@ -153,14 +158,18 @@ class DocView implements MiddlewareInterface
     /**
      * @param Request $request
      * @param string  $path
-     * @param string  $file_loc
+     * @param string  $ext
      * @return null|Response
      * 
      * @noinspection PhpUnusedPrivateMethodInspection 
      */
-    private function markToHtml($request, $path, $file_loc)
+    private function markToHtml($request, $path, $ext)
     {
-        return $request->respond()->asResponse($file_loc, 'text/plain');
+        if (!$this->markUp) {
+            throw new \InvalidArgumentException('no converter for CommonMark file');
+        }
+        $html = $this->markUp->getHtml($path.'.'.$ext);
+        return $request->respond()->asHtml($html);
 
     }
 }

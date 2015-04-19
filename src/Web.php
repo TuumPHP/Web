@@ -259,15 +259,20 @@ class Web implements MiddlewareInterface
     }
 
     /**
-     * @param string $dir
+     * @param string $docs_dir
      * @return $this
      */
-    public function pushDocView($dir)
+    public function pushDocView($docs_dir)
     {
         $view = $this->getViewEngine();
-        $view->setRoot($dir); // to render some files as template.
+        $view->setRoot($docs_dir); // to render some files as template.
 
-        $docs = new \Tuum\Web\Stack\DocView(new \Tuum\Locator\Locator($dir));
+        $docs = new \Tuum\Web\Stack\DocView(
+            new \Tuum\Locator\Locator($docs_dir),
+            \Tuum\Locator\CommonMark::forge(
+                $docs_dir,
+                $this->vars_dir . '/markUp')
+        );
         $docs->enable_raw = true;
         $this->push($docs);
 
