@@ -22,7 +22,6 @@ use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\Dispatcher;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
-use Tuum\Web\Stack\UrlMapper;
 use Tuum\Web\Stack\ViewStack;
 use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
@@ -263,14 +262,14 @@ class Web implements MiddlewareInterface
      * @param string $dir
      * @return $this
      */
-    public function pushUrlMapper($dir)
+    public function pushDocView($dir)
     {
         $view = $this->getViewEngine();
         $view->setRoot($dir); // to render some files as template.
 
-        $locator = new Locator($dir);
-        $stack   = new UrlMapper($locator);
-        $this->push($stack);
+        $docs = new \Tuum\Web\Stack\DocView(new \Tuum\Locator\Locator($dir));
+        $docs->enable_raw = true;
+        $this->push($docs);
 
         return $this;
     }

@@ -58,8 +58,7 @@ class DocView implements MiddlewareInterface
      */
     public $view_extensions = [
         'php' => 'evaluatePhp',
-        'md'  => 'convertDown',
-        'html'
+        'md'  => 'markToHtml',
     ];
 
     /**
@@ -97,7 +96,7 @@ class DocView implements MiddlewareInterface
         $path = $request->getUri()->getPath();
         $ext  = pathinfo($path, PATHINFO_EXTENSION);
         if (!$ext) {
-            return $this->handleView($path);
+            return $this->handleView($request, $path);
         }
         return $this->handleEmit($request, $path, $ext);
     }
@@ -125,10 +124,43 @@ class DocView implements MiddlewareInterface
     }
 
     /**
-     * @param string $path
+     * @param Request $request
+     * @param string  $path
+     * @param string  $ext
      * @return null|Response
      */
-    private function handleView($path)
+    private function handleView($request, $path)
     {
+        foreach($this->view_extensions as $ext => $handler) {
+            if ($file_loc = $this->locator->locate($path.'.'.$ext)) {
+                return $this->$handler($request, $path, $file_loc);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $path
+     * @param string  $file_loc
+     * @return null|Response
+     */
+    private function evaluatePhp($request, $path, $file_loc)
+    {
+        return $request->respond()->asView($path);
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $path
+     * @param string  $file_loc
+     * @return null|Response
+     * 
+     * @noinspection PhpUnusedPrivateMethodInspection 
+     */
+    private function markToHtml($request, $path, $file_loc)
+    {
+        return $request->respond()->asResponse($file_loc, 'text/plain');
+
     }
 }
