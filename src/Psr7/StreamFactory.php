@@ -15,4 +15,13 @@ class StreamFactory
         $stream->write($text);
         return $stream;
     }
+
+    /**
+     * @param string $file_loc
+     * @return Stream
+     */
+    public static function file($file_loc)
+    {
+        return new Stream(fopen($file_loc, 'rb'));
+    }
 }

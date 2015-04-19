@@ -104,4 +104,15 @@ class Respond extends AbstractResponseFactory
     {
         return $this->asError(self::ACCESS_DENIED);
     }
+
+    /**
+     * @param string $file_loc
+     * @param string $mime
+     * @return Response
+     */
+    public function asResponse($file_loc, $mime)
+    {
+        $stream = StreamFactory::file($file_loc);
+        return new Response($stream, self::OK, ['Content-Type' => $mime]);
+    }
 }
