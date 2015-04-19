@@ -63,8 +63,10 @@ class DocView implements MiddlewareInterface
      * @var array
      */
     public $view_extensions = [
-        'php' => 'evaluatePhp',
-        'md'  => 'markToHtml',
+        'php'  => 'evaluatePhp',
+        'md'   => 'markToHtml',
+        'txt'  => 'textToPre',
+        'text' => 'textToPre',
     ];
 
     /**
@@ -164,8 +166,6 @@ class DocView implements MiddlewareInterface
      * @param string  $path
      * @param string  $ext
      * @return null|Response
-     *
-     * @noinspection PhpUnusedPrivateMethodInspection
      */
     private function markToHtml($request, $path, $ext)
     {
@@ -178,6 +178,18 @@ class DocView implements MiddlewareInterface
     }
 
     /**
+     * @param Request $request
+     * @param string  $path
+     * @param string  $ext
+     * @return null|Response
+     */
+    private function textToPre($request, $path, $ext)
+    {
+        $file_loc = $this->locator->locate($path . '.' . $ext);
+        return $request->respond()->asContents('<pre>'.\file_get_contents($file_loc).'</pre>');
+    }
+    
+    /**
      * dummy method to call private methods which are judged as unused methods.
      *
      * @param Request $request
@@ -186,5 +198,6 @@ class DocView implements MiddlewareInterface
     {
         $this->evaluatePhp($request, null);
         $this->markToHtml($request, null, null);
+        $this->textToPre($request, null, null);
     }
 }
