@@ -14,7 +14,7 @@ class DocView implements MiddlewareInterface
     use MiddlewareTrait;
 
     use MatchRootTrait;
-    
+
     /**
      * @var LocatorInterface
      */
@@ -37,20 +37,20 @@ class DocView implements MiddlewareInterface
         'jpeg' => 'image/jpeg',
         'htm'  => 'text/html',
         'html' => 'text/html',
-        'txt'      => 'text/plain',
-        'text'     => 'text/plain',
+        'txt'  => 'text/plain',
+        'text' => 'text/plain',
     ];
 
     /**
      * set to true to allow raw access for text and markdown files.
-     * 
+     *
      * @var bool
      */
     public $enable_raw = false;
-    
+
     /**
-     * raw extensions types. 
-     * 
+     * raw extensions types.
+     *
      * @var array
      */
     public $raw_extensions = [
@@ -59,7 +59,7 @@ class DocView implements MiddlewareInterface
     ];
     /**
      * for view/template files.
-     * 
+     *
      * @var array
      */
     public $view_extensions = [
@@ -72,8 +72,8 @@ class DocView implements MiddlewareInterface
      */
     public function __construct($locator, $mark = null)
     {
-        $this->locator  = $locator;
-        $this->markUp   = $mark;
+        $this->locator = $locator;
+        $this->markUp  = $mark;
     }
 
     /**
@@ -83,12 +83,13 @@ class DocView implements MiddlewareInterface
      */
     public function __invoke($request, $next = null)
     {
-        if( !$matched = $this->isMatch($request)) {
+        if (!$matched = $this->isMatch($request)) {
             return $this->execNext($request);
         }
         if ($response = $this->handle($request)) {
             return $response;
         }
+
         return $this->execNext($request);
     }
 
@@ -105,6 +106,7 @@ class DocView implements MiddlewareInterface
         if (!$ext) {
             return $this->handleView($request, $path);
         }
+
         return $this->handleEmit($request, $path, $ext);
     }
 
@@ -127,6 +129,7 @@ class DocView implements MiddlewareInterface
             return null;
         }
         $mime = $emitExt[$ext];
+
         return $request->respond()->asResponse($file_loc, $mime);
     }
 
@@ -137,11 +140,12 @@ class DocView implements MiddlewareInterface
      */
     private function handleView($request, $path)
     {
-        foreach($this->view_extensions as $ext => $handler) {
-            if ($file_loc = $this->locator->locate($path.'.'.$ext)) {
+        foreach ($this->view_extensions as $ext => $handler) {
+            if ($file_loc = $this->locator->locate($path . '.' . $ext)) {
                 return $this->$handler($request, $path, $ext);
             }
         }
+
         return null;
     }
 
@@ -160,16 +164,27 @@ class DocView implements MiddlewareInterface
      * @param string  $path
      * @param string  $ext
      * @return null|Response
-     * 
-     * @noinspection PhpUnusedPrivateMethodInspection 
+     *
+     * @noinspection PhpUnusedPrivateMethodInspection
      */
     private function markToHtml($request, $path, $ext)
     {
         if (!$this->markUp) {
             throw new \InvalidArgumentException('no converter for CommonMark file');
         }
-        $html = $this->markUp->getHtml($path.'.'.$ext);
-        return $request->respond()->asContents($html);
+        $html = $this->markUp->getHtml($path . '.' . $ext);
 
+        return $request->respond()->asContents($html);
+    }
+
+    /**
+     * dummy method to call private methods which are judged as unused methods.
+     *
+     * @param Request $request
+     */
+    protected function dummy($request)
+    {
+        $this->evaluatePhp($request, null);
+        $this->markToHtml($request, null, null);
     }
 }
