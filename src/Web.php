@@ -198,7 +198,7 @@ class Web implements MiddlewareInterface
      * 
      * @return ErrorView|null
      */
-    public function getErrorView()
+    protected function getErrorView()
     {
         $error_files = (array)$this->app->get(Web::ERROR_VIEWS);
         if (empty($error_files)) {
@@ -307,7 +307,7 @@ class Web implements MiddlewareInterface
     /**
      * @return RouterInterface
      */
-    public function getRouter()
+    protected function getRouter()
     {
         if ($this->app->exists(RouterInterface::class)) {
             return $this->app->get(RouterInterface::class);
@@ -331,7 +331,7 @@ class Web implements MiddlewareInterface
     /**
      * @return ReverseRouteInterface
      */
-    public function getRouteNames()
+    protected function getRouteNames()
     {
         if ($this->app->exists(ReverseRouteInterface::class)) {
             return $this->app->get(ReverseRouteInterface::class);
