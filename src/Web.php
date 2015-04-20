@@ -264,9 +264,6 @@ class Web implements MiddlewareInterface
      */
     public function pushDocView($docs_dir)
     {
-        $view = $this->getViewEngine();
-        $view->setRoot($docs_dir); // to render some files as template.
-
         $docs = new \Tuum\Web\Stack\DocView(
             new \Tuum\Locator\Locator($docs_dir),
             \Tuum\Locator\CommonMark::forge(

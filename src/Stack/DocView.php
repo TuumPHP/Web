@@ -188,12 +188,13 @@ class DocView implements MiddlewareInterface
 
     /**
      * @param Request $request
-     * @param string  $path
-     * @param string  $ext
+     * @param array   $info
      * @return null|Response
      */
-    private function textToPre($request, $path, $ext)
+    private function textToPre($request, array $info)
     {
+        $path = $info['path'];
+        $ext  = $info['ext'];
         $file_loc = $this->locator->locate($path . '.' . $ext);
         return $request->respond()->asContents('<pre>'.\file_get_contents($file_loc).'</pre>');
     }
