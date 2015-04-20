@@ -97,7 +97,6 @@ class DocView implements MiddlewareInterface
             $filter($request, $next);
             $request = $next->get($request);
         }
-        $this->filterBefore($request);
         if ($response = $this->handle($request)) {
             return $response;
         }
