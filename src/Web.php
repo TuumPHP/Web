@@ -7,6 +7,7 @@ use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Tuum\Locator\CommonMark;
 use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\ReverseRouteInterface;
@@ -20,6 +21,7 @@ use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\Dispatcher;
+use Tuum\Web\Stack\DocView;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\ViewStack;
@@ -56,6 +58,8 @@ class Web implements MiddlewareInterface
     private $app;
     
     public $debug = false;
+    
+    public $app_dir;
     public $config_dir;
     public $view_dir;
     public $docs_dir;
@@ -109,10 +113,10 @@ class Web implements MiddlewareInterface
      */
     public function setAppRoot($app_dir)
     {
-        $app_dir          = rtrim($app_dir, '/');
-        $this->config_dir = $app_dir . '/config';
-        $this->view_dir   = $app_dir . '/views';
-        $this->vars_dir   = dirname($app_dir) . '/var';
+        $this->app_dir    = rtrim($app_dir, '/');
+        $this->config_dir = $this->app_dir . '/config';
+        $this->view_dir   = $this->app_dir . '/views';
+        $this->vars_dir   = dirname($this->app_dir) . '/var';
         return $this;
     }
 
@@ -259,24 +263,6 @@ class Web implements MiddlewareInterface
     }
 
     /**
-     * @param string $docs_dir
-     * @return $this
-     */
-    public function pushDocView($docs_dir)
-    {
-        $docs = new \Tuum\Web\Stack\DocView(
-            new \Tuum\Locator\Locator($docs_dir),
-            \Tuum\Locator\CommonMark::forge(
-                $docs_dir,
-                $this->vars_dir . '/markUp')
-        );
-        $docs->enable_raw = true;
-        $this->push($docs);
-
-        return $this;
-    }
-
-    /**
      * @return $this
      */
     public function pushViewStack()
@@ -289,6 +275,20 @@ class Web implements MiddlewareInterface
         $this->push($stack);
 
         return $this;
+    }
+
+    /**
+     * @param $docs_dir
+     * @return DocView
+     */
+    public function getDocViewStack($docs_dir)
+    {
+        return new DocView(
+            new Locator($docs_dir),
+            CommonMark::forge(
+                $docs_dir,
+                $this->vars_dir . '/markUp')
+        );
     }
 
     /**
