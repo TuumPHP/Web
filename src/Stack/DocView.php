@@ -144,7 +144,12 @@ class DocView implements MiddlewareInterface
     {
         foreach ($this->view_extensions as $ext => $handler) {
             if ($file_loc = $this->locator->locate($path . '.' . $ext)) {
-                return $this->$handler($request, $path, $ext);
+                $info = [
+                    'loc' => $file_loc,
+                    'path' => $path,
+                    'ext' => $ext,
+                ];
+                return $this->$handler($request, $info);
             }
         }
 
@@ -153,22 +158,26 @@ class DocView implements MiddlewareInterface
 
     /**
      * @param Request $request
-     * @param string  $path
+     * @param array   $info
      * @return null|Response
      */
-    private function evaluatePhp($request, $path)
+    private function evaluatePhp($request, array $info)
     {
-        return $request->respond()->asView($path);
+        ob_start();
+        /** @noinspection PhpIncludeInspection */
+        include $info['loc'];
+        return $request->respond()->asContents(ob_get_clean());
     }
 
     /**
      * @param Request $request
-     * @param string  $path
-     * @param string  $ext
+     * @param array   $info
      * @return null|Response
      */
-    private function markToHtml($request, $path, $ext)
+    private function markToHtml($request, array $info)
     {
+        $path = $info['path'];
+        $ext  = $info['ext'];
         if (!$this->markUp) {
             throw new \InvalidArgumentException('no converter for CommonMark file');
         }
