@@ -3,6 +3,7 @@ namespace Tuum\Web\Stack;
 
 use Tuum\Locator\CommonMark;
 use Tuum\Locator\LocatorInterface;
+use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
@@ -14,6 +15,8 @@ class DocView implements MiddlewareInterface
     use MiddlewareTrait;
 
     use MatchRootTrait;
+
+    use BeforeFilterTrait;
 
     /**
      * @var LocatorInterface
@@ -88,6 +91,13 @@ class DocView implements MiddlewareInterface
         if (!$matched = $this->isMatch($request)) {
             return $this->execNext($request);
         }
+        foreach($this->_beforeFilters as $filter) {
+            $filter = $request->getFilter($filter);
+            $next = $this->getReturnable();
+            $filter($request, $next);
+            $request = $next->get($request);
+        }
+        $this->filterBefore($request);
         if ($response = $this->handle($request)) {
             return $response;
         }
