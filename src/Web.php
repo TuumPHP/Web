@@ -292,6 +292,19 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @param string $config
+     * @param array  $data
+     * @return $this
+     */
+    public function pushConfig($config, $data=[])
+    {
+        if($stack = $this->configure($config, $data)) {
+            $this->push($stack);
+        }
+        return $this;
+    }
+    
+    /**
      * @return RouterInterface
      */
     public function getRouter()
@@ -308,6 +321,14 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @return RouterStack
+     */
+    public function getRouterStack()
+    {
+        return new RouterStack($this->getRouter(), new Dispatcher($this->app));
+    }
+    
+    /**
      * @return ReverseRouteInterface
      */
     public function getRouteNames()
@@ -320,21 +341,6 @@ class Web implements MiddlewareInterface
         return $names;
     }
     
-    /**
-     * @param array $routes
-     * @return $this
-     */
-    public function pushRoutes(array $routes)
-    {
-        foreach ($routes as $route) {
-            $router = $this->getRouter();
-            $stack = new RouterStack($router, new Dispatcher($this->app));
-            $this->push($this->configure($route, ['stack' => $stack]));
-        }
-
-        return $this;
-    }
-
     /**
      * @param string $name
      * @param array  $data
