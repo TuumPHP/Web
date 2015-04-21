@@ -9,6 +9,7 @@ use Tuum\View\ViewEngineInterface;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\StreamFactory;
+use Tuum\Web\View\Value;
 
 class ViewStack implements MiddlewareInterface
 {
@@ -107,7 +108,7 @@ class ViewStack implements MiddlewareInterface
     {
         // render view file.
         $data        = $response->getData();
-        $data['uri'] = $request->getUri();
+        $data[Value::URI] = $request->getUri();
         $file        = $response->getViewFile();
         $content     = $this->engine->render($file, $data);
         $response    = $response->withBody(StreamFactory::string($content));
