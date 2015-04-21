@@ -85,10 +85,11 @@ class Response extends BaseResponse
      * @param $html
      * @return Response
      */    
-    public static function contents($html)
+    public static function contents($html, $data=[])
     {
         $self            = new self;
         $self->view_file = function() use($html) {return $html;};
+        $self->data      = $data;
         $self->type      = self::TYPE_VIEW;
         return $self;
     }
