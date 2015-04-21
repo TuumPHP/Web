@@ -10,7 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "tuum/locator": "0.1.*",
+        "tuum/locator": "0.2.*",
         "tuum/router": "0.3.*",
         "tuum/view": "0.3.*",
         "tuum/form":"0.2.*",
