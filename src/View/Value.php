@@ -20,11 +20,19 @@ class Value extends DataView
     const INPUTS = '-input-view';
     const ERRORS = '-errors-view';
     const URI = '-uri-view';
+    const VIEW_COMPOSER = '-view-composer';
 
     /**
      * @var UriInterface
      */
     public $uri;
+
+    /**
+     * a callable to set up renderer.
+     * 
+     * @var callable
+     */
+    public $composer;
 
     /**
      * @param array $data
@@ -61,6 +69,7 @@ class Value extends DataView
         $this->errors  = Errors::forge($bite(self::ERRORS));
         $this->message = Message::forge($bite(self::MESSAGE));
         $this->uri     = $bite(self::URI);
+        $this->composer = $bite(self::VIEW_COMPOSER);
         $this->data    = Data::forge($bite(), $this->escape);
         $this->setInputs($this->inputs);
     }

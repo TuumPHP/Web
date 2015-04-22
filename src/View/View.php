@@ -44,7 +44,12 @@ class View implements ViewEngineInterface
     public function render($file, $data = [])
     {
         if ($this->value) {
-            $data = ['view' => $this->value->withData($data)];
+            $view = $this->value->withData($data);
+            $data = ['view' => $view];
+            if(isset($view->composer) && is_callable($view->composer)) {
+                $composer = $view->composer;
+                $this->renderer = $composer($this->renderer);
+            }
         }
         return $this->renderer->render($file, $data);
     }
