@@ -90,7 +90,7 @@ class RouterStack implements MiddlewareInterface
                 $app->prepend($filter);
             }
         }
-        if ($beforeFilters = $route->before()) {
+        if ($beforeFilters = (array) $route->before()) {
             foreach ($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);
                 $app->prepend($filter);
