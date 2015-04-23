@@ -83,12 +83,14 @@ class RouterStack implements MiddlewareInterface
         $app = $request->getWebApp()->cloneApp();
         $app->prepend($this->dispatcher->withRoute($route));
 
-        if (!empty($this->_beforeFilters)) {
-            foreach ($this->_beforeFilters as $filter) {
-                $filter = $request->getFilter($filter);
-                $app->prepend($filter);
-            }
+        // apply filters in this stack.
+        $retReq = $this->getReturnable();
+        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+            return $response;
         }
+        $request = $retReq->get($request);
+        
+        // prepend filters in this route to the $app.
         if ($beforeFilters = (array) $route->before()) {
             foreach ($beforeFilters as $filter) {
                 $filter = $request->getFilter($filter);

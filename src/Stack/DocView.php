@@ -88,17 +88,15 @@ class DocView implements MiddlewareInterface
      */
     public function __invoke($request, $next = null)
     {
-        $reqRet = $this->getReturnable();
-        if (!$matched = $this->isMatch($request, $reqRet)) {
-            $request = $reqRet->get($request);
+        $retReq = $this->getReturnable();
+        if (!$matched = $this->isMatch($request, $retReq)) {
             return $this->execNext($request);
         }
-        foreach($this->_beforeFilters as $filter) {
-            $filter = $request->getFilter($filter);
-            $reqRet = $this->getReturnable();
-            $filter($request, $reqRet);
-            $request = $reqRet->get($request);
+        $retReq = $this->getReturnable();
+        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+            return $response;
         }
+        $request = $retReq->get($request);
         if ($response = $this->handle($request)) {
             return $response;
         }

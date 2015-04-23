@@ -33,6 +33,11 @@ trait BeforeFilterTrait
     abstract public function prepend($handler);
 
     /**
+     * @return ReturnRequest
+     */
+    abstract protected function getReturnable();
+        
+    /**
      * @param string|Closure|ApplicationInterface $filter
      */
     public function setBeforeFilter($filter)
@@ -42,14 +47,22 @@ trait BeforeFilterTrait
 
     /**
      * @param Request $request
+     * @param Closure $nextReq
      * @return null|Response
      */
-    public function filterBefore($request)
+    public function applyBeforeFilters($request, $nextReq)
     {
         foreach ($this->_beforeFilters as $filter) {
-            $filter = $request->getFilter($filter);
-            $this->prepend($filter);
+            if (!$filter = $request->getFilter($filter)) {
+                continue;
+            }
+            $retReq = $this->getReturnable();
+            if ($response = $filter($request, $retReq)) {
+                return $response;
+            }
+            $request = $retReq->get($request);
         }
+        $nextReq($request);
         return null;
     }
 
