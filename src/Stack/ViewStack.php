@@ -56,21 +56,20 @@ class ViewStack implements MiddlewareInterface
          */
         $response = $this->execNext($request);
 
-        /*
-         * if no response, convert to not-found response.
-         */
-        if (!$response) {
+        if (is_null($response)) {
+            // no response. turn it to not-found response.
             $response = $request->respond()->asNotFound();
         }
-        // in case $response is a text or an array.
         if (is_string($response)) {
+            // return as a plain text.
             return $request->respond()->asText($response);
         }
         if (is_array($response)) {
+            // return as a JSON.
             return $request->respond()->asJson($response);
         }
-        // what's this? just return it.
         if (!$response instanceof Response) {
+            // what is this? just return it.
             return $response;
         }
         /*
@@ -86,6 +85,8 @@ class ViewStack implements MiddlewareInterface
     }
 
     /**
+     * render error pages.
+     *
      * @param Response $response
      * @return Response
      */
@@ -100,6 +101,8 @@ class ViewStack implements MiddlewareInterface
     }
 
     /**
+     * render template views.
+     *
      * @param Request  $request
      * @param Response $response
      * @return Response
@@ -107,11 +110,12 @@ class ViewStack implements MiddlewareInterface
     protected function setContents($request, $response)
     {
         // render view file.
-        $data        = $response->getData();
+        $data = $response->getData();
+        $file = $response->getViewFile();
+
         $data[Value::URI] = $request->getUri();
-        $file        = $response->getViewFile();
-        $content     = $this->engine->render($file, $data);
-        $response    = $response->withBody(StreamFactory::string($content));
+        $content          = $this->engine->render($file, $data);
+        $response         = $response->withBody(StreamFactory::string($content));
         return $response;
     }
 }
