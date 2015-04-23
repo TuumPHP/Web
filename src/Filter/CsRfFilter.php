@@ -28,7 +28,7 @@ class CsRfFilter implements ApplicationInterface
         if (!$session) {
             return null;
         }
-        $token = $session->getCsrfToken(Web::TOKEN_NAME);
+        $token = $session->getCsrfToken();
         /*
          * check for token in post data.
          */
