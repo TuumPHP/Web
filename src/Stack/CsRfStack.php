@@ -60,21 +60,20 @@ class CsRfStack implements MiddlewareInterface
         /*
          * check if token must be verified.
          */
-        if (!$matched = $this->isMatch($request)) {
+        $reqRet = $this->getReturnable();
+        if (!$matched = $this->isMatch($request, $reqRet)) {
+            $request = $reqRet->get($request);
             return $this->execNext($request); // maybe not...
-        }
-        if (isset($matched['matched'])) {
-            $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
         }
         /*
          * validate token
          */
         /** @var CsRfFilter $csRfFilter */
-        $return     = $this->getReturnable();
-        if ($response = $this->csRfFilter->__invoke($request, $return)) {
+        $reqRet = $this->getReturnable();
+        if ($response = $this->csRfFilter->__invoke($request, $reqRet)) {
             return $response;
         }
-        $request = $return->get($request);
+        $request = $reqRet->get($request);
         return $this->execNext($request); // GOOD!
     }
 }

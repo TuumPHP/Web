@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Middleware;
 
+use Closure;
 use Tuum\Router\Matcher;
 use Tuum\Web\Psr7\Request;
 
@@ -33,10 +34,11 @@ trait MatchRootTrait
      * returns true/false, but
      * if the matched root has trails, returns new $request with a path to match.
      *
-     * @param Request $request
+     * @param Request  $request
+     * @param Closure $reqRet
      * @return bool|array
      */
-    public function isMatch($request)
+    public function isMatch($request, $reqRet)
     {
         // empty means match always.
         if (empty($this->_patterns)) {
@@ -49,6 +51,9 @@ trait MatchRootTrait
         $method = $request->getMethod();
         foreach ($this->_patterns as $pattern) {
             if ($matched = Matcher::verify($pattern, $path, $method)) {
+                if (isset($matched['matched'])) {
+                    $reqRet($request->withPathToMatch($matched['matched'], $matched['trailing']));
+                }
                 return $matched;
             }
         }

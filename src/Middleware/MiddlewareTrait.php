@@ -14,11 +14,11 @@ trait MiddlewareTrait
     protected $next;
 
     /**
-     * @return Returnable
+     * @return ReturnRequest
      */
     protected function getReturnable()
     {
-        return Returnable::start();
+        return ReturnRequest::start();
     }
 
     /**

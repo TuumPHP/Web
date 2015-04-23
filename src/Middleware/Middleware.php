@@ -47,17 +47,16 @@ class Middleware implements MiddlewareInterface
      */
     public function __invoke($request, $next = null)
     {
-        if ($matched = $this->isMatch($request)) {
-            if (isset($matched['matched'])) {
-                $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
-            }
+        $retReq = $this->getReturnable();
+        if ($matched = $this->isMatch($request, $retReq)) {
+            $request  = $retReq->get($request);
             $app      = $this->app;
-            $return   = $this->getReturnable();
-            $response = $app($request, $return);
+            $retReq   = $this->getReturnable();
+            $response = $app($request, $retReq);
             if ($response) {
                 return $response;
             }
-            $request = $return->get($request);
+            $request = $retReq->get($request);
         }
         $next = $this->next;
         if ($next) {

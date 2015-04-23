@@ -3,7 +3,7 @@ namespace Tuum\Web\Middleware;
 
 use Tuum\Web\Psr7\Request;
 
-class Returnable
+class ReturnRequest
 {
     /**
      * @var mixed
@@ -11,7 +11,7 @@ class Returnable
     private $return = null;
 
     /**
-     * @var Returnable
+     * @var ReturnRequest
      */
     private static $self;
 
@@ -23,12 +23,12 @@ class Returnable
     }
 
     /**
-     * @return Returnable
+     * @return ReturnRequest
      */
     public static function start()
     {
         if (!self::$self) {
-            self::$self = new Returnable();
+            self::$self = new ReturnRequest();
         }
 
         return clone(self::$self);
