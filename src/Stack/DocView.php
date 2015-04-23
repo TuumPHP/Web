@@ -215,8 +215,8 @@ class DocView implements MiddlewareInterface
      */
     protected function dummy($request)
     {
-        $this->evaluatePhp($request, null);
-        $this->markToHtml($request, null, null);
-        $this->textToPre($request, null, null);
+        $this->evaluatePhp($request, []);
+        $this->markToHtml($request, []);
+        $this->textToPre($request, []);
     }
 }
