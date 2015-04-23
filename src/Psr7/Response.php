@@ -52,7 +52,7 @@ class Response extends BaseResponse
     }
 
     /**
-     * @return string|\Closure
+     * @return string|callable
      */
     public function getViewFile()
     {
