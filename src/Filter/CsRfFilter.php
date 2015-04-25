@@ -2,12 +2,12 @@
 namespace Tuum\Web\Filter;
 
 use Aura\Session\Session;
+use Tuum\Web\FilterInterface;
 use Tuum\Web\Web;
-use Tuum\Web\ApplicationInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 
-class CsRfFilter implements ApplicationInterface
+class CsRfFilter implements FilterInterface
 {
     public function __construct()
     {

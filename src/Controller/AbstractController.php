@@ -17,10 +17,9 @@ abstract class AbstractController implements ApplicationInterface
 
     /**
      * @param Request       $request
-     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next = null)
+    public function __invoke($request)
     {
         $this->request = $request;
 

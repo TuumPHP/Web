@@ -354,12 +354,11 @@ class Web implements MiddlewareInterface
 
     /**
      * @param Request       $request
-     * @param callable|null $next
      * @return null|Response
      */
-    public function __invoke($request, $next = null)
+    public function __invoke($request)
     {
-        return $this->app->__invoke($request, $next);
+        return $this->app->__invoke($request);
     }
 
     /**

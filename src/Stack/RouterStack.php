@@ -49,11 +49,10 @@ class RouterStack implements MiddlewareInterface
 
     /**
      * @param Request       $request
-     * @param callable|null $next
      * @return null|Response
      * @throws \ErrorException
      */
-    public function __invoke($request, $next = null)
+    public function __invoke($request)
     {
         if (!$this->router) {
             throw new \ErrorException('no router for routing.');

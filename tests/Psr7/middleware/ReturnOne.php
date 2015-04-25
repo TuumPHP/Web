@@ -5,7 +5,7 @@ use Tuum\Web\ApplicationInterface;
 
 class ReturnOne implements ApplicationInterface
 {
-    public function __invoke($request, $next=null)
+    public function __invoke($request)
     {
         return $request->respond()->asText('1');
     }

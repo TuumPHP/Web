@@ -9,10 +9,9 @@ class Location implements ApplicationInterface
 {
     /**
      * @param Request          $request
-     * @param callable|null    $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request)
     {
         return $request->redirect()
             ->with( 'test', 'tested')

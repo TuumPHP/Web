@@ -13,10 +13,9 @@ class Increment implements MiddlewareInterface
 
     /**
      * @param Request          $request
-     * @param callable|null    $next
      * @return null|Response
      */
-    public function __invoke($request, $next=null)
+    public function __invoke($request)
     {
         /*
          * execute the subsequent stack.
