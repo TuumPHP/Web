@@ -11,7 +11,7 @@ trait AfterReleaseTrait
     /**
      * list of filters to apply if matched.
      *
-     * @var string[]|Closure[]|ReleaseInterface[]
+     * @var string|Closure|ReleaseInterface[]
      */
     protected $_afterRelease = [];
 
@@ -34,7 +34,12 @@ trait AfterReleaseTrait
             if (!$release = $request->getFilter($release)) {
                 continue;
             }
-            $response = $release($request, $response);
+            if ($release instanceof ReleaseInterface) {
+                $response = $release->release($request, $response);
+            }
+            elseif (is_callable($release)) {
+                $response = $release($request, $response);
+            }
         }
         return $response;
     }

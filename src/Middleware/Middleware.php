@@ -5,6 +5,7 @@ use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
+use Tuum\Web\ReleaseInterface;
 
 /**
  * Class Middleware
@@ -19,10 +20,8 @@ class Middleware implements MiddlewareInterface
 
     use MatchRootTrait;
 
-    use BeforeFilterTrait;
-
     /**
-     * @var ApplicationInterface
+     * @var ApplicationInterface|ReleaseInterface
      */
     protected $app;
 
@@ -32,7 +31,7 @@ class Middleware implements MiddlewareInterface
     protected $name;
 
     /**
-     * @param ApplicationInterface $app
+     * @param ApplicationInterface|ReleaseInterface $app
      */
     public function __construct($app)
     {
@@ -46,22 +45,27 @@ class Middleware implements MiddlewareInterface
      */
     public function __invoke($request)
     {
+        // check if matches with root. 
         $retReq = $this->getReturnable();
-        if ($matched = $this->isMatch($request, $retReq)) {
-            $request  = $retReq->get($request);
-            $app      = $this->app;
-            $retReq   = $this->getReturnable();
-            $response = $app($request, $retReq);
-            if ($response) {
-                return $response;
-            }
-            $request = $retReq->get($request);
+        if (!$matched = $this->isMatch($request, $retReq)) {
+            return $this->execNext($request);
         }
-        $next = $this->next;
-        if ($next) {
-            return $next($request);
+        $request  = $retReq->get($request);
+        
+        // let's run the application.
+        $app      = $this->app;
+        $retReq   = $this->getReturnable();
+        $response = $app($request, $retReq); // Application!
+        $request  = $retReq->get($request);
+        
+        // release procedure. 
+        if (is_null($response)) {
+            $response = $this->execNext($request);
         }
-        return null;
+        if ($app instanceof ReleaseInterface) {
+            $response = $app->release($request, $response);
+        }
+        return $response;
     }
 
 }

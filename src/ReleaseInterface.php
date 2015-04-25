@@ -11,12 +11,12 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-interface ReleaseInterface
+interface ReleaseInterface extends ApplicationInterface
 {
     /**
      * @param Request  $request
      * @param null|Response $response
      * @return null|Response
      */
-    public function __invoke($request, $response);
+    public function release($request, $response);
 }
