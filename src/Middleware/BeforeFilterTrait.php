@@ -50,7 +50,7 @@ trait BeforeFilterTrait
      * @param Closure $nextReq
      * @return null|Response
      */
-    public function applyBeforeFilters($request, $nextReq)
+    protected function applyBeforeFilters($request, $nextReq)
     {
         foreach ($this->_beforeFilters as $filter) {
             if (!$filter = $request->getFilter($filter)) {
