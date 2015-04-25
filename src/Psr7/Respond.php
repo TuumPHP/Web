@@ -40,8 +40,9 @@ class Respond extends AbstractResponseFactory
     public function asView($file)
     {
         if ($app = $this->request->getWebApp()) {
-            $view   = $this->request->getWebApp()->get(ViewEngineInterface::class);
-            $stream = new ViewStream($view, new Value());
+            $view   = $app->get(ViewEngineInterface::class);
+            $value  = $app->get(Value::class);
+            $stream = new ViewStream($view, $value);
             $stream->setView($file, $this->data);
             return Response::view($stream, $file, $this->data);
         }

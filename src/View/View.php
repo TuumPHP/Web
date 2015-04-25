@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\View;
 
+use Closure;
 use Tuum\Locator\Locator;
 use Tuum\View\Renderer;
 use Tuum\View\ViewEngineInterface;
@@ -52,6 +53,14 @@ class View implements ViewEngineInterface
             }
         }
         return $this->renderer->render($file, $data);
+    }
+
+    /**
+     * @param Closure $modifiers
+     */
+    public function modRenderer($modifiers)
+    {
+        $this->renderer = $modifiers($this->renderer);
     }
 
     /**

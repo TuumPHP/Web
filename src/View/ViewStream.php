@@ -60,14 +60,31 @@ class ViewStream implements StreamableInterface
     }
 
     /**
-     * @param Closure[] $modifiers
+     * @param Closure $modifiers
      */
     public function modRenderer($modifiers)
     {
-        foreach ($modifiers as $mod) {
-            $this->renderer = $mod($this->renderer);
-        }
+        $modifiers($this->renderer);
     }
+
+    /**
+     * a simple renderer for a raw PHP file.
+     *
+     * @param string|callable $file
+     * @param array           $data
+     * @return string
+     * @throws \Exception
+     */
+    private function render($file, $data = [])
+    {
+        if ($this->value) {
+            $view = $this->value->withData($data);
+            $data = ['view' => $view];
+        }
+
+        return $this->renderer->render($file, $data);
+    }
+
 
     /**
      * Reads all data from the stream into a string, from the beginning to end.
@@ -83,7 +100,7 @@ class ViewStream implements StreamableInterface
     {
         $this->rendered = true;
 
-        return $this->renderer->render($this->view_file, $this->view_data);
+        return $this->render($this->view_file, $this->view_data);
     }
 
     /**

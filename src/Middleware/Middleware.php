@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Middleware;
 
-use Tuum\Web\ApplicationInterface;
+use Tuum\Web\FilterInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -21,7 +21,7 @@ class Middleware implements MiddlewareInterface
     use MatchRootTrait;
 
     /**
-     * @var ApplicationInterface|ReleaseInterface
+     * @var FilterInterface|ReleaseInterface
      */
     protected $app;
 
@@ -31,7 +31,7 @@ class Middleware implements MiddlewareInterface
     protected $name;
 
     /**
-     * @param ApplicationInterface|ReleaseInterface $app
+     * @param FilterInterface|ReleaseInterface $app
      */
     public function __construct($app)
     {

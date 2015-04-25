@@ -25,7 +25,6 @@ use Tuum\Web\Stack\DocView;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\ViewStack;
-use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -173,6 +172,16 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @param string $key
+     * @param array  $data
+     * @return mixed
+     */
+    public function get($key, $data=[])
+    {
+        return $this->app->get($key, $data);
+    }
+
+    /**
      * get shared view engine, Renderer as default. 
      * 
      * @return ViewEngineInterface|View
@@ -188,9 +197,8 @@ class Web implements MiddlewareInterface
             $locator->addRoot($doc_root);
         }
         $renderer = new Renderer($locator);
-        $view = new View($renderer, new Value());
-        $this->app->set(ViewEngineInterface::class, $view, true);
-        return $view;
+        $this->app->set(ViewEngineInterface::class, $renderer, true);
+        return $renderer;
     }
 
     /**

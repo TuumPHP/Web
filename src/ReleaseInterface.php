@@ -11,7 +11,7 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-interface ReleaseInterface extends ApplicationInterface
+interface ReleaseInterface extends FilterInterface
 {
     /**
      * @param Request  $request
