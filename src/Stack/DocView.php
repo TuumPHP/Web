@@ -3,6 +3,7 @@ namespace Tuum\Web\Stack;
 
 use Tuum\Locator\CommonMark;
 use Tuum\Locator\LocatorInterface;
+use Tuum\Web\Middleware\AfterReleaseTrait;
 use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -17,6 +18,8 @@ class DocView implements MiddlewareInterface
     use MatchRootTrait;
 
     use BeforeFilterTrait;
+    
+    use AfterReleaseTrait;
 
     /**
      * @var LocatorInterface
@@ -114,10 +117,11 @@ class DocView implements MiddlewareInterface
         $path = $request->getUri()->getPath();
         $ext  = pathinfo($path, PATHINFO_EXTENSION);
         if (!$ext) {
-            return $this->handleView($request, $path);
+            $response = $this->handleView($request, $path);
+        } else {
+            $response = $this->handleEmit($request, $path, $ext);
         }
-
-        return $this->handleEmit($request, $path, $ext);
+        return $this->applyAfterReleases($request, $response);
     }
 
     /**

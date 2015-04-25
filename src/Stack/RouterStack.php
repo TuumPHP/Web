@@ -4,6 +4,7 @@ namespace Tuum\Web\Stack;
 use Tuum\Router\Route;
 use Tuum\Router\RouterInterface;
 use Tuum\Router\RouteCollector;
+use Tuum\Web\Middleware\AfterReleaseTrait;
 use Tuum\Web\Middleware\BeforeFilterTrait;
 use Tuum\Web\Middleware\MatchRootTrait;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -18,6 +19,8 @@ class RouterStack implements MiddlewareInterface
     use MatchRootTrait;
 
     use BeforeFilterTrait;
+    
+    use AfterReleaseTrait;
 
     /**
      * @var RouterInterface
@@ -99,6 +102,7 @@ class RouterStack implements MiddlewareInterface
         if ($route->matched()) {
             $request = $request->withPathToMatch($route->matched(), $route->trailing());
         }
-        return $app($request);
+        $response = $app($request);
+        return $this->applyAfterReleases($request, $response);
     }
 }
