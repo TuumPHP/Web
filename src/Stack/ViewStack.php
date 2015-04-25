@@ -75,9 +75,6 @@ class ViewStack implements MiddlewareInterface
         /*
          * fill up contents for VIEW and ERROR responses.
          */
-        if ($response->isType(Response::TYPE_VIEW)) {
-            return $this->setContents($request, $response);
-        }
         if ($response->isType(Response::TYPE_ERROR)) {
             return $this->setErrorView($response);
         }
@@ -97,25 +94,6 @@ class ViewStack implements MiddlewareInterface
         }
         $content  = $this->error->render($response->getStatusCode(), $response->getData());
         $response = $response->withBody(StreamFactory::string($content));
-        return $response;
-    }
-
-    /**
-     * render template views.
-     *
-     * @param Request  $request
-     * @param Response $response
-     * @return Response
-     */
-    protected function setContents($request, $response)
-    {
-        // render view file.
-        $data = $response->getData();
-        $file = $response->getViewFile();
-
-        $data[Value::URI] = $request->getUri();
-        $content          = $this->engine->render($file, $data);
-        $response         = $response->withBody(StreamFactory::string($content));
         return $response;
     }
 }

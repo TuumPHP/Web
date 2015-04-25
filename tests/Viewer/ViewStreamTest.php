@@ -76,7 +76,7 @@ class ViewStreamTest extends \PHPUnit_Framework_TestCase
     {
         $view = $this->view;
         $view->setView("test.view", ['all' => 'clear']);
-        $this->assertEquals("hi\nview: hi\nall: clear\n\n", (string) $view);
+        $this->assertEquals("hi\nall: clear\n", (string) $view);
         $this->assertEquals("", $view->getContents());
     }
 
@@ -87,7 +87,7 @@ class ViewStreamTest extends \PHPUnit_Framework_TestCase
     {
         $view = $this->view;
         $view->setView("test.view", ['all' => 'clear']);
-        $this->assertEquals("hi\nview: hi\nall: clear\n\n", $view->getContents());
+        $this->assertEquals("hi\nall: clear\n", $view->getContents());
         $this->assertEquals("", $view->getContents());
     }
 
@@ -99,12 +99,12 @@ class ViewStreamTest extends \PHPUnit_Framework_TestCase
         $view = $this->view;
         $view->setView("test.view", ['all' => 'clear']);
         $this->assertEquals(false, $view->eof());
-        $this->assertEquals("hi\nview: hi\nall: clear\n\n", $view->getContents());
+        $this->assertEquals("hi\nall: clear\n", $view->getContents());
         $this->assertEquals(true, $view->eof());
         $this->assertEquals("", $view->getContents());
         $view->rewind();
         $this->assertEquals(false, $view->eof());
-        $this->assertEquals("hi\nview: hi\nall: clear\n\n", $view->getContents());
+        $this->assertEquals("hi\nall: clear\n", $view->getContents());
     }
 
     /**

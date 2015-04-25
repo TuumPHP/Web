@@ -2,7 +2,10 @@
 namespace Tuum\Web\Psr7;
 
 use Phly\Http\Response as BaseResponse;
+use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
+use Tuum\View\ViewEngineInterface;
+use Tuum\Web\View\ViewStream;
 
 class Response extends BaseResponse
 {
@@ -68,27 +71,15 @@ class Response extends BaseResponse
     }
 
     /**
+     * @param StreamableInterface $stream
      * @param string $file
      * @param array  $data
      * @return Response
      */
-    public static function view($file, $data = [])
+    public static function view($stream, $file, $data = [])
     {
-        $self            = new self;
+        $self            = new self($stream);
         $self->view_file = $file;
-        $self->data      = $data;
-        $self->type      = self::TYPE_VIEW;
-        return $self;
-    }
-
-    /**
-     * @param $html
-     * @return Response
-     */    
-    public static function contents($html, $data=[])
-    {
-        $self            = new self;
-        $self->view_file = function() use($html) {return $html;};
         $self->data      = $data;
         $self->type      = self::TYPE_VIEW;
         return $self;

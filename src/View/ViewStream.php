@@ -5,6 +5,13 @@ use Closure;
 use Psr\Http\Message\StreamableInterface;
 use Tuum\View\ViewEngineInterface;
 
+/**
+ * Class ViewStream
+ *
+ * Stream for ViewEngineInterface renderer. 
+ * 
+ * @package Tuum\Web\View
+ */
 class ViewStream implements StreamableInterface
 {
     /**
@@ -53,28 +60,6 @@ class ViewStream implements StreamableInterface
     }
 
     /**
-     * a simple renderer for a raw PHP file.
-     *
-     * @param string|callable $file
-     * @param array           $data
-     * @return string
-     * @throws \Exception
-     */
-    private function render($file, $data = [])
-    {
-        if ($this->value) {
-            $view = $this->value->withData($data);
-            $data = ['view' => $view];
-            if (isset($view->composer) && is_callable($view->composer)) {
-                $composer       = (array) $view->composer;
-                $this->modRenderer($composer);
-            }
-        }
-
-        return $this->renderer->render($file, $data);
-    }
-
-    /**
      * @param Closure[] $modifiers
      */
     public function modRenderer($modifiers)
@@ -98,7 +83,7 @@ class ViewStream implements StreamableInterface
     {
         $this->rendered = true;
 
-        return $this->render($this->view_file, $this->view_data);
+        return $this->renderer->render($this->view_file, $this->view_data);
     }
 
     /**

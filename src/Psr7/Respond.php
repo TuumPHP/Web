@@ -1,6 +1,11 @@
 <?php
 namespace Tuum\Web\Psr7;
 
+use Closure;
+use Tuum\View\ViewEngineInterface;
+use Tuum\Web\View\Value;
+use Tuum\Web\View\ViewStream;
+
 /**
  * Class Respond
  *
@@ -29,17 +34,28 @@ class Respond extends AbstractResponseFactory
      * return from a view file, $file.
      * rendering must occur on the way back.
      *
-     * @param $file
+     * @param string|Closure $file
      * @return Response
      */
     public function asView($file)
     {
-        return Response::view($file, $this->data);
+        if ($app = $this->request->getWebApp()) {
+            $view   = $this->request->getWebApp()->get(ViewEngineInterface::class);
+            $stream = new ViewStream($view, new Value());
+            $stream->setView($file, $this->data);
+            return Response::view($stream, $file, $this->data);
+        }
+        return Response::view('php://memory', $file, $this->data);
     }
 
+    /**
+     * @param string $html
+     * @return Response
+     */
     public function asContents($html)
     {
-        return Response::contents($html, $this->data);
+        $file = function() use($html) {return $html;};
+        return $this->asView($file);
     }
 
     /**
