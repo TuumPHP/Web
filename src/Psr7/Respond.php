@@ -2,6 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Closure;
+use Tuum\Web\Application;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\View\Value;
 use Tuum\Web\View\ViewStream;
@@ -24,10 +25,23 @@ class Respond extends AbstractResponseFactory
     const INTERNAL_ERROR = '500';
 
     /**
+     * @var array
+     */
+    public $error_views;
+
+    /**
      *
      */
     public function __construct()
     {
+    }
+
+    /**
+     * @param array $views
+     */
+    public function setErrorViews(array $views)
+    {
+        $this->error_views = $views;
     }
 
     /**
@@ -40,9 +54,7 @@ class Respond extends AbstractResponseFactory
     public function asView($file)
     {
         if ($app = $this->request->getWebApp()) {
-            $view   = $app->get(ViewEngineInterface::class);
-            $value  = $app->get(Value::class);
-            $stream = new ViewStream($view, $value);
+            $stream = $this->forgeStreamView($app);
             $stream->setView($file, $this->data);
             return Response::view($stream, $file, $this->data);
         }
@@ -103,7 +115,14 @@ class Respond extends AbstractResponseFactory
      */
     public function asError($status = self::INTERNAL_ERROR)
     {
-        return Response::error($status, $this->data);
+        if ($this->error_views && $app = $this->request->getWebApp()) {
+            $view   = isset($this->error_views[$status]) ?$this->error_views[$status]:$this->error_views[0]; 
+            $stream = $this->forgeStreamView($app);
+            $stream->setView($view);
+        } else {
+            $stream = null;
+        }
+        return Response::error($status, $this->data, $stream);
     }
 
     /**
@@ -136,5 +155,18 @@ class Respond extends AbstractResponseFactory
     {
         $stream = StreamFactory::file($file_loc);
         return new Response($stream, self::OK, ['Content-Type' => $mime]);
+    }
+
+    /**
+     * @param Application $app
+     * @return ViewStream
+     */
+    private function forgeStreamView($app)
+    {
+        $view   = $app->get(ViewEngineInterface::class);
+        $value  = $app->get(Value::class);
+        $stream = new ViewStream($view, $value);
+
+        return $stream;
     }
 }

@@ -105,9 +105,10 @@ class Response extends BaseResponse
      * @param array $data
      * @return Response
      */
-    public static function error($status, $data = [])
+    public static function error($status, $data = [], $stream = null)
     {
-        $self       = new self('php://memory', $status);
+        $stream     = $stream ?: 'php://memory';
+        $self       = new self($stream, $status);
         $self->data = $data;
         $self->type = self::TYPE_ERROR;
         return $self;

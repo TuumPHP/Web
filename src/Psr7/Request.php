@@ -8,6 +8,7 @@ use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Application;
 use Tuum\Web\View\Value;
+use Tuum\Web\Web;
 
 /**
  * Class Request
@@ -79,6 +80,7 @@ class Request extends ServerRequest
     public function setWebApp($web)
     {
         $this->web = $web;
+        $this->respond->setErrorViews($web->get(Web::ERROR_VIEWS));
     }
 
     /**
