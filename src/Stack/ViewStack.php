@@ -5,11 +5,10 @@ use Psr\Log\LoggerInterface;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
-use Tuum\View\ViewEngineInterface;
+use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\StreamFactory;
-use Tuum\Web\View\Value;
 
 class ViewStack implements MiddlewareInterface
 {

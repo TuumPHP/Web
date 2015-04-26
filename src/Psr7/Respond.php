@@ -2,7 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Closure;
-use Tuum\View\ViewEngineInterface;
+use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\View\Value;
 use Tuum\Web\View\ViewStream;
 

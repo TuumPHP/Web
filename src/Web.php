@@ -15,7 +15,7 @@ use Tuum\Router\Router;
 use Tuum\Router\RouterInterface;
 use Tuum\Web\View\ErrorView;
 use Tuum\View\Renderer;
-use Tuum\View\ViewEngineInterface;
+use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -198,8 +198,9 @@ class Web implements MiddlewareInterface
             $locator->addRoot($doc_root);
         }
         $renderer = new Renderer($locator);
-        $this->app->set(ViewEngineInterface::class, $renderer, true);
-        return $renderer;
+        $view     = new View($renderer, new Value());
+        $this->app->set(ViewEngineInterface::class, $view, true);
+        return $view;
     }
 
     /**

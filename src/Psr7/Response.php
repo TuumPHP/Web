@@ -4,8 +4,6 @@ namespace Tuum\Web\Psr7;
 use Phly\Http\Response as BaseResponse;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Tuum\View\ViewEngineInterface;
-use Tuum\Web\View\ViewStream;
 
 class Response extends BaseResponse
 {

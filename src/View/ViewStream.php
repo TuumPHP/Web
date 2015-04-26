@@ -3,7 +3,6 @@ namespace Tuum\Web\View;
 
 use Closure;
 use Psr\Http\Message\StreamableInterface;
-use Tuum\View\ViewEngineInterface;
 
 /**
  * Class ViewStream
@@ -64,7 +63,7 @@ class ViewStream implements StreamableInterface
      */
     public function modRenderer($modifiers)
     {
-        $modifiers($this->renderer);
+        $this->renderer->modRenderer($modifiers);
     }
 
     /**
@@ -77,11 +76,6 @@ class ViewStream implements StreamableInterface
      */
     private function render($file, $data = [])
     {
-        if ($this->value) {
-            $view = $this->value->withData($data);
-            $data = ['view' => $view];
-        }
-
         return $this->renderer->render($file, $data);
     }
 

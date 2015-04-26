@@ -3,7 +3,6 @@ namespace Tuum\Web\View;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Tuum\View\ViewEngineInterface;
 use Tuum\Web\Psr7\Respond;
 use Tuum\Web\Psr7\Response;
 

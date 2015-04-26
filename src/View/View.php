@@ -2,9 +2,7 @@
 namespace Tuum\Web\View;
 
 use Closure;
-use Tuum\Locator\Locator;
 use Tuum\View\Renderer;
-use Tuum\View\ViewEngineInterface;
 
 class View implements ViewEngineInterface
 {
@@ -19,18 +17,12 @@ class View implements ViewEngineInterface
     private $value;
 
     /**
-     * @var Locator
-     */
-    public $locator;
-
-    /**
      * @param Renderer   $renderer
      * @param null|Value $value
      */
     public function __construct($renderer, $value = null)
     {
         $this->renderer = $renderer;
-        $this->locator  = $renderer->locator; // bad!
         $this->value    = $value;
     }
 
@@ -47,10 +39,6 @@ class View implements ViewEngineInterface
         if ($this->value) {
             $view = $this->value->withData($data);
             $data = ['view' => $view];
-            if(isset($view->composer) && is_callable($view->composer)) {
-                $composer = $view->composer;
-                $this->renderer = $composer($this->renderer);
-            }
         }
         return $this->renderer->render($file, $data);
     }
@@ -60,31 +48,6 @@ class View implements ViewEngineInterface
      */
     public function modRenderer($modifiers)
     {
-        $this->renderer = $modifiers($this->renderer);
-    }
-
-    /**
-     * set layout file.
-     *
-     * @param string $file
-     * @param array  $data
-     * @return $this
-     */
-    public function setLayout($file, $data = [])
-    {
-        $this->renderer->setLayout($file, $data);
-        return $this;
-    }
-
-    /**
-     * set root directory of template files.
-     *
-     * @param $dir
-     * @return $this
-     */
-    public function setRoot($dir)
-    {
-        $this->renderer->setRoot($dir);
-        return $this;
+        $modifiers($this->renderer);
     }
 }
