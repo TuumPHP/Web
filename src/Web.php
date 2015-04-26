@@ -13,7 +13,7 @@ use Tuum\Router\ReverseRoute;
 use Tuum\Router\ReverseRouteInterface;
 use Tuum\Router\Router;
 use Tuum\Router\RouterInterface;
-use Tuum\View\ErrorView;
+use Tuum\Web\View\ErrorView;
 use Tuum\View\Renderer;
 use Tuum\View\ViewEngineInterface;
 use Tuum\Web\Filter\CsRfFilter;
@@ -25,6 +25,7 @@ use Tuum\Web\Stack\DocView;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\ViewStack;
+use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -212,7 +213,7 @@ class Web implements MiddlewareInterface
         if (empty($error_files)) {
             return null;
         }
-        $view = new ErrorView($this->getViewEngine(), $this->debug);
+        $view = new ErrorView($this->getViewEngine(), new Value(), $this->debug);
         if (isset($error_files[0])) {
             $view->default_error_file = $error_files[0];
             unset($error_files[0]);

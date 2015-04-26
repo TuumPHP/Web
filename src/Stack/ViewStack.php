@@ -2,7 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Psr\Log\LoggerInterface;
-use Tuum\View\ErrorView;
+use Tuum\Web\View\ErrorView;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\View\ViewEngineInterface;
