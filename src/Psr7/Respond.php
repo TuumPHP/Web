@@ -39,7 +39,7 @@ class Respond extends AbstractResponseFactory
     /**
      * @param array $views
      */
-    public function setErrorViews(array $views)
+    public function setErrorViews(array $views = [])
     {
         $this->error_views = $views;
     }

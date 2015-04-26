@@ -9,6 +9,7 @@ use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\StreamFactory;
+use Tuum\Web\View\ViewStream;
 
 class ViewStack implements MiddlewareInterface
 {
@@ -73,7 +74,8 @@ class ViewStack implements MiddlewareInterface
         /*
          * fill up contents for VIEW and ERROR responses.
          */
-        if ($response->isType(Response::TYPE_ERROR)) {
+        if ($response->isType(Response::TYPE_ERROR) && 
+            !$response->getBody() instanceof ViewStream) {
             return $this->setErrorView($response);
         }
         return $response;

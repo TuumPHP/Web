@@ -80,7 +80,7 @@ class Request extends ServerRequest
     public function setWebApp($web)
     {
         $this->web = $web;
-        $this->respond->setErrorViews($web->get(Web::ERROR_VIEWS));
+        $this->respond->setErrorViews((array) $web->get(Web::ERROR_VIEWS));
     }
 
     /**
