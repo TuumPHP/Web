@@ -8,7 +8,6 @@ use Tuum\Web\Psr7\Response;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Middleware\MiddlewareTrait;
 use Tuum\Web\MiddlewareInterface;
-use Tuum\Web\Psr7\StreamFactory;
 use Tuum\Web\View\ViewStream;
 
 class ViewStack implements MiddlewareInterface

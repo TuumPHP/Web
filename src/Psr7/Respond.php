@@ -3,6 +3,7 @@ namespace Tuum\Web\Psr7;
 
 use Closure;
 use Tuum\Web\Application;
+use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\View\ViewStream;
 
@@ -24,7 +25,7 @@ class Respond extends AbstractResponseFactory
     const INTERNAL_ERROR = '500';
 
     /**
-     * @var array
+     * @var ErrorView
      */
     public $error_views;
 
@@ -41,11 +42,11 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
-     * @param array $views
+     * @param ErrorView $view
      */
-    public function setErrorViews(array $views = [])
+    public function setErrorViews($view)
     {
-        $this->error_views = $views;
+        $this->error_views = $view;
     }
 
     /**
@@ -126,9 +127,8 @@ class Respond extends AbstractResponseFactory
      */
     public function asError($status = self::INTERNAL_ERROR)
     {
-        if ($this->error_views && $app = $this->request->getWebApp()) {
-            $view   = isset($this->error_views[$status]) ?$this->error_views[$status]:$this->error_views[0]; 
-            $stream = $this->forgeStreamView($view);
+        if ($this->error_views) {
+            $stream = $this->error_views->getStream($status);
         } else {
             $stream = null;
         }

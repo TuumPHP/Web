@@ -208,10 +208,14 @@ class Web implements MiddlewareInterface
      * 
      * @return ErrorView|null
      */
-    protected function getErrorView()
+    public function getErrorView()
     {
+        if($this->app->exists(ErrorView::class)) {
+            return $this->app->get(ErrorView::class);
+        }
         $error_files = (array)$this->app->get(Web::ERROR_VIEWS);
         if (empty($error_files)) {
+            $this->app->set(ErrorView::class, null, true);
             return null;
         }
         $view = new ErrorView($this->getViewEngine(), $this->debug);
@@ -221,6 +225,7 @@ class Web implements MiddlewareInterface
         }
         $view->setLogger($this->getLog());
         $view->error_files = $error_files;
+        $this->app->set(ErrorView::class, $view, true);
 
         return $view;
     }
