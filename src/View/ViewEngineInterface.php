@@ -2,6 +2,7 @@
 namespace Tuum\Web\View;
 
 use Closure;
+use Psr\Http\Message\StreamableInterface;
 
 /**
  * Interface RendererInterface
@@ -22,6 +23,16 @@ interface ViewEngineInterface
      */
     public function render($file, $data = []);
 
+    /**
+     * a simple renderer for a raw PHP file.
+     *
+     * @param string|callable $file
+     * @param array  $data
+     * @return StreamableInterface|ViewStream
+     * @throws \Exception
+     */
+    public function getStream($file, $data = []);
+    
     /**
      * modifies renderer using closure:
      * function($renderer) {}, where $renderer is the view engine. 

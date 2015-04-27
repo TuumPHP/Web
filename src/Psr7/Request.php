@@ -8,6 +8,7 @@ use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Application;
 use Tuum\Web\View\Value;
+use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Web;
 
 /**
@@ -80,6 +81,7 @@ class Request extends ServerRequest
     public function setWebApp($web)
     {
         $this->web = $web;
+        $this->respond->setViewEngine( $web->get(ViewEngineInterface::class));
         $this->respond->setErrorViews((array) $web->get(Web::ERROR_VIEWS));
     }
 

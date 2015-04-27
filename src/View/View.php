@@ -2,6 +2,7 @@
 namespace Tuum\Web\View;
 
 use Closure;
+use Psr\Http\Message\StreamableInterface;
 use Tuum\View\Renderer;
 
 class View implements ViewEngineInterface
@@ -43,6 +44,21 @@ class View implements ViewEngineInterface
         return $this->renderer->render($file, $data);
     }
 
+    /**
+     * a simple renderer for a raw PHP file.
+     *
+     * @param string|callable $file
+     * @param array  $data
+     * @return StreamableInterface|ViewStream
+     * @throws \Exception
+     */
+    public function getStream($file, $data = [])
+    {
+        $stream = new ViewStream($this);
+        $stream->setView($file, $data);
+        return $stream;
+    }
+        
     /**
      * @param Closure $modifiers
      */

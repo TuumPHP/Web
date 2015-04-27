@@ -16,6 +16,11 @@ class render implements ViewEngineInterface
         }
         return $string;
     }
+    
+    public function getStream($file, $data = [])
+    {
+        return null;
+    }
 
     public function modRenderer($mod)
     {

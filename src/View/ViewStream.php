@@ -14,11 +14,6 @@ use Psr\Http\Message\StreamableInterface;
 class ViewStream implements StreamableInterface
 {
     /**
-     * @var Value
-     */
-    private $value;
-
-    /**
      * @var ViewEngineInterface
      */
     private $renderer;
@@ -40,12 +35,10 @@ class ViewStream implements StreamableInterface
 
     /**
      * @param ViewEngineInterface $renderer
-     * @param null|Value          $value
      */
-    public function __construct($renderer, $value = null)
+    public function __construct($renderer)
     {
         $this->renderer = $renderer;
-        $this->value    = $value;
     }
 
     /**
