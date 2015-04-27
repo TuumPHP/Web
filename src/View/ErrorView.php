@@ -2,21 +2,19 @@
 namespace Tuum\Web\View;
 
 use Exception;
+use Phly\Http\Stream;
+use Psr\Http\Message\StreamableInterface;
 use Psr\Log\LoggerInterface;
 use Tuum\Web\Psr7\Respond;
 use Tuum\Web\Psr7\Response;
+use Tuum\Web\Psr7\StreamFactory;
 
 class ErrorView
 {
     /**
      * @var ViewEngineInterface
      */
-    protected $engine;
-
-    /**
-     * @var Value
-     */
-    protected $value;
+    private $engine;
 
     /**
      * default error file name.
@@ -44,13 +42,11 @@ class ErrorView
 
     /**
      * @param ViewEngineInterface $engine
-     * @param Value               $value
      * @param bool                $debug
      */
-    public function __construct($engine, $value, $debug = false)
+    public function __construct($engine, $debug = false)
     {
         $this->engine = $engine;
-        $this->value  = $value;
         $this->debug  = $debug;
     }
 
@@ -72,11 +68,24 @@ class ErrorView
         if ($this->debug) {
             $data['trace'] = $e->getTrace();
         }
-        $content = $this->render($code, $data);
-        echo $content;
+        echo $this->getStream($code, $data);
         exit;
     }
 
+    /**
+     * @param int   $code
+     * @param array $data
+     * @return Stream|StreamableInterface|ViewStream
+     */
+    public function getStream($code, $data = [])
+    {
+        $error = isset($this->error_files[$code]) ? $this->error_files[$code] : $this->default_error_file;
+        if ($error) {
+            return $this->engine->getStream($error, $data);
+        }
+        return StreamFactory::string('<h1>Error</h1>');
+    }
+    
     /**
      * @param int   $code
      * @param array $data
@@ -88,7 +97,7 @@ class ErrorView
         if (!$error) {
             return '';
         }
-        $content = $this->engine->render($error, ['view'=>$this->value->withData($data)]);
+        $content = $this->engine->render($error, $data);
         return $content;
     }
 

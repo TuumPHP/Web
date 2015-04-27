@@ -87,13 +87,13 @@ class ViewStack implements MiddlewareInterface
      * @param Response $response
      * @return Response
      */
-    protected function setErrorView($response)
+    private function setErrorView($response)
     {
         if ($this->logger) {
             $this->logger->error('ErrorRelease: received an error response: ' . $response->getStatusCode());
         }
-        $content  = $this->error->render($response->getStatusCode(), $response->getData());
-        $response = $response->withBody(StreamFactory::string($content));
+        $stream   = $this->error->getStream($response->getStatusCode(), $response->getData());
+        $response = $response->withBody($stream);
         return $response;
     }
 }
