@@ -99,21 +99,6 @@ class Web implements MiddlewareInterface
     }
 
     /**
-     * all in one set up.
-     *
-     * @param string $env_file
-     * @return $this
-     */
-    public function setup($env_file)
-    {
-        $this
-            ->loadConfig()
-            ->loadEnvironment($env_file)
-            ->catchError();
-        return $this;
-    }
-
-    /**
      * set up working directories.
      *
      * @param string $app_dir
