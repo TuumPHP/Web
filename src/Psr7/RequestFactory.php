@@ -18,25 +18,17 @@ class RequestFactory extends ServerRequestFactory
      * order to marshal the request URI and headers.
      *
      * @see fromServer()
-     * @param array $server  $_SERVER superglobal
-     * @param array $query   $_GET superglobal
-     * @param array $body    $_POST superglobal
-     * @param array $cookies $_COOKIE superglobal
-     * @param array $files   $_FILES superglobal
+     * @param array $globals  $GLOBALS super-global
      * @return Request
      */
-    public static function fromGlobals(
-        array $server = null,
-        array $query = null,
-        array $body = null,
-        array $cookies = null,
-        array $files = null
+    public static function fromGlobalData(
+        array $globals = []
     ) {
-        $server  = self::normalizeServer($server ?: $_SERVER);
-        $files   = $files ?: $_FILES;
-        $cookies = $cookies ?: $_COOKIE;
-        $query   = $query ?: $_GET;
-        $body    = $body ?: $_POST;
+        $server  = self::normalizeServer(self::arrayGet($globals, '_SERVER', $_SERVER));
+        $files   = self::arrayGet($globals, '_FILES', $_FILES);
+        $cookies = self::arrayGet($globals, '_COOKIE', $_COOKIE);
+        $query   = self::arrayGet($globals, '_GET', $_GET);
+        $body    = self::arrayGet($globals, '_POST', $_POST);
         $headers = self::marshalHeaders($server);
         $request = new Request(
             $server,
@@ -54,6 +46,17 @@ class RequestFactory extends ServerRequestFactory
             ->withBodyParams($body);
     }
 
+    /**
+     * @param array $array
+     * @param string $key
+     * @param array  $default
+     * @return array
+     */
+    private static function arrayGet($array, $key, $default=[])
+    {
+        return array_key_exists($key, $array) ? $array[$key] : $default;
+    }
+    
     /**
      * @param string $path
      * @param string $method

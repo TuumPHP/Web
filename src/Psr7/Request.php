@@ -10,7 +10,6 @@ use Tuum\Web\Application;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\Value;
 use Tuum\Web\View\ViewEngineInterface;
-use Tuum\Web\Web;
 
 /**
  * Class Request
@@ -71,19 +70,27 @@ class Request extends ServerRequest
         $body = 'php://input',
         array $headers = []
     ) {
-        $this->respond  = new Respond();
-        $this->redirect = new Redirect();
         parent::__construct($serverParams, $fileParams, $uri, $method, $body, $headers);
     }
 
     /**
-     * @param Application $web
+     * @param Application $app
+     * @return Request
      */
-    public function setWebApp($web)
+    public function withApp($app)
     {
-        $this->web = $web;
-        $this->respond->setViewEngine($web->get(ViewEngineInterface::class));
-        $this->respond->setErrorViews($web->get(ErrorView::class));
+        $self = clone($this);
+        $self->web = $app;
+
+        $self->respond  = new Respond();
+        if ($app->exists(ViewEngineInterface::class)) {
+            $self->respond->setViewEngine($app->get(ViewEngineInterface::class));
+        }
+        $self->redirect = new Redirect();
+        if ($app->exists(ErrorView::class)) {
+            $self->respond->setErrorViews($app->get(ErrorView::class));
+        }
+        return $self;
     }
 
     /**

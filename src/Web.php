@@ -77,6 +77,14 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @return Application
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+    
+    /**
      * @param string $app_dir
      * @param bool   $debug
      * @return $this
