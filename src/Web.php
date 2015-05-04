@@ -114,6 +114,26 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * @param \Closure $closure
+     * @return $this
+     */
+    public function cacheApp($closure)
+    {
+        $cached = $this->vars_dir . '/app.cached';
+        if (!$this->debug && file_exists($cached)) {
+            $this->app = unserialize(\file_get_contents($cached));
+            return $this;
+        }
+        $closure($this);
+        if ($this->debug) {
+            \file_put_contents($cached, serialize($this->app));
+            chmod($cached, 0666);
+        }
+        
+        return $this;
+    }
+
+    /**
      * loads the main configuration for the application.
      *
      * @param null|bool $debug
