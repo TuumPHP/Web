@@ -340,12 +340,15 @@ class Web implements MiddlewareInterface
         if ($this->app->exists(RouterInterface::class)) {
             return $this->app->get(RouterInterface::class);
         }
-        $this->app->set(RouterInterface::class, function() {
-            $router = new Router();
-            $router->setReverseRoute($this->getRouteNames());
-            return $router;
-        });
-        return $this->app->get(RouterInterface::class);
+        // use Tuum's Router class. 
+        if ($this->app->exists(Router::class)) {
+            // already set. clone it!
+            return clone($this->app->get(Router::class));
+        }
+        $router = new Router();
+        $router->setReverseRoute($this->getRouteNames());
+        $this->app->set(Router::class, $router, true);
+        return $router;
     }
 
     /**
