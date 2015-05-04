@@ -162,14 +162,14 @@ class Web implements MiddlewareInterface
     /**
      * set up global exception handler.
      *
-     * @param null|bool $debug
+     * @param array $error_files
      * @return $this
      */
-    public function catchError($debug=null)
+    public function catchError(array $error_files)
     {
-        $debug = is_null($debug)? $this->debug: $debug;
+        $this->app->set(Web::ERROR_VIEWS, $error_files);
         $whoops = new Run;
-        if ($debug) {
+        if ($this->debug) {
             error_reporting(E_ALL);
             $whoops->pushHandler(new PrettyPageHandler);
         } else {
