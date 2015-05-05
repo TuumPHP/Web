@@ -7,9 +7,7 @@ use Psr\Http\Message\UriInterface;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Application;
-use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\Value;
-use Tuum\Web\View\ViewEngineInterface;
 
 /**
  * Class Request
@@ -82,13 +80,11 @@ class Request extends ServerRequest
         $self = clone($this);
         $self->web = $app;
 
-        $self->respond  = new Respond();
-        if ($app->exists(ViewEngineInterface::class)) {
-            $self->respond->setViewEngine($app->get(ViewEngineInterface::class));
+        if ($app->exists(Respond::class)) {
+            $self->respond = $app->get(Respond::class);
         }
-        $self->redirect = new Redirect();
-        if ($app->exists(ErrorView::class)) {
-            $self->respond->setErrorViews($app->get(ErrorView::class));
+        if ($app->exists(Redirect::class)) {
+            $self->redirect = $app->get(Redirect::class);
         }
         return $self;
     }
@@ -169,6 +165,9 @@ class Request extends ServerRequest
      */
     public function respond()
     {
+        if (!$this->respond) {
+            $this->respond = new Respond();
+        }
         $respond = $this->respond->withRequest($this);
         $respond->with($this->getAttributes());
         return $respond;
@@ -180,6 +179,9 @@ class Request extends ServerRequest
      */
     public function redirect($list = [])
     {
+        if (!$this->redirect) {
+            $this->redirect = new Redirect();
+        }
         $data = (array)$this->getAttributes();
         $list = array_merge($list, [Value::INPUTS, Value::ERRORS, Value::MESSAGE]);
         foreach ($data as $key => $v) {

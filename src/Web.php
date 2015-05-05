@@ -13,6 +13,8 @@ use Tuum\Router\ReverseRoute;
 use Tuum\Router\ReverseRouteInterface;
 use Tuum\Router\Router;
 use Tuum\Router\RouterInterface;
+use Tuum\Web\Psr7\Redirect;
+use Tuum\Web\Psr7\Respond;
 use Tuum\Web\View\ErrorView;
 use Tuum\View\Renderer;
 use Tuum\Web\View\ViewEngineInterface;
@@ -77,6 +79,8 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * returns Application, $app for execution.
+     * 
      * @return Application
      */
     public function getApp()
@@ -114,6 +118,9 @@ class Web implements MiddlewareInterface
     }
 
     /**
+     * caches entire Application, $app, to a file. 
+     * specify $closure to construct the application in case cache file is absent. 
+     * 
      * @param \Closure $closure
      * @return $this
      */
@@ -161,6 +168,31 @@ class Web implements MiddlewareInterface
         foreach ($environments as $env) {
             $this->configure($this->config_dir . "/{$env}/configure");
         }
+        return $this;
+    }
+
+    /**
+     * constructs and pre-loads objects to be cached with $app.
+     * 
+     * @return $this
+     */
+    public function loadContainer()
+    {
+        // pre-load Respond for Request->respond().
+        $respond  = new Respond();
+        if ($this->app->exists(ViewEngineInterface::class)) {
+            $respond->setViewEngine($this->app->get(ViewEngineInterface::class));
+        }
+        if ($this->app->exists(ErrorView::class)) {
+            $respond->setErrorViews($this->app->get(ErrorView::class));
+        }
+        $this->app->set(Respond::class, $respond);
+        
+        // pre-load Redirect for Request->redirect().
+        $this->app->set(Redirect::class, new Redirect());
+
+        // pre-load RouterStack. 
+        $this->getRouterStack();
         return $this;
     }
 
