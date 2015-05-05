@@ -125,7 +125,7 @@ class Web implements MiddlewareInterface
             return $this;
         }
         $closure($this);
-        if ($this->debug) {
+        if ($this->debug && !file_exists($cached)) {
             \file_put_contents($cached, serialize($this->app));
             chmod($cached, 0666);
         }
@@ -311,12 +311,18 @@ class Web implements MiddlewareInterface
      */
     public function getDocViewStack($docs_dir)
     {
-        return new DocView(
-            new Locator($docs_dir),
-            CommonMark::forge(
-                $docs_dir,
-                $this->vars_dir . '/markUp')
-        );
+        if (!$this->app->exists(DocView::class)) {
+            $docs = new DocView(
+                new Locator($docs_dir),
+                CommonMark::forge(
+                    $docs_dir,
+                    $this->vars_dir . '/markUp')
+            );
+            $this->app->set(DocView::class, $docs);
+        } else {
+            $docs = $this->app->get(DocView::class);
+        }
+        return $docs;
     }
 
     /**
@@ -356,7 +362,13 @@ class Web implements MiddlewareInterface
      */
     public function getRouterStack()
     {
-        return new RouterStack($this->getRouter(), new Dispatcher($this->app));
+        if (!$this->app->exists(RouterStack::class)) {
+            $router = new RouterStack($this->getRouter(), new Dispatcher($this->app));
+            $this->app->set(RouterStack::class, $router);
+        } else {
+            $router = $this->app->get(RouterStack::class);
+        }
+        return $router->forge();
     }
     
     /**

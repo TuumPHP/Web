@@ -43,6 +43,16 @@ class RouterStack implements MiddlewareInterface
     }
 
     /**
+     * @return RouterStack
+     */
+    public function forge()
+    {
+        $new = clone($this);
+        $new->router = clone($this->router);
+        return $new;
+    }
+
+    /**
      * @return mixed|RouteCollector
      */
     public function getRouting()
