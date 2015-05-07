@@ -12,7 +12,7 @@
     "require": {
         "tuum/locator": "0.2.*",
         "tuum/router": "0.3.*",
-        "tuum/view": "0.4.*",
+        "tuum/view": "0.5.*",
         "tuum/form":"0.2.*",
         "aura/session": " 2.*",
         "phly/http": "~0.10.0",
