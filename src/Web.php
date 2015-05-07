@@ -132,7 +132,7 @@ class Web implements MiddlewareInterface
             return $this;
         }
         $closure($this);
-        if ($this->debug && !file_exists($cached)) {
+        if (!$this->debug && !file_exists($cached)) {
             \file_put_contents($cached, serialize($this->app));
             chmod($cached, 0666);
         }
