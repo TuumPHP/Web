@@ -60,7 +60,8 @@ class Web implements MiddlewareInterface
     private $app;
     
     public $debug = false;
-    
+
+    public $app_name;
     public $app_dir;
     public $config_dir;
     public $view_dir;
@@ -87,17 +88,15 @@ class Web implements MiddlewareInterface
     {
         return $this->app;
     }
-    
+
     /**
-     * @param string $app_dir
-     * @param bool   $debug
+     * @param array $config
      * @return $this
      */
-    public static function forge($app_dir, $debug=false)
+    public static function forge(array $config)
     {
         $app            = new self(new Application(new Container()));
-        $app->debug     = $debug;
-        $app->setAppRoot($app_dir);
+        $app->setAppRoot($config);
 
         return $app;
     }
@@ -105,15 +104,17 @@ class Web implements MiddlewareInterface
     /**
      * set up working directories.
      *
-     * @param string $app_dir
+     * @param array $config
      * @return $this
      */
-    public function setAppRoot($app_dir)
+    public function setAppRoot(array $config)
     {
-        $this->app_dir    = rtrim($app_dir, '/');
-        $this->config_dir = $this->app_dir . '/config';
-        $this->view_dir   = $this->app_dir . '/views';
-        $this->vars_dir   = dirname($this->app_dir) . '/var';
+        $this->app_name   = $config['app_name'];
+        $this->app_dir    = rtrim($config['app_dir'], '/');
+        $this->debug      = $config['debug'];
+        $this->config_dir = $config['config_dir'];
+        $this->view_dir   = $config['view_dir'];
+        $this->vars_dir   = $config['vars_dir'];
         return $this;
     }
 
