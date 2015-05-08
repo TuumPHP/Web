@@ -75,11 +75,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new ResourceController();
         $request    = RequestFactory::fromPath('/', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('GET,HEAD,OPTIONS,POST', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,POST', $response->getHeader('Allow')[0]);
 
         $request    = RequestFactory::fromPath('/123', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('GET,HEAD,OPTIONS,POST', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,POST', $response->getHeader('Allow')[0]);
     }
 
     /**
@@ -90,11 +90,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new ByMethodController();
         $request    = RequestFactory::fromPath('/', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('GET,HEAD,OPTIONS,PUT', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,PUT', $response->getHeader('Allow')[0]);
 
         $request    = RequestFactory::fromPath('/123', 'options');
         $response   = $controller->__invoke($request);
-        $this->assertEquals('GET,HEAD,OPTIONS,PUT', $response->getHeader('Allow'));
+        $this->assertEquals('GET,HEAD,OPTIONS,PUT', $response->getHeader('Allow')[0]);
     }
 
     /**

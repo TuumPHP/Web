@@ -2,7 +2,7 @@
 namespace Tuum\Web\View;
 
 use Closure;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Class ViewStream
@@ -11,7 +11,7 @@ use Psr\Http\Message\StreamableInterface;
  * 
  * @package Tuum\Web\View
  */
-class ViewStream implements StreamableInterface
+class ViewStream implements StreamInterface
 {
     /**
      * @var ViewEngineInterface

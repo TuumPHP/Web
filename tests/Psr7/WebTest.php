@@ -121,7 +121,7 @@ class WebTest extends \PHPUnit_Framework_TestCase
         $request  = RequestFactory::fromPath('test');
         $response = $this->app->__invoke($request);
         $this->assertEquals('Tuum\Web\Psr7\Response', get_class($response));
-        $this->assertEquals('/tested-location.php', $response->getHeader('location'));
+        $this->assertEquals('/tested-location.php', $response->getHeader('location')[0]);
         $this->assertTrue( $response->isType(Response::TYPE_REDIRECT));
         $data = $response->getData();
         $this->assertEquals('tested', $data['test']);

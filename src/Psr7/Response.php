@@ -2,7 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Phly\Http\Response as BaseResponse;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 class Response extends BaseResponse
@@ -65,11 +65,12 @@ class Response extends BaseResponse
      */
     public function getLocation()
     {
-        return $this->getHeader('Location');
+        $loc = $this->getHeader('Location');
+        return array_key_exists(0, $loc) ? $loc[0] : '';
     }
 
     /**
-     * @param StreamableInterface $stream
+     * @param StreamInterface $stream
      * @param string $file
      * @param array  $data
      * @return Response

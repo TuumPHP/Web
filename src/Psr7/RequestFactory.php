@@ -43,7 +43,7 @@ class RequestFactory extends ServerRequestFactory
             ->withSession((new SessionFactory)->newInstance($cookies))
             ->withCookieParams($cookies)
             ->withQueryParams($query)
-            ->withBodyParams($body);
+            ->withParsedBody($body);
     }
 
     /**

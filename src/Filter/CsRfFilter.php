@@ -32,7 +32,7 @@ class CsRfFilter implements FilterInterface
         /*
          * check for token in post data.
          */
-        $posts = $request->getBodyParams();
+        $posts = $request->getParsedBody();
         if (isset($posts[Web::TOKEN_NAME]) &&
             $posts[Web::TOKEN_NAME] &&
             $token->isValid($posts[Web::TOKEN_NAME])
