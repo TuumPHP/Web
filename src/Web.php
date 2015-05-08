@@ -325,13 +325,17 @@ class Web implements MiddlewareInterface
     /**
      * @return $this
      */
-    public function pushViewStack()
+    public function pushViewStack($release=null)
     {
         $stack = new ViewStack(
             $this->getViewEngine(),
             $this->getErrorView(),
             $this->getLog()
         );
+        $releases = func_get_args();
+        foreach($releases as $release) {
+            $stack->setAfterRelease($release);
+        }
         $this->push($stack);
 
         return $this;

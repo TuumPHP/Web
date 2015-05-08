@@ -2,6 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Psr\Log\LoggerInterface;
+use Tuum\Web\Middleware\AfterReleaseTrait;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -13,6 +14,8 @@ use Tuum\Web\View\ViewStream;
 class ViewStack implements MiddlewareInterface
 {
     use MiddlewareTrait;
+
+    use AfterReleaseTrait;
 
     /**
      * @var ViewEngineInterface
@@ -58,15 +61,15 @@ class ViewStack implements MiddlewareInterface
             // no response. turn it to not-found response.
             $response = $request->respond()->asNotFound();
         }
-        if (is_string($response)) {
+        elseif (is_string($response)) {
             // return as a plain text.
-            return $request->respond()->asText($response);
+            $response = $request->respond()->asText($response);
         }
-        if (is_array($response)) {
+        elseif (is_array($response)) {
             // return as a JSON.
-            return $request->respond()->asJson($response);
+            $response = $request->respond()->asJson($response);
         }
-        if (!$response instanceof Response) {
+        elseif (!$response instanceof Response) {
             // what is this? just return it.
             return $response;
         }
@@ -75,8 +78,9 @@ class ViewStack implements MiddlewareInterface
          */
         if ($response->isType(Response::TYPE_ERROR) && 
             !$response->getBody() instanceof ViewStream) {
-            return $this->setErrorView($response);
+            $response = $this->setErrorView($response);
         }
+        $response = $this->applyAfterReleases($request, $response);
         return $response;
     }
 
