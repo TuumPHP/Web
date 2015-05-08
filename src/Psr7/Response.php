@@ -104,7 +104,7 @@ class Response extends BaseResponse
     /**
      * @param int   $status
      * @param array $data
-     * @param null|StreamableInterface  $stream
+     * @param null|StreamInterface  $stream
      * @return Response
      */
     public static function error($status, $data = [], $stream = null)
