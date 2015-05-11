@@ -2,6 +2,7 @@
 namespace Tuum\Web\Stack;
 
 use Tuum\Locator\CommonMark;
+use Tuum\Locator\Locator;
 use Tuum\Locator\LocatorInterface;
 use Tuum\Web\Middleware\AfterReleaseTrait;
 use Tuum\Web\Middleware\BeforeFilterTrait;
@@ -77,11 +78,28 @@ class DocView implements MiddlewareInterface
 
     /**
      * @param LocatorInterface $locator
+     * @param null|CommonMark  $mark
      */
     public function __construct($locator, $mark = null)
     {
         $this->locator = $locator;
         $this->markUp  = $mark;
+    }
+
+    /**
+     * @param string $docs_dir
+     * @param string $vars_dir
+     * @return DocView
+     */    
+    public static function forge($docs_dir, $vars_dir)
+    {
+        return new DocView(
+            new Locator($docs_dir),
+            CommonMark::forge(
+                $docs_dir,
+                $vars_dir . '/markUp')
+        );
+
     }
 
     /**

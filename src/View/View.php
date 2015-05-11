@@ -2,7 +2,8 @@
 namespace Tuum\Web\View;
 
 use Closure;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
+use Tuum\Locator\Locator;
 use Tuum\View\Renderer;
 
 class View implements ViewEngineInterface
@@ -28,6 +29,18 @@ class View implements ViewEngineInterface
     }
 
     /**
+     * @param string $view_dir
+     * @return View
+     */
+    public static function forge($view_dir)
+    {
+        return new View(
+            new Renderer(new Locator($view_dir)),
+            new Value()
+        );
+    }
+
+    /**
      * a simple renderer for a raw PHP file.
      *
      * @param string|callable $file
@@ -49,7 +62,7 @@ class View implements ViewEngineInterface
      *
      * @param string|callable $file
      * @param array  $data
-     * @return StreamableInterface|ViewStream
+     * @return StreamInterface|ViewStream
      * @throws \Exception
      */
     public function getStream($file, $data = [])

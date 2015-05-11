@@ -1,14 +1,11 @@
 <?php
 namespace Tuum\Web;
 
-use Aura\Session\SessionFactory;
 use League\Container\Container;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Tuum\Locator\CommonMark;
-use Tuum\Locator\Locator;
 use Tuum\Router\ReverseRoute;
 use Tuum\Router\ReverseRouteInterface;
 use Tuum\Router\Router;
@@ -16,7 +13,6 @@ use Tuum\Router\RouterInterface;
 use Tuum\Web\Psr7\Redirect;
 use Tuum\Web\Psr7\Respond;
 use Tuum\Web\View\ErrorView;
-use Tuum\View\Renderer;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Psr7\Request;
@@ -27,7 +23,6 @@ use Tuum\Web\Stack\DocView;
 use Tuum\Web\Stack\RouterStack;
 use Tuum\Web\Stack\SessionStack;
 use Tuum\Web\Stack\ViewStack;
-use Tuum\Web\View\Value;
 use Tuum\Web\View\View;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -65,7 +60,6 @@ class Web implements MiddlewareInterface
     public $app_dir;
     public $config_dir;
     public $view_dir;
-    public $docs_dir;
     public $vars_dir;
     public $env_file;
 
@@ -238,13 +232,7 @@ class Web implements MiddlewareInterface
         if($this->app->exists(ViewEngineInterface::class)) {
             return $this->app->get(ViewEngineInterface::class);
         }
-        $locator = new Locator($this->view_dir);
-        if ($doc_root = $this->docs_dir) {
-            // also render php documents
-            $locator->addRoot($doc_root);
-        }
-        $renderer = new Renderer($locator);
-        $view     = new View($renderer, new Value());
+        $view = View::forge($this->view_dir);
         $this->app->set(ViewEngineInterface::class, $view, true);
         return $view;
     }
@@ -316,14 +304,13 @@ class Web implements MiddlewareInterface
      */
     public function pushSessionStack()
     {
-        $factory = new SessionFactory;
-        $stack   = new SessionStack($factory);
-        $this->push($stack);
+        $this->push(SessionStack::forge());
 
         return $this;
     }
 
     /**
+     * @param null|ReleaseInterface $release
      * @return $this
      */
     public function pushViewStack($release=null)
@@ -349,12 +336,7 @@ class Web implements MiddlewareInterface
     public function getDocViewStack($docs_dir)
     {
         if (!$this->app->exists(DocView::class)) {
-            $docs = new DocView(
-                new Locator($docs_dir),
-                CommonMark::forge(
-                    $docs_dir,
-                    $this->vars_dir . '/markUp')
-            );
+            $docs = DocView::forge($docs_dir, $this->vars_dir);
             $this->app->set(DocView::class, $docs);
         } else {
             $docs = $this->app->get(DocView::class);

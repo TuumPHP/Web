@@ -28,6 +28,14 @@ class SessionStack implements MiddlewareInterface
     }
 
     /**
+     * @return SessionStack
+     */    
+    public static function forge()
+    {
+        return new SessionStack(new SessionFactory);
+    }
+
+    /**
      * @param Request       $request
      * @return null|Response
      */
