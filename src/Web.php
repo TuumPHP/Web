@@ -6,31 +6,22 @@ use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Tuum\Router\ReverseRoute;
-use Tuum\Router\ReverseRouteInterface;
-use Tuum\Router\Router;
-use Tuum\Router\RouterInterface;
 use Tuum\Web\Psr7\Redirect;
 use Tuum\Web\Psr7\Respond;
+use Tuum\Web\Stack\StackProviders;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\ViewEngineInterface;
-use Tuum\Web\Filter\CsRfFilter;
-use Tuum\Web\Stack\CsRfStack;
-use Tuum\Web\Stack\Dispatcher;
-use Tuum\Web\Stack\DocView;
 use Tuum\Web\Stack\RouterStack;
-use Tuum\Web\Stack\SessionStack;
-use Tuum\Web\Stack\ViewStack;
-use Tuum\Web\View\View;
+use Tuum\Web\View\ViewProviders;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
 /**
- * Class App
+ * Class Web
+ * 
+ * a web application builder. 
  *
  * @package Tuum\Web
- *          web application.
- *
  *
  *
  */
@@ -51,6 +42,16 @@ class Web
      * @var Application
      */
     private $app;
+
+    /**
+     * @var StackProviders
+     */
+    private $stacks;
+
+    /**
+     * @var ViewProviders
+     */
+    private $views;
     
     public $debug = false;
 
@@ -69,6 +70,8 @@ class Web
     public function __construct($app)
     {
         $this->app = $app;
+        $this->stacks = new StackProviders($this);
+        $this->views  = new ViewProviders($this);
     }
 
     /**
@@ -223,16 +226,11 @@ class Web
     /**
      * get shared view engine, Renderer as default. 
      * 
-     * @return ViewEngineInterface|View
+     * @return ViewEngineInterface
      */
     public function getViewEngine()
     {
-        if($this->app->exists(ViewEngineInterface::class)) {
-            return $this->app->get(ViewEngineInterface::class);
-        }
-        $view = View::forge($this->view_dir);
-        $this->app->set(ViewEngineInterface::class, $view, true);
-        return $view;
+        return $this->views->getViewEngine();
     }
 
     /**
@@ -242,24 +240,7 @@ class Web
      */
     public function getErrorView()
     {
-        if($this->app->exists(ErrorView::class)) {
-            return $this->app->get(ErrorView::class);
-        }
-        $error_files = (array)$this->app->get(Web::ERROR_VIEWS);
-        if (empty($error_files)) {
-            $this->app->set(ErrorView::class, null, true);
-            return null;
-        }
-        $view = new ErrorView($this->getViewEngine(), $this->debug);
-        if (isset($error_files[0])) {
-            $view->default_error_file = $error_files[0];
-            unset($error_files[0]);
-        }
-        $view->setLogger($this->getLog());
-        $view->error_files = $error_files;
-        $this->app->set(ErrorView::class, $view, true);
-
-        return $view;
+        return $this->views->getErrorView();
     }
 
     /**
@@ -287,12 +268,7 @@ class Web
      */
     public function pushCsRfStack($root = 'post:/*')
     {
-        $stack = new CsRfStack($this->app->get(CsRfFilter::class));
-        $root  = (array)$root;
-        foreach ($root as $r) {
-            $stack->setRoot($r);
-        }
-        $this->push($stack);
+        $this->push($this->stacks->getCsRfStack($root));
 
         return $this;
     }
@@ -302,7 +278,7 @@ class Web
      */
     public function pushSessionStack()
     {
-        $this->push(SessionStack::forge());
+        $this->push($this->stacks->getSessionStack());
 
         return $this;
     }
@@ -313,33 +289,20 @@ class Web
      */
     public function pushViewStack($release=null)
     {
-        $stack = new ViewStack(
-            $this->getViewEngine(),
-            $this->getErrorView(),
-            $this->getLog()
-        );
-        $releases = func_get_args();
-        foreach($releases as $release) {
-            $stack->setAfterRelease($release);
-        }
-        $this->push($stack);
+        $this->push($this->stacks->getViewStack($release));
 
         return $this;
     }
 
     /**
-     * @param $docs_dir
-     * @return DocView
+     * @param string $docs_dir
+     * @return $this
      */
-    public function getDocViewStack($docs_dir)
+    public function pushDocViewStack($docs_dir)
     {
-        if (!$this->app->exists(DocView::class)) {
-            $docs = DocView::forge($docs_dir, $this->vars_dir);
-            $this->app->set(DocView::class, $docs);
-        } else {
-            $docs = $this->app->get(DocView::class);
-        }
-        return $docs;
+        $this->push($this->stacks->getDocViewStack($docs_dir));
+
+        return $this;
     }
 
     /**
@@ -356,49 +319,11 @@ class Web
     }
     
     /**
-     * @return RouterInterface
-     */
-    protected function getRouter()
-    {
-        if ($this->app->exists(RouterInterface::class)) {
-            return $this->app->get(RouterInterface::class);
-        }
-        // use Tuum's Router class. 
-        if ($this->app->exists(Router::class)) {
-            // already set. clone it!
-            return clone($this->app->get(Router::class));
-        }
-        $router = new Router();
-        $router->setReverseRoute($this->getRouteNames());
-        $this->app->set(Router::class, $router, true);
-        return $router;
-    }
-
-    /**
      * @return RouterStack
      */
     public function getRouterStack()
     {
-        if (!$this->app->exists(RouterStack::class)) {
-            $router = new RouterStack($this->getRouter(), new Dispatcher($this->app));
-            $this->app->set(RouterStack::class, $router);
-        } else {
-            $router = $this->app->get(RouterStack::class);
-        }
-        return $router->forge();
-    }
-    
-    /**
-     * @return ReverseRouteInterface
-     */
-    protected function getRouteNames()
-    {
-        if ($this->app->exists(ReverseRouteInterface::class)) {
-            return $this->app->get(ReverseRouteInterface::class);
-        }
-        $names = new ReverseRoute();
-        $this->app->set(ReverseRouteInterface::class, $names, true);
-        return $names;
+        return $this->stacks->getRouterStack();
     }
     
     /**
