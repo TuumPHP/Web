@@ -74,12 +74,14 @@ class StackProviders
 
     /**
      * @param string $docs_dir
+     * @param array  $options
      * @return DocView
      */
-    public function getDocViewStack($docs_dir)
+    public function getDocViewStack($docs_dir, array $options = [])
     {
         if (!$this->app->exists(DocView::class)) {
             $docs = DocView::forge($docs_dir, $this->web->vars_dir);
+            $docs->options($options);
             $this->app->set(DocView::class, $docs);
         } else {
             $docs = $this->app->get(DocView::class);

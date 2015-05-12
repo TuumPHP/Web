@@ -187,6 +187,16 @@ class DocView implements MiddlewareInterface
     }
 
     /**
+     * @param array $options
+     */
+    public function options(array $options)
+    {
+        if (array_key_exists('enable_raw', $options)) {
+            $this->enable_raw = (bool) $options['enable_raw'];
+        }
+    }
+
+    /**
      * @param Request $request
      * @param array   $info
      * @return null|Response

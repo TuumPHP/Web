@@ -296,11 +296,12 @@ class Web
 
     /**
      * @param string $docs_dir
+     * @param array  $options
      * @return $this
      */
-    public function pushDocViewStack($docs_dir)
+    public function pushDocViewStack($docs_dir, array $options = [])
     {
-        $this->push($this->stacks->getDocViewStack($docs_dir));
+        $this->push($this->stacks->getDocViewStack($docs_dir, $options));
 
         return $this;
     }
