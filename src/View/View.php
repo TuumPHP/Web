@@ -19,6 +19,11 @@ class View implements ViewEngineInterface
     private $value;
 
     /**
+     * @var ViewStream
+     */
+    private $stream;
+    
+    /**
      * @param Renderer   $renderer
      * @param null|Value $value
      */
@@ -34,10 +39,12 @@ class View implements ViewEngineInterface
      */
     public static function forge($view_dir)
     {
-        return new View(
+        $self = new View(
             new Renderer(new Locator($view_dir)),
             new Value()
         );
+        $self->stream = new ViewStream($self);
+        return $self;
     }
 
     /**
@@ -67,7 +74,7 @@ class View implements ViewEngineInterface
      */
     public function getStream($file, $data = [])
     {
-        $stream = new ViewStream($this);
+        $stream = $this->stream ? clone($this->stream) : new ViewStream($this);
         $stream->setView($file, $data);
         return $stream;
     }
