@@ -15,8 +15,6 @@ use Tuum\Web\Psr7\Respond;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\Filter\CsRfFilter;
-use Tuum\Web\Psr7\Request;
-use Tuum\Web\Psr7\Response;
 use Tuum\Web\Stack\CsRfStack;
 use Tuum\Web\Stack\Dispatcher;
 use Tuum\Web\Stack\DocView;
@@ -36,7 +34,7 @@ use Whoops\Run;
  *
  *
  */
-class Web implements MiddlewareInterface
+class Web
 {
     /*
      * values
@@ -412,15 +410,6 @@ class Web implements MiddlewareInterface
     {
         $data['web'] = $this;
         return $this->app->configure($name, $data);
-    }
-
-    /**
-     * @param Request       $request
-     * @return null|Response
-     */
-    public function __invoke($request)
-    {
-        return $this->app->__invoke($request);
     }
 
     /**
