@@ -160,6 +160,9 @@ class Web
      */
     public function loadEnvironment($env_file) 
     {
+        if (!file_exists($env_file)) {
+            return $this;
+        }
         $environments = (array)$this->configure($env_file);
         foreach ($environments as $env) {
             $this->configure($this->config_dir . "/{$env}/configure");
