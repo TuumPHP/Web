@@ -46,6 +46,8 @@ class DocView implements MiddlewareInterface
         'html' => 'text/html',
         'txt'  => 'text/plain',
         'text' => 'text/plain',
+        'css'  => 'text/css',
+        'js'   => 'text/javascript',
     ];
 
     /**
