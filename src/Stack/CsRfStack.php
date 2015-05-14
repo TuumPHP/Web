@@ -48,7 +48,7 @@ class CsRfStack implements MiddlewareInterface
         /** @var Request $request */
         $session = $request->getSession();
         if (!$session) {
-            return $this->execNext($request);
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         /*
          * get token, and set the token value to respond 
@@ -62,7 +62,7 @@ class CsRfStack implements MiddlewareInterface
         $reqRet = $this->getReturnable();
         if (!$matched = $this->isMatch($request, $reqRet)) {
             $request = $reqRet->get($request);
-            return $this->execNext($request); // maybe not...
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         /*
          * validate token
@@ -73,6 +73,6 @@ class CsRfStack implements MiddlewareInterface
             return $response;
         }
         $request = $reqRet->get($request);
-        return $this->execNext($request); // GOOD!
+        return $this->next ? $this->next->__invoke($request) : null;
     }
 }

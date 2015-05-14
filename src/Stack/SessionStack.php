@@ -46,7 +46,7 @@ class SessionStack implements MiddlewareInterface
          */
         $session = $request->getSession();
         if (!$session) {
-            return $this->execNext($request);
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         $segment = $session->getSegment('TuumFW');
         $flash   = [Web::REFERRER_URI => $segment->get(Web::REFERRER_URI, null)];
@@ -57,7 +57,7 @@ class SessionStack implements MiddlewareInterface
         /*
          * execute the subsequent stack.
          */
-        $response = $this->execNext($request);
+        $response = $this->next ? $this->next->__invoke($request) : null;
 
         /*
          * copy data from $response into session. 

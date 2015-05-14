@@ -70,10 +70,6 @@ trait MiddlewareTrait
      */
     protected function execNext($request)
     {
-        if (!$this->next) {
-            return null;
-        }
-        $next = $this->next;
-        return $next($request);
+        return $this->next ? $this->next->__invoke($request) : null;
     }
 }

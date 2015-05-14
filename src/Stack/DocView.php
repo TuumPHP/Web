@@ -112,7 +112,7 @@ class DocView implements MiddlewareInterface
     {
         $retReq = $this->getReturnable();
         if (!$matched = $this->isMatch($request, $retReq)) {
-            return $this->execNext($request);
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         $retReq = $this->getReturnable();
         if ($response = $this->applyBeforeFilters($request, $retReq)) {
@@ -123,7 +123,7 @@ class DocView implements MiddlewareInterface
             return $response;
         }
 
-        return $this->execNext($request);
+        return $this->next ? $this->next->__invoke($request) : null;
     }
 
     /**

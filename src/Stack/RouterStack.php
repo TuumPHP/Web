@@ -72,12 +72,12 @@ class RouterStack implements MiddlewareInterface
         }
         $reqRet = $this->getReturnable();
         if (!$matched = $this->isMatch($request, $reqRet)) {
-            return $this->execNext($request);
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         $request = $reqRet->get($request);
         $route   = $this->router->match($request->getUri()->getPath(), $request->getMethod());
         if (!$route) {
-            return $this->execNext($request);
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         return $this->dispatch($request, $route);
 

@@ -55,7 +55,7 @@ class ViewStack implements MiddlewareInterface
         /*
          * execute the subsequent stack.
          */
-        $response = $this->execNext($request);
+        $response = $this->next ? $this->next->__invoke($request) : null;
 
         if (is_null($response)) {
             // no response. turn it to not-found response.
