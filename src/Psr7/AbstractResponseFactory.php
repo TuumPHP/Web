@@ -6,6 +6,7 @@ use Tuum\Web\View\Value;
 
 abstract class AbstractResponseFactory
 {
+    const FLASHED = '--flashed-data';
     /**
      * @var array
      */
@@ -13,6 +14,7 @@ abstract class AbstractResponseFactory
         Value::MESSAGE => [],
         Value::INPUTS  => [],
         Value::ERRORS  => [],
+        self::FLASHED  => [],
     ];
 
     /**
@@ -129,5 +131,26 @@ abstract class AbstractResponseFactory
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @param mixed  $data
+     * @return $this
+     */
+    public function withFlashData($key, $data)
+    {
+        $this->data[self::FLASHED][$key] = $data;
+        return $this;
+    }
 
+    /**
+     * @param string|null $key
+     * @return null|mixed
+     */
+    public function getFlashData($key=null)
+    {
+        if (is_null($key)) {
+            return $this->data[self::FLASHED];
+        }
+        return array_key_exists($key, $this->data[self::FLASHED]) ? $this->data[self::FLASHED][$key] : null;
+    }
 }

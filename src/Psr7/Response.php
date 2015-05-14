@@ -53,6 +53,19 @@ class Response extends BaseResponse
     }
 
     /**
+     * @return null|array
+     */
+    public function getFlashData()
+    {
+        if (array_key_exists(AbstractResponseFactory::FLASHED, $this->data)) {
+            $data = $this->data[AbstractResponseFactory::FLASHED];
+            unset($this->data[AbstractResponseFactory::FLASHED]);
+            return $data;
+        }
+        return null;
+    }
+
+    /**
      * @return string|callable
      */
     public function getViewFile()

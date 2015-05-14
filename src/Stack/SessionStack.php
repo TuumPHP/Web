@@ -49,8 +49,9 @@ class SessionStack implements MiddlewareInterface
             return $this->execNext($request);
         }
         $segment = $session->getSegment('TuumFW');
-        $flash   = $segment->getFlash('flashed');
-        $flash[Web::REFERRER_URI] = $segment->get(Web::REFERRER_URI, null);
+        $flash   = [Web::REFERRER_URI => $segment->get(Web::REFERRER_URI, null)];
+        $flash  += (array) $segment->getFlash('flash-info') ?: [];
+        $flash  += (array) $segment->getFlash('flash-data') ?: [];
         $request = $request->withAttributes($flash);
 
         /*
@@ -61,9 +62,15 @@ class SessionStack implements MiddlewareInterface
         /*
          * copy data from $response into session. 
          */
+        if ($data = $response->getFlashData()) {
+            // must get flash data first (before redirect's getData)
+            // to clear the flash data. Otherwise, the flash-data
+            // will reappear in the sub-sequent request.
+            $segment->setFlash('flash-data', $data);
+        }
         if ($response->isType(Response::TYPE_REDIRECT)) {
             $data = $response->getData();
-            $segment->setFlash('flashed', $data);
+            $segment->setFlash('flash-info', $data);
         }
         elseif ($response->isType(Response::TYPE_VIEW)) {
             $segment->set(Web::REFERRER_URI, $request->getUri()->__toString());
