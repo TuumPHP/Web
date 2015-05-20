@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Aura\Session\Segment;
 use Aura\Session\SessionFactory;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
@@ -49,10 +50,7 @@ class SessionStack implements MiddlewareInterface
             return $this->next ? $this->next->__invoke($request) : null;
         }
         $segment = $session->getSegment('TuumFW');
-        $flash   = [Web::REFERRER_URI => $segment->get(Web::REFERRER_URI, null)];
-        $flash  += (array) $segment->getFlash('flash-info') ?: [];
-        $flash  += (array) $segment->getFlash('flash-data') ?: [];
-        $request = $request->withAttributes($flash);
+        $request = $this->prepare($request, $segment);
 
         /*
          * execute the subsequent stack.
@@ -62,6 +60,31 @@ class SessionStack implements MiddlewareInterface
         /*
          * copy data from $response into session. 
          */
+        $this->release($request, $response, $segment);
+        $session->commit();
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param Segment $segment
+     * @return Request
+     */
+    private function prepare($request, $segment)
+    {
+        $flash = [Web::REFERRER_URI => $segment->get(Web::REFERRER_URI, null)];
+        $flash += (array)$segment->getFlash('flash-info') ?: [];
+        $flash += (array)$segment->getFlash('flash-data') ?: [];
+        return $request->withAttributes($flash);
+    }
+
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param Segment  $segment
+     */
+    private function release($request, $response, $segment)
+    {
         if ($data = $response->getFlashData()) {
             // must get flash data first (before redirect's getData)
             // to clear the flash data. Otherwise, the flash-data
@@ -71,11 +94,8 @@ class SessionStack implements MiddlewareInterface
         if ($response->isType(Response::TYPE_REDIRECT)) {
             $data = $response->getData();
             $segment->setFlash('flash-info', $data);
-        }
-        elseif ($response->isType(Response::TYPE_VIEW)) {
+        } elseif ($response->isType(Response::TYPE_VIEW)) {
             $segment->set(Web::REFERRER_URI, $request->getUri()->__toString());
         }
-        $session->commit();
-        return $response;
     }
 }
