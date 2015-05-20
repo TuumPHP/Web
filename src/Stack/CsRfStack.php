@@ -56,14 +56,16 @@ class CsRfStack implements MiddlewareInterface
          */
         $token   = $session->getCsrfToken();
         $request = $request->withAttribute(Web::TOKEN_NAME, $token->getValue());
+
         /*
          * check if token must be verified.
          */
-        $reqRet = $this->getReturnable();
-        if (!$matched = $this->isMatch($request, $reqRet)) {
-            $request = $reqRet->get($request);
+
+        // matches requested path with the root.
+        if (!$myRequest = $this->matchRoot($request)) {
             return $this->next ? $this->next->__invoke($request) : null;
         }
+        $request = $myRequest;
         /*
          * validate token
          */
