@@ -114,11 +114,12 @@ class DocView implements MiddlewareInterface
         if (!$matched = $this->isMatch($request, $retReq)) {
             return $this->next ? $this->next->__invoke($request) : null;
         }
-        $retReq = $this->getReturnable();
-        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+        // apply before filter. 
+        list($request, $response) = $this->filterBefore($request);
+        if ($response) {
             return $response;
         }
-        $request = $retReq->get($request);
+
         if ($response = $this->handle($request)) {
             return $response;
         }

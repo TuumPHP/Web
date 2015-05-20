@@ -67,6 +67,7 @@ class RouterStack implements MiddlewareInterface
      */
     public function __invoke($request)
     {
+        /** @var Request $request */
         if (!$this->router) {
             throw new \ErrorException('no router for routing.');
         }
@@ -76,13 +77,12 @@ class RouterStack implements MiddlewareInterface
             return $this->next ? $this->next->__invoke($request) : null;
         }
         $request = $reqRet->get($request);
-        
-        // apply filters in this stack.
-        $retReq = $this->getReturnable();
-        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+
+        // apply before filter. 
+        list($request, $response) = $this->filterBefore($request);
+        if ($response) {
             return $response;
         }
-        $request = $retReq->get($request);
 
         // matches the route!
         $route   = $this->router->match($request->getUri()->getPath(), $request->getMethod());

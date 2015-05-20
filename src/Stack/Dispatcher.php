@@ -47,11 +47,10 @@ class Dispatcher implements ApplicationInterface
     public function __invoke($request)
     {
         // apply before filter. 
-        $retReq = $this->getReturnable();
-        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+        list($request, $response) = $this->filterBefore($request);
+        if ($response) {
             return $response;
         }
-        $request  = $retReq->get($request);
 
         // dispatch the controller/closure!
         $response = $this->dispatch($request);

@@ -46,6 +46,7 @@ trait BeforeFilterTrait
     }
 
     /**
+     * @deprecated
      * @param Request $request
      * @param Closure $nextReq
      * @return null|Response
@@ -66,4 +67,27 @@ trait BeforeFilterTrait
         return null;
     }
 
+    /**
+     * @param Request $request
+     * @return array [Request, Response]
+     */
+    protected function filterBefore($request)
+    {
+        if (empty($this->_beforeFilters)) {
+            return [$request, null];
+        }
+        $response = null;
+        $retReq   = $this->getReturnable();
+        foreach ($this->_beforeFilters as $filter) {
+            if (!$filter = $request->getFilter($filter)) {
+                continue;
+            }
+            $response = $filter($request, $retReq);
+            $request  = $retReq->get($request);
+            if ($response) {
+                return [$request, $response];
+            }
+        }
+        return [$request, $response];
+    }
 }
