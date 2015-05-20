@@ -4,12 +4,24 @@ namespace Tuum\Web\Stack;
 use Closure;
 use Tuum\Router\Route;
 use Tuum\Web\ApplicationInterface;
+use Tuum\Web\Middleware\AfterReleaseTrait;
+use Tuum\Web\Middleware\BeforeFilterTrait;
+use Tuum\Web\Middleware\Middleware;
+use Tuum\Web\Middleware\MiddlewareTrait;
+use Tuum\Web\Middleware\ReturnRequest;
+use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Application;
 
 class Dispatcher implements ApplicationInterface
 {
+    use MiddlewareTrait;
+    
+    use BeforeFilterTrait;
+    
+    use AfterReleaseTrait;
+    
     /**
      * @var Route
      */
@@ -18,14 +30,14 @@ class Dispatcher implements ApplicationInterface
     /**
      * @var Application
      */
-    protected $app;
+    protected $dic;
 
     /**
-     * @param null|Application $app
+     * @param null|Application $dic
      */
-    public function __construct($app = null)
+    public function __construct($dic = null)
     {
-        $this->app = $app;
+        $this->dic = $dic;
     }
 
     /**
@@ -34,11 +46,53 @@ class Dispatcher implements ApplicationInterface
      */
     public function __invoke($request)
     {
-        $class = $this->route->handle();
+        // apply before filter. 
+        $retReq = $this->getReturnable();
+        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+            return $response;
+        }
+        $request  = $retReq->get($request);
 
+        // dispatch the controller/closure!
+        $response = $this->dispatch($request);
+
+        // apply after release. 
+        return $this->applyAfterReleases($request, $response);
+    }
+
+    /**
+     * @param Route $route
+     * @return Dispatcher
+     */
+    public function withRoute($route)
+    {
+        $dispatch = clone($this);
+        $dispatch->prepare($route);
+        return $dispatch;
+    }
+
+    /**
+     * prepares before filters and after releases from route.
+     * 
+     * @param Route $route
+     */
+    private function prepare($route)
+    {
+        $this->route          = $route;
+        $this->_beforeFilters = $route->before() ?: [];
+        $this->_afterRelease  = $route->after() ?: [];
+    }
+
+    /**
+     * @param $request
+     * @return null|Response
+     */
+    private function dispatch($request)
+    {
+        $class = $this->route->handle();
         // prepare object to dispatch.
         if (is_string($class)) {
-            $next = $this->app->get($class);
+            $next = $this->dic->get($class);
         } elseif (is_callable($class)) {
             $next = $class;
         } else {
@@ -52,16 +106,5 @@ class Dispatcher implements ApplicationInterface
             return $next($request);
         }
         throw new \InvalidArgumentException();
-    }
-
-    /**
-     * @param Route $route
-     * @return Dispatcher
-     */
-    public function withRoute($route)
-    {
-        $dispatch        = clone($this);
-        $dispatch->route = $route;
-        return $dispatch;
     }
 }

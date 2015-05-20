@@ -70,16 +70,34 @@ class RouterStack implements MiddlewareInterface
         if (!$this->router) {
             throw new \ErrorException('no router for routing.');
         }
+        // check if path matches.
         $reqRet = $this->getReturnable();
         if (!$matched = $this->isMatch($request, $reqRet)) {
             return $this->next ? $this->next->__invoke($request) : null;
         }
         $request = $reqRet->get($request);
+        
+        // apply filters in this stack.
+        $retReq = $this->getReturnable();
+        if ($response = $this->applyBeforeFilters($request, $retReq)) {
+            return $response;
+        }
+        $request = $retReq->get($request);
+
+        // matches the route!
         $route   = $this->router->match($request->getUri()->getPath(), $request->getMethod());
         if (!$route) {
+            // not matched. dispatch the next middleware. 
             return $this->next ? $this->next->__invoke($request) : null;
         }
-        return $this->dispatch($request, $route);
+        // dispatch the route!
+        if ($route->matched()) {
+            $request = $request->withPathToMatch($route->matched(), $route->trailing());
+        }
+        $response = $this->dispatch($request, $route);
+        
+        // apply after release. 
+        return $this->applyAfterReleases($request, $response);
 
     }
 
@@ -92,27 +110,6 @@ class RouterStack implements MiddlewareInterface
      */
     private function dispatch($request, $route)
     {
-        $app = $request->getWebApp()->cloneApp();
-        $app->prepend($this->dispatcher->withRoute($route));
-
-        // apply filters in this stack.
-        $retReq = $this->getReturnable();
-        if ($response = $this->applyBeforeFilters($request, $retReq)) {
-            return $response;
-        }
-        $request = $retReq->get($request);
-        
-        // prepend filters in this route to the $app.
-        if ($beforeFilters = (array) $route->before()) {
-            foreach ($beforeFilters as $filter) {
-                $filter = $request->getFilter($filter);
-                $app->prepend($filter);
-            }
-        }
-        if ($route->matched()) {
-            $request = $request->withPathToMatch($route->matched(), $route->trailing());
-        }
-        $response = $app($request);
-        return $this->applyAfterReleases($request, $response);
+        return $this->dispatcher->withRoute($route)->__invoke($request);
     }
 }
