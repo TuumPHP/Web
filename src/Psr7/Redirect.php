@@ -34,14 +34,18 @@ class Redirect extends AbstractResponseFactory
 
     /**
      * @param string $path
+     * @param string $query
      * @return Response
      */
-    public function toBasePath($path = '')
+    public function toBasePath($path = '', $query='')
     {
         $path = '/' . ltrim($path, '/');
         $path = $this->request->getBasePath() . $path;
         $path = rtrim($path, '/');
         $uri  = $this->request->getUri()->withPath($path);
+        if ($query) {
+            $uri = $uri->withQuery($query);
+        }
         return $this->toAbsoluteUri($uri);
     }
 
