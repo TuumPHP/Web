@@ -40,6 +40,7 @@ class Redirect extends AbstractResponseFactory
     {
         $path = '/' . ltrim($path, '/');
         $path = $this->request->getBasePath() . $path;
+        $path = rtrim($path, '/');
         $uri  = $this->request->getUri()->withPath($path);
         return $this->toAbsoluteUri($uri);
     }
