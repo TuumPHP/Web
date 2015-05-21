@@ -82,21 +82,30 @@ class RouterStack implements MiddlewareInterface
             return $response;
         }
 
-        // matches the route!
-        $route   = $this->router->match($request->getUri()->getPath(), $request->getMethod());
+        // match and dispatch!
+        $response = $this->match($request);
+
+        // apply after release.
+        return $this->applyAfterReleases($request, $response);
+    }
+
+    /**
+     * matches the route!
+     *
+     * @param Request $request
+     * @return null|Response
+     */
+    private function match($request)
+    {
+        $route = $this->router->match(
+            $request->getUri()->getPath(),
+            $request->getMethod()
+        );
         if (!$route) {
-            // not matched. dispatch the next middleware. 
+            // not matched. dispatch the next middleware.
             return $this->next ? $this->next->__invoke($request) : null;
         }
-        // dispatch the route!
-        if ($route->matched()) {
-            $request = $request->withPathToMatch($route->matched(), $route->trailing());
-        }
-        $response = $this->dispatch($request, $route);
-        
-        // apply after release. 
-        return $this->applyAfterReleases($request, $response);
-
+        return $this->dispatch($request, $route);
     }
 
     /**
@@ -108,6 +117,10 @@ class RouterStack implements MiddlewareInterface
      */
     private function dispatch($request, $route)
     {
+        if ($route->matched()) {
+            $request = $request->withPathToMatch($route->matched(), $route->trailing());
+        }
+        // dispatch the route!
         return $this->dispatcher->withRoute($route)->__invoke($request);
     }
 }
