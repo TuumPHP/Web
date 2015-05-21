@@ -2,7 +2,6 @@
 namespace Tuum\Web\Psr7;
 
 use Closure;
-use Tuum\Web\Application;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\View\ViewStream;
@@ -168,7 +167,6 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
-     * @param Application $app
      * @param string      $file
      * @param array       $data
      * @return ViewStream
