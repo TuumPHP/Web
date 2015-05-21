@@ -73,14 +73,26 @@ class ViewStack implements MiddlewareInterface
             // what is this? just return it.
             return $response;
         }
-        /*
-         * fill up contents for VIEW and ERROR responses.
-         */
-        if ($response->isType(Response::TYPE_ERROR) && 
-            !$response->getBody() instanceof ViewStream) {
-            $response = $this->setErrorView($response);
-        }
+        // post process $response for view.
+        $response = $this->streamView($response);
         $response = $this->applyAfterReleases($request, $response);
+        return $response;
+    }
+
+    /**
+     * fill up contents for VIEW and ERROR responses.
+     *
+     * @param Response $response
+     * @return Response
+     */
+    private function streamView($response)
+    {
+        if ($response->isType(Response::TYPE_ERROR) &&
+            !$response->getBody() instanceof ViewStream
+        ) {
+            $response = $this->setErrorView($response);
+            return $response;
+        }
         return $response;
     }
 
