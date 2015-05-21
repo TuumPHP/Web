@@ -62,10 +62,9 @@ class CsRfStack implements MiddlewareInterface
          */
 
         // matches requested path with the root.
-        if (!$myRequest = $this->matchRoot($request)) {
+        if (!$this->matchRoot($request)) {
             return $this->next ? $this->next->__invoke($request) : null;
         }
-        $request = $myRequest;
         /*
          * validate token
          */

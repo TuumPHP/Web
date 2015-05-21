@@ -72,4 +72,12 @@ trait MiddlewareTrait
     {
         return $this->next ? $this->next->__invoke($request) : null;
     }
+
+    /**
+     * @return MiddlewareInterface|null
+     */
+    protected function getNext()
+    {
+        return $this->next;
+    }
 }

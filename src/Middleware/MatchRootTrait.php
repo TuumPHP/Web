@@ -68,25 +68,24 @@ trait MatchRootTrait
      * (i.e. execute the next middleware).
      * 
      * @param Request $request
-     * @return Request|bool
+     * @return bool
      */
-    public function matchRoot($request)
+    public function matchRoot(&$request)
     {
         // empty means match always.
         if (empty($this->_patterns)) {
-            return $request;
+            return true;
         }
         $path   = $request->getPathToMatch();
         $method = $request->getMethod();
         foreach ($this->_patterns as $pattern) {
             if ($matched = Matcher::verify($pattern, $path, $method)) {
                 if (isset($matched['matched'])) {
-                    return $request->withPathToMatch($matched['matched'], $matched['trailing']);
+                    $request = $request->withPathToMatch($matched['matched'], $matched['trailing']);
                 }
-                return $request;
+                return true;
             }
         }
         return false;
-
     }
 }

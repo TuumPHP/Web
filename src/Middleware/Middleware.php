@@ -40,14 +40,14 @@ class Middleware implements MiddlewareInterface
     }
 
     /**
-     * @param Request       $origRequest
+     * @param Request       $request
      * @return null|Response
      */
-    public function __invoke($origRequest)
+    public function __invoke($request)
     {
         // matches requested path with the root.
-        if (!$request = $this->matchRoot($origRequest)) {
-            return $this->next ? $this->next->__invoke($origRequest) : null;
+        if (!$this->matchRoot($request)) {
+            return $this->next ? $this->next->__invoke($request) : null;
         }
         
         // let's run the application.

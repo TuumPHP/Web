@@ -61,19 +61,19 @@ class RouterStack implements MiddlewareInterface
     }
 
     /**
-     * @param Request       $origRequest
+     * @param Request       $request
      * @return null|Response
      * @throws \ErrorException
      */
-    public function __invoke($origRequest)
+    public function __invoke($request)
     {
         /** @var Request $request */
         if (!$this->router) {
             throw new \ErrorException('no router for routing.');
         }
         // matches requested path with the root.
-        if (!$request = $this->matchRoot($origRequest)) {
-            return $this->next ? $this->next->__invoke($origRequest) : null;
+        if (!$this->matchRoot($request)) {
+            return $this->next ? $this->next->__invoke($request) : null;
         }
 
         // apply before filter. 
