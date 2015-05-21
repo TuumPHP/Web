@@ -5,7 +5,6 @@ use Closure;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
-use Tuum\Web\Psr7\Response;
 
 /**
  * Class StackFilterTrait
@@ -43,28 +42,6 @@ trait BeforeFilterTrait
     public function setBeforeFilter($filter)
     {
         $this->_beforeFilters[] = $filter;
-    }
-
-    /**
-     * @deprecated
-     * @param Request $request
-     * @param Closure $nextReq
-     * @return null|Response
-     */
-    protected function applyBeforeFilters($request, $nextReq)
-    {
-        foreach ($this->_beforeFilters as $filter) {
-            if (!$filter = $request->getFilter($filter)) {
-                continue;
-            }
-            $retReq = $this->getReturnable();
-            if ($response = $filter($request, $retReq)) {
-                return $response;
-            }
-            $request = $retReq->get($request);
-        }
-        $nextReq($request);
-        return null;
     }
 
     /**
