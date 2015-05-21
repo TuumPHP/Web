@@ -22,6 +22,9 @@ class StreamFactory
      */
     public static function file($file_loc)
     {
-        return new Stream(fopen($file_loc, 'rb'));
+        if (is_string($file_loc)) {
+            return new Stream(fopen($file_loc, 'rb'));
+        }
+        return stream_get_contents($file_loc);
     }
 }

@@ -167,6 +167,27 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
+     * downloads string data.
+     *
+     * @param string      $content
+     * @param string      $filename
+     * @param string|null $mime
+     * @return Response
+     */
+    public function asDownload($content, $filename, $mime=null)
+    {
+        $response = new Response(
+            StreamFactory::string($content),
+            self::OK, [
+            'Content-Disposition' => "inline; filename=\"{$filename}\"",
+            'Content-Length' => strlen($content),
+            'Content-Type' => $mime ?: 'application/octet-stream',
+        ])
+        ;
+        return $response;
+    }
+
+    /**
      * @param string      $file
      * @param array       $data
      * @return ViewStream
