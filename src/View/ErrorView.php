@@ -3,7 +3,7 @@ namespace Tuum\Web\View;
 
 use Exception;
 use Phly\Http\Stream;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Tuum\Web\Psr7\Respond;
 use Tuum\Web\Psr7\Response;
@@ -75,11 +75,11 @@ class ErrorView
     /**
      * @param int   $code
      * @param array $data
-     * @return Stream|StreamableInterface|ViewStream
+     * @return Stream|StreamInterface|ViewStream
      */
     public function getStream($code, $data = [])
     {
-        $error = isset($this->error_files[$code]) ? $this->error_files[$code] : $this->default_error_file;
+        $error = $this->findView($code);
         if ($error) {
             return $this->engine->getStream($error, $data);
         }
@@ -87,25 +87,21 @@ class ErrorView
     }
     
     /**
-     * @param int   $code
-     * @param array $data
-     * @return string
-     */
-    public function render($code, $data = [])
-    {
-        $error = isset($this->error_files[$code]) ? $this->error_files[$code] : $this->default_error_file;
-        if (!$error) {
-            return '';
-        }
-        $content = $this->engine->render($error, $data);
-        return $content;
-    }
-
-    /**
      * @param null|LoggerInterface $logger
      */
     public function setLogger($logger)
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * find error-view file from error code ($code).
+     *
+     * @param $code
+     * @return string
+     */
+    private function findView($code)
+    {
+        return isset($this->error_files[$code]) ? $this->error_files[$code] : $this->default_error_file;
     }
 }
