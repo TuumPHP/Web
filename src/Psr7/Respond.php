@@ -160,7 +160,7 @@ class Respond extends AbstractResponseFactory
      * @param string $mime
      * @return Response
      */
-    public function asResponse($file_loc, $mime)
+    public function asFileContents($file_loc, $mime)
     {
         $stream = StreamFactory::file($file_loc);
         return new Response($stream, self::OK, ['Content-Type' => $mime]);

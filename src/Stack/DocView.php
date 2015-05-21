@@ -166,7 +166,7 @@ class DocView implements MiddlewareInterface
         }
         $mime = $emitExt[$ext];
 
-        return $request->respond()->asResponse($file_loc, $mime);
+        return $request->respond()->asFileContents($file_loc, $mime);
     }
 
     /**
