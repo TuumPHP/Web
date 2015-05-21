@@ -171,17 +171,21 @@ class Respond extends AbstractResponseFactory
      *
      * @param string      $content
      * @param string      $filename
+     * @param bool        $attach      download as attachment if true, or inline if false. 
      * @param string|null $mime
      * @return Response
      */
-    public function asDownload($content, $filename, $mime=null)
+    public function asDownload($content, $filename, $attach=true, $mime=null)
     {
+        $type = $attach ? 'attachment' : 'inline';
         $response = new Response(
             StreamFactory::string($content),
             self::OK, [
-            'Content-Disposition' => "inline; filename=\"{$filename}\"",
-            'Content-Length' => strlen($content),
-            'Content-Type' => $mime ?: 'application/octet-stream',
+            'Content-Disposition' => "{$type}; filename=\"{$filename}\"",
+            'Content-Length'      => strlen($content),
+            'Content-Type'        => $mime ?: 'application/octet-stream',
+            'Cache-Control'       => 'public', // for IE8
+            'Pragma'              => 'public', // for IE8
         ])
         ;
         return $response;
