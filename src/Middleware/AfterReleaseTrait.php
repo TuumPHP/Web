@@ -16,11 +16,15 @@ trait AfterReleaseTrait
     protected $_afterRelease = [];
 
     /**
-     * @param string|Closure|ReleaseInterface $release
+     * @param string|Closure|ReleaseInterface|array $release
      */
     public function setAfterRelease($release)
     {
-        $this->_afterRelease[] = $release;
+        if (is_array($release)) {
+            $this->_afterRelease = array_merge($this->_afterRelease, $release);
+        } else {
+            $this->_afterRelease[] = $release;
+        }
     }
 
     /**

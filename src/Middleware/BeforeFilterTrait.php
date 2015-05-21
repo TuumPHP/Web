@@ -37,11 +37,15 @@ trait BeforeFilterTrait
     abstract protected function getReturnable();
         
     /**
-     * @param string|Closure|ApplicationInterface $filter
+     * @param string|Closure|ApplicationInterface|array $filter
      */
     public function setBeforeFilter($filter)
     {
-        $this->_beforeFilters[] = $filter;
+        if (is_array($filter)) {
+            $this->_beforeFilters = array_merge($this->_beforeFilters, $filter);
+        } else {
+            $this->_beforeFilters[] = $filter;
+        }
     }
 
     /**

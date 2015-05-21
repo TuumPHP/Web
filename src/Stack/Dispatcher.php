@@ -78,8 +78,8 @@ class Dispatcher implements ApplicationInterface
     private function prepare($route)
     {
         $this->route = $route;
-        $this->setBeforeFilter((array) $route->before());
-        $this->setAfterRelease((array) $route->after());
+        $this->setBeforeFilter($route->before());
+        $this->setAfterRelease($route->after());
     }
 
     /**
