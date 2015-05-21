@@ -42,12 +42,10 @@ class SessionStack implements MiddlewareInterface
      */
     public function __invoke($request)
     {
-        /*
-         * first, copy session data into $request->respond. 
-         */
+        // get session or throw a RuntimeException.
         $session = $request->getSession();
         if (!$session) {
-            return $this->next ? $this->next->__invoke($request) : null;
+            throw new \RuntimeException('Missing session manager');
         }
         $segment = $session->getSegment('TuumFW');
         $request = $this->prepare($request, $segment);
@@ -57,15 +55,15 @@ class SessionStack implements MiddlewareInterface
          */
         $response = $this->next ? $this->next->__invoke($request) : null;
 
-        /*
-         * copy data from $response into session. 
-         */
+        // release process.
         $this->release($request, $response, $segment);
         $session->commit();
         return $response;
     }
 
     /**
+     * copy session data into $request's attribute.
+     *
      * @param Request $request
      * @param Segment $segment
      * @return Request
@@ -79,6 +77,8 @@ class SessionStack implements MiddlewareInterface
     }
 
     /**
+     * copy data from $response into session.
+     *
      * @param Request  $request
      * @param Response $response
      * @param Segment  $segment

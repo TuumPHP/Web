@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\Web\Stack;
 
-use Aura\Session\Session;
 use Tuum\Web\Web;
 use Tuum\Web\Filter\CsRfFilter;
 use Tuum\Web\Middleware\MatchRootTrait;
@@ -43,12 +42,10 @@ class CsRfStack implements MiddlewareInterface
      */
     public function __invoke($request)
     {
-        // get session. ignore CsRf filter if not set. 
-        /** @var Session $session */
-        /** @var Request $request */
+        // get session or throw a RuntimeException.
         $session = $request->getSession();
         if (!$session) {
-            return $this->next ? $this->next->__invoke($request) : null;
+            throw new \RuntimeException('Missing session manager');
         }
         /*
          * get token, and set the token value to respond 
@@ -57,14 +54,19 @@ class CsRfStack implements MiddlewareInterface
         $token   = $session->getCsrfToken();
         $request = $request->withAttribute(Web::TOKEN_NAME, $token->getValue());
 
-        /*
-         * check if token must be verified.
-         */
-
         // matches requested path with the root.
         if (!$this->matchRoot($request)) {
             return $this->next ? $this->next->__invoke($request) : null;
         }
+        return $this->verifyToken($request);
+    }
+
+    /**
+     * @param $request
+     * @return null|Response
+     */
+    private function verifyToken($request)
+    {
         /*
          * validate token
          */
