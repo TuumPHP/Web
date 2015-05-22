@@ -2,9 +2,31 @@
 namespace Tuum\Web\Psr7;
 
 use Phly\Http\Stream;
+use Psr\Http\Message\StreamInterface;
 
 class StreamFactory
 {
+    /**
+     * @param string|StreamInterface|resource $stream
+     * @return Stream
+     */
+    public static function make($stream)
+    {
+        if ($stream instanceof StreamInterface) {
+            return $stream;
+        }
+        if (is_string($stream)) {
+            return self::string($stream);
+        }
+        if (is_resource($stream)) {
+            return new Stream($stream);
+        }
+        if (is_object($stream) && method_exists($stream, '__toString')) {
+            return self::string($stream->__toString());
+        }
+        throw new \RuntimeException('unknown type of input to make a stream object.');
+    }
+
     /**
      * @param string $text
      * @return Stream
@@ -17,7 +39,7 @@ class StreamFactory
     }
 
     /**
-     * @param string $file_loc
+     * @param string|resource $file_loc
      * @return Stream
      */
     public static function file($file_loc)
@@ -25,6 +47,9 @@ class StreamFactory
         if (is_string($file_loc)) {
             return new Stream(fopen($file_loc, 'rb'));
         }
-        return stream_get_contents($file_loc);
+        if (is_resource($file_loc)) {
+            return new Stream($file_loc);
+        }
+        throw new \RuntimeException('unknown type of input to make a stream object.');
     }
 }

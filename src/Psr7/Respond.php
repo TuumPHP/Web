@@ -2,6 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Closure;
+use Psr\Http\Message\StreamInterface;
 use Tuum\Web\View\ErrorView;
 use Tuum\Web\View\ViewEngineInterface;
 use Tuum\Web\View\ViewStream;
@@ -57,7 +58,7 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
-     * return from a view file, $file.
+     * creates a Response with a view file, $file.
      * rendering must occur on the way back.
      *
      * @param string|Closure $file
@@ -73,6 +74,9 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
+     * creates a Response of view with given $html as a contents.
+     * use this to view a main contents with layout.
+     *
      * @param string $html
      * @return Response
      */
@@ -156,7 +160,10 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
-     * @param string $file_loc
+     * creates a response of file contents.
+     * A file can be a string of the file's pathName, or a file resource.
+     *
+     * @param string|resource $file_loc
      * @param string $mime
      * @return Response
      */
@@ -167,9 +174,10 @@ class Respond extends AbstractResponseFactory
     }
 
     /**
-     * downloads string data.
+     * creates a response for downloading a contents.
+     * A contents can be, a text string, a resource, or a stream.
      *
-     * @param string      $content
+     * @param string|StreamInterface|resource      $content
      * @param string      $filename
      * @param bool        $attach      download as attachment if true, or inline if false. 
      * @param string|null $mime
@@ -179,7 +187,7 @@ class Respond extends AbstractResponseFactory
     {
         $type = $attach ? 'attachment' : 'inline';
         $response = new Response(
-            StreamFactory::string($content),
+            StreamFactory::make($content),
             self::OK, [
             'Content-Disposition' => "{$type}; filename=\"{$filename}\"",
             'Content-Length'      => strlen($content),
@@ -189,6 +197,23 @@ class Respond extends AbstractResponseFactory
         ])
         ;
         return $response;
+    }
+
+    /**
+     * creates a generic response.
+     *
+     * @param string|StreamInterface|resource       $input
+     * @param string $status
+     * @param array  $header
+     * @return Response
+     */
+    public function asResponse($input, $status=self::OK, $header=[])
+    {
+        return new Response(
+            StreamFactory::make($input),
+            $status,
+            $header
+        );
     }
 
     /**
