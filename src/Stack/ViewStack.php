@@ -45,12 +45,12 @@ class ViewStack implements MiddlewareInterface
     }
 
     /**
-     * render view file if the $response is a View object.
-     *
      * @param Request       $request
+     * @param null|Response $response
+     * @param null|\Closure  $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $response = null, $next = null)
     {
         /*
          * execute the subsequent stack.

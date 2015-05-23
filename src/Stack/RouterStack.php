@@ -62,10 +62,12 @@ class RouterStack implements MiddlewareInterface
 
     /**
      * @param Request       $request
+     * @param null|Response $response
+     * @param null|\Closure $next
      * @return null|Response
      * @throws \ErrorException
      */
-    public function __invoke($request)
+    public function __invoke($request, $response = null, $next = null)
     {
         /** @var Request $request */
         if (!$this->router) {

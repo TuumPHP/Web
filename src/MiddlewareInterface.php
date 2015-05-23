@@ -16,7 +16,7 @@ interface MiddlewareInterface extends ApplicationInterface
      * converts normal HttpKernel into Stackable.
      *
      * @param ApplicationInterface $handler
-     * @return $this
+     * @return MiddlewareInterface
      */
     public function push($handler);
 

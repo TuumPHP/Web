@@ -106,9 +106,11 @@ class DocView implements MiddlewareInterface
 
     /**
      * @param Request       $request
+     * @param null|Response $response
+     * @param null|\Closure  $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $response = null, $next = null)
     {
         // matches requested path with the root.
         if (!$this->matchRoot($request)) {

@@ -63,7 +63,7 @@ trait BeforeFilterTrait
             if (!$filter = $request->getFilter($filter)) {
                 continue;
             }
-            $response = $filter($request, $retReq);
+            $response = $filter->__invoke($request, null, $retReq);
             $request  = $retReq->get($request);
             if ($response) {
                 return [$request, $response];

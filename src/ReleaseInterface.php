@@ -11,12 +11,6 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-interface ReleaseInterface extends FilterInterface
+interface ReleaseInterface extends ApplicationInterface
 {
-    /**
-     * @param Request  $request
-     * @param null|Response $response
-     * @return null|Response
-     */
-    public function release($request, $response);
 }

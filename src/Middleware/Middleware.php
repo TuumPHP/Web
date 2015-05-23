@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Middleware;
 
+use Tuum\Web\ApplicationInterface;
 use Tuum\Web\FilterInterface;
 use Tuum\Web\MiddlewareInterface;
 use Tuum\Web\Psr7\Request;
@@ -31,7 +32,7 @@ class Middleware implements MiddlewareInterface
     protected $name;
 
     /**
-     * @param FilterInterface|ReleaseInterface $app
+     * @param ApplicationInterface $app
      */
     public function __construct($app)
     {
@@ -41,27 +42,32 @@ class Middleware implements MiddlewareInterface
 
     /**
      * @param Request       $request
+     * @param null|Response $response
+     * @param null|\Closure  $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $response = null, $next = null)
     {
         // matches requested path with the root.
         if (!$this->matchRoot($request)) {
             return $this->next ? $this->next->__invoke($request) : null;
         }
         
-        // let's run the application.
-        $app      = $this->app;
-        $retReq   = $this->getReturnable();
-        $response = $app($request, $retReq); // Application!
-        $request  = $retReq->get($request);
-        
-        // release procedure. 
-        if (is_null($response)) {
-            $response = $this->execNext($request);
+        // let's run the filter application.
+        if (!$this->app instanceof ReleaseInterface) {
+            $retReq   = $this->getReturnable();
+            $response = $this->app->__invoke($request, $retReq); // Application!
+            $request  = $retReq->get($request);
         }
-        if ($app instanceof ReleaseInterface) {
-            $response = $app->release($request, $response);
+        
+        // invoke next middleware. 
+        if (is_null($response)) {
+            $response = $this->next ? $this->next->__invoke($request) : null;
+        }
+        
+        // release process.
+        if ($this->app instanceof ReleaseInterface) {
+            $response = $this->app->__invoke($request, $response);
         }
         return $response;
     }

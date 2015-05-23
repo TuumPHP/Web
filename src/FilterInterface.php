@@ -12,12 +12,6 @@ use Tuum\Web\Psr7\Response;
  *
  * @package Tuum\Web
  */
-interface FilterInterface
+interface FilterInterface extends ApplicationInterface
 {
-    /**
-     * @param Request       $request
-     * @param callable|null $next
-     * @return null|Response
-     */
-    public function __invoke($request, $next = null);
 }

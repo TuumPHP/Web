@@ -39,7 +39,7 @@ trait AfterReleaseTrait
                 continue;
             }
             if ($release instanceof ReleaseInterface) {
-                $response = $release->release($request, $response);
+                $response = $release->__invoke($request, $response);
             }
             elseif (is_callable($release)) {
                 $response = $release($request, $response);

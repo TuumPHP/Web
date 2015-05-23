@@ -38,9 +38,11 @@ class SessionStack implements MiddlewareInterface
 
     /**
      * @param Request       $request
+     * @param null|Response $response
+     * @param null|\Closure  $next
      * @return null|Response
      */
-    public function __invoke($request)
+    public function __invoke($request, $response = null, $next = null)
     {
         // get session or throw a RuntimeException.
         $session = $request->getSession();
