@@ -21,8 +21,18 @@ class ViewProviders
      */
     public function __construct($web)
     {
+        $this->setWeb($web);
+    }
+
+    /**
+     * @param Web $web
+     * @return $this
+     */
+    public function setWeb($web)
+    {
         $this->web = $web;
         $this->app = $web->getApp();
+        return $this;
     }
 
     /**

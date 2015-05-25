@@ -125,6 +125,8 @@ class Web
         $cached = $this->vars_dir . '/app.cached';
         if (!$this->debug && file_exists($cached)) {
             $this->app = unserialize(\file_get_contents($cached));
+            $this->stacks->setWeb($this);
+            $this->views->setWeb($this);
             return $this;
         }
         $closure($this);
