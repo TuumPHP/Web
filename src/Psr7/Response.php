@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Psr7;
 
-use Phly\Http\Response as BaseResponse;
+use Zend\Diactoros\Response as BaseResponse;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 

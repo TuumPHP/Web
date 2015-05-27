@@ -10,15 +10,15 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "tuum/locator": "0.2.*",
-        "tuum/router": "0.3.*",
-        "tuum/view": "0.5.*",
-        "tuum/form":"0.2.*",
-        "aura/session": " 2.*",
-        "phly/http": "0.13.*",
-        "monolog/monolog": "1.*",
-        "league/container": "1.3.0",
-        "filp/whoops": "1.1.3"
+        "tuum/locator": "~0.2",
+        "tuum/router": "~0.3",
+        "tuum/view": "~0.5",
+        "tuum/form":"~0.2",
+        "aura/session": "~2.0",
+        "zendframework/zend-diactoros": "~1.0",
+        "monolog/monolog": "~1.0",
+        "league/container": "^1.3.0",
+        "filp/whoops": "^1.1.3"
     },
     "repositories": [
     ],

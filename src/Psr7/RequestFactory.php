@@ -2,8 +2,8 @@
 namespace Tuum\Web\Psr7;
 
 use Aura\Session\SessionFactory;
-use Phly\Http\ServerRequestFactory;
-use Phly\Http\Uri;
+use Zend\Diactoros\ServerRequestFactory;
+use Zend\Diactoros\Uri;
 
 class RequestFactory extends ServerRequestFactory
 {

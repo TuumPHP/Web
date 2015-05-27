@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Web\Psr7;
 
-use Phly\Http\Stream;
+use Zend\Diactoros\Stream;
 use Psr\Http\Message\StreamInterface;
 
 class StreamFactory

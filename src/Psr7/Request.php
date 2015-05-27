@@ -2,7 +2,7 @@
 namespace Tuum\Web\Psr7;
 
 use Aura\Session\Session;
-use Phly\Http\ServerRequest;
+use Zend\Diactoros\ServerRequest;
 use Psr\Http\Message\UriInterface;
 use Tuum\Web\ApplicationInterface;
 use Tuum\Web\MiddlewareInterface;
