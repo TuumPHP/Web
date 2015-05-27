@@ -50,7 +50,6 @@ class Application implements MiddlewareInterface
      */
     public function get($key, $data = [])
     {
-        $data['app'] = $this;
         return $this->container->get($key, $data);
     }
 
