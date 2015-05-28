@@ -3,6 +3,7 @@ namespace Tuum\Web\Stack;
 
 use Aura\Session\Segment;
 use Aura\Session\SessionFactory;
+use Psr\Http\Message\ResponseInterface;
 use Tuum\Web\Psr7\Request;
 use Tuum\Web\Psr7\Response;
 use Tuum\Web\Middleware\MiddlewareTrait;
@@ -85,17 +86,42 @@ class SessionStack implements MiddlewareInterface
      */
     private function release($request, $response, $segment)
     {
+        if ($this->isReferrerAble($response)) {
+            $segment->set(Web::REFERRER_URI, $request->getUri()->__toString());
+        }
+        if (!$response instanceof Response) {
+            return;
+        }
         if ($data = $response->getFlashData()) {
             // must get flash data first (before redirect's getData)
             // to clear the flash data. Otherwise, the flash-data
             // will reappear in the sub-sequent request.
             $segment->setFlash('flash-data', $data);
         }
-        if ($response->isType(Response::TYPE_REDIRECT)) {
+        if (Response::isRedirect($response)) {
             $data = $response->getData();
             $segment->setFlash('flash-info', $data);
-        } elseif ($response->isType(Response::TYPE_VIEW)) {
-            $segment->set(Web::REFERRER_URI, $request->getUri()->__toString());
         }
+    }
+
+    /**
+     * validates if the response can be used as reference url
+     * used by redirect()->toReferrer().
+     *
+     * response must be OK, and html type.
+     *
+     * @param ResponseInterface $response
+     * @return bool
+     */
+    private function isReferrerAble($response)
+    {
+        if (!Response::isOk($response)) {
+            return false;
+        }
+        $type = $response->getHeader('Content-Type');
+        if (!$type || $type === 'text/html') {
+            return true;
+        }
+        return false;
     }
 }

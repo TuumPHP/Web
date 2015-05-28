@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Psr7;
 
+use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response as BaseResponse;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -38,6 +39,48 @@ class Response extends BaseResponse
     public function isType($type)
     {
         return $this->type === $type;
+    }
+
+    /**
+     * Is this response successful?
+     *
+     * @param ResponseInterface $response
+     * @return bool
+     */
+    public static function isOk($response)
+    {
+        return $response->getStatusCode() === 200;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return bool
+     */
+    public static function isRedirect($response)
+    {
+        return in_array($response->getStatusCode(), [301, 302, 303, 307]);
+    }
+
+    /**
+     * Is this response a client error?
+     *
+     * @param ResponseInterface $response
+     * @return bool
+     */
+    public static function isError($response)
+    {
+        return $response->getStatusCode() >= 400 && $response->getStatusCode() < 600;
+    }
+
+    /**
+     * Is this response a server error?
+     *
+     * @param ResponseInterface $response
+     * @return bool
+     */
+    public static function isServerError($response)
+    {
+        return $response->getStatusCode() >= 500 && $response->getStatusCode() < 600;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Web\Stack;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Tuum\Web\Middleware\AfterReleaseTrait;
 use Tuum\Web\View\ErrorView;
@@ -69,7 +70,7 @@ class ViewStack implements MiddlewareInterface
             // return as a JSON.
             $response = $request->respond()->asJson($response);
         }
-        elseif (!$response instanceof Response) {
+        elseif (!$response instanceof ResponseInterface) {
             // what is this? just return it.
             return $response;
         }
@@ -87,7 +88,7 @@ class ViewStack implements MiddlewareInterface
      */
     private function streamView($response)
     {
-        if ($response->isType(Response::TYPE_ERROR) &&
+        if (Response::isError($response) &&
             !$response->getBody() instanceof ViewStream
         ) {
             $response = $this->setErrorView($response);
@@ -104,8 +105,8 @@ class ViewStack implements MiddlewareInterface
      */
     private function setErrorView($response)
     {
-        if ($this->logger) {
-            $this->logger->error('ErrorRelease: received an error response: ' . $response->getStatusCode());
+        if (Response::isServerError($response) && $this->logger) {
+            $this->logger->error('received a server error response: ' . $response->getStatusCode());
         }
         $stream   = $this->error->getStream($response->getStatusCode(), $response->getData());
         $response = $response->withBody($stream);
