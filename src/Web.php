@@ -141,16 +141,16 @@ class Web
     /**
      * loads the main configuration for the application.
      *
-     * @param null|bool $debug
+     * @param null|string $env_file
      * @return $this
      */
-    public function loadConfig($debug=null)
+    public function loadConfig($env_file=null)
     {
-        $debug = is_null($debug)? $this->debug: $debug;
         $this->configure($this->config_dir . '/configure');
-        if ($debug) {
+        if ($this->debug) {
             $this->configure($this->config_dir . '/configure-debug');
         }
+        $this->loadEnvironment($env_file);
         return $this;
     }
 
