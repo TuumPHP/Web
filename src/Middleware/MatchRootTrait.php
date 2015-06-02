@@ -22,10 +22,12 @@ trait MatchRootTrait
 
     /**
      * @param string $root
+     * @return $this
      */
     public function setRoot($root)
     {
         $this->_patterns[] = $root;
+        return $this;
     }
 
     /**
