@@ -210,6 +210,11 @@ class DocView implements MiddlewareInterface
         if (array_key_exists('after', $options)) {
             $this->setAfterRelease($options['after']);
         }
+        if (array_key_exists('roots', $options)) {
+            foreach($options['roots'] as $root) {
+                $this->setRoot($root);
+            }
+        }
     }
 
     /**
