@@ -191,12 +191,24 @@ class DocView implements MiddlewareInterface
     }
 
     /**
+     * set up optional behavior.
+     *
+     * - 'enable_raw' : enables raw view for markdown files.
+     * - 'before' : sets before filters.
+     * - 'after' : sets after release filters.
+     *
      * @param array $options
      */
     public function options(array $options)
     {
         if (array_key_exists('enable_raw', $options)) {
             $this->enable_raw = (bool) $options['enable_raw'];
+        }
+        if (array_key_exists('before', $options)) {
+            $this->setBeforeFilter($options['before']);
+        }
+        if (array_key_exists('after', $options)) {
+            $this->setAfterRelease($options['after']);
         }
     }
 
