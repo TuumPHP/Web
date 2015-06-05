@@ -2,7 +2,7 @@
 namespace Tuum\Web\View;
 
 use Closure;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Interface RendererInterface
@@ -28,7 +28,7 @@ interface ViewEngineInterface
      *
      * @param string|callable $file
      * @param array  $data
-     * @return StreamableInterface|ViewStream
+     * @return StreamInterface|ViewStream
      * @throws \Exception
      */
     public function getStream($file, $data = []);
